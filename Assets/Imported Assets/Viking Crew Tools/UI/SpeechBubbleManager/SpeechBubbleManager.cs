@@ -52,7 +52,7 @@ namespace VikingCrewTools.UI {
 
         [SerializeField]
         [Tooltip("Will use main camera if left as null")]
-        private Camera _cam;
+        private Camera[] _cams;
 
         private static SpeechBubbleManager _instance;
         public static SpeechBubbleManager Instance {
@@ -66,17 +66,17 @@ namespace VikingCrewTools.UI {
         {
             get
             {
-                return _cam;
+                return _cams[0];
             }
 
             set
             {
-                _cam = value;
+                _cams[0] = value;
                 foreach (var bubbleQueue in _speechBubbleQueueDict.Values)
                 {
                     foreach (var bubble in bubbleQueue)
                     {
-                        bubble.Cam = _cam;
+                        bubble.Cam = _cams[0];
                     }
                 }
             }
@@ -84,7 +84,11 @@ namespace VikingCrewTools.UI {
 
         protected void Awake()
         {
-            if (_cam == null) _cam = Camera.main;
+            if (_cams == null)
+            {
+                _cams = new Camera[1];
+                _cams[0] = (Camera.main);
+            }
 
             if (_isSingleton) {
                 UnityEngine.Assertions.Assert.IsNull(_instance, "_intance was not null. Do you maybe have several Speech Bubble Managers in your scene, all trying to be singletons?");
@@ -142,6 +146,35 @@ namespace VikingCrewTools.UI {
             bubbleBehaviour.Setup(objectToFollow, offset, text, timeToLive, color, Cam);
             _speechBubbleQueueDict[type].Enqueue(bubbleBehaviour);
             return bubbleBehaviour;
+        }
+
+        /// <summary>
+        /// Adds speech bubbles to all cameras.
+        /// </summary>
+        /// <param name="objectToFollow"></param>
+        /// <param name="text"></param>
+        /// <param name="type"></param>
+        /// <param name="timeToLive"></param>
+        /// <param name="color"></param>
+        /// <param name="offset"></param>
+        /// <returns></returns>
+        public SpeechBubbleBehaviour[] AddSpeechBubbleAllCams(Transform objectToFollow, string text, SpeechbubbleType type = SpeechbubbleType.NORMAL, float timeToLive = 0, Color color = default(Color), Vector3 offset = new Vector3())
+        {
+            if (timeToLive == 0) timeToLive = _defaultTimeToLive;
+            if (color == default(Color)) color = _defaultColor;
+
+            SpeechBubbleBehaviour[] retArr = new SpeechBubbleBehaviour[_cams.Length];
+
+            for(int i = 0; i < _cams.Length; i++)
+            {
+                Camera cam = _cams[i];
+                SpeechBubbleBehaviour bubbleBehaviour = GetBubble(type);
+                bubbleBehaviour.Setup(objectToFollow, offset, text, timeToLive, color, Cam);
+                _speechBubbleQueueDict[type].Enqueue(bubbleBehaviour);
+                retArr[i] = bubbleBehaviour;
+            }
+
+            return retArr;
         }
 
         /// <summary>

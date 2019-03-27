@@ -29,7 +29,7 @@ RectTransform:
   m_GameObject: {fileID: 1000010751767686}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalScale: {x: -0.5, y: 0.5, z: 1}
   m_Children:
   - {fileID: 224000014219043584}
   m_Father: {fileID: 224000013733147440}
@@ -140,7 +140,7 @@ RectTransform:
   m_GameObject: {fileID: 1000011352178948}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.008, y: 0.008, z: 0.008}
+  m_LocalScale: {x: 0.003, y: 0.003, z: 0.003}
   m_Children:
   - {fileID: 224000012334511288}
   m_Father: {fileID: 0}
@@ -192,7 +192,7 @@ RectTransform:
   m_GameObject: {fileID: 1000012403991974}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: -1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 224000012334511288}
   m_RootOrder: 0
@@ -232,15 +232,15 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 12800000, guid: 99fe713b35c66e440b72fa58f384d1d7, type: 3}
-    m_FontSize: 28
+    m_FontSize: 16
     m_FontStyle: 0
     m_BestFit: 1
-    m_MinSize: 2
+    m_MinSize: 1
     m_MaxSize: 100
-    m_Alignment: 0
+    m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
-    m_HorizontalOverflow: 1
+    m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1.1
   m_Text: 'Lorem ipsum dolor sit amet,
