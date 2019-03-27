@@ -1,0 +1,38 @@
+﻿
+using UnityEngine;
+using System.Collections;
+
+public class MeshShaker : MonoBehaviour
+{
+    // How long the object should shake for.
+    [SerializeField]
+    float shakeDuration;
+    float shakeTimer;
+
+    // Amplitude of the shake. A larger value shakes the camera harder.
+    [SerializeField]
+    float shakeAmount = 0.7f;
+
+    Vector3 originalPos;
+
+    void OnEnable()
+    {
+        originalPos = transform.localPosition;
+        shakeTimer = shakeDuration;
+    }
+
+    void Update()
+    {
+        if (shakeTimer > 0)
+        {
+            transform.localPosition = originalPos + Random.insideUnitSphere * Mathf.Lerp(0, shakeAmount, shakeTimer / shakeDuration);
+            shakeTimer -= Time.deltaTime;
+        }
+        else
+        {
+            shakeTimer = 0f;
+            transform.localPosition = originalPos;
+            enabled = false;
+        }
+    }
+}

@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 920544299f5cca24496d9c6f05fd27c4, type: 3}
+  m_Name: SteamVR_Input_ActionSet_default_In
+  m_EditorClassIdentifier: 
+  actionSet: {fileID: 0}
+  listDirection: 0
+  actions:
+  - {fileID: 11400000, guid: 0a03e99ea557bd245aa045a3ac49ed73, type: 2}
+  - {fileID: 11400000, guid: 4424302156323f441947137439d753d2, type: 2}
+  - {fileID: 11400000, guid: 6f9f7eb0826aa934ebe4695babddb413, type: 2}
+  - {fileID: 11400000, guid: 11b8a10381d0a424d957810e8454d7b5, type: 2}
+  - {fileID: 11400000, guid: a4387f90175ca0b45a57bcaec4b7b46f, type: 2}
+  - {fileID: 11400000, guid: 61736bfb501d415458e56d906ee0f3af, type: 2}
+  - {fileID: 11400000, guid: 6980b03d6264f5e44976ad2d589c682a, type: 2}
+  - {fileID: 11400000, guid: b227abcb3e52a44429ef8542f5aa8866, type: 2}
+  - {fileID: 11400000, guid: 4da2d7459d66d9f4ea57271b8ea021a6, type: 2}
+  - {fileID: 11400000, guid: 194235ce8c438da4ba6728e021863c45, type: 2}
+  InteractUI: {fileID: 11400000, guid: 0a03e99ea557bd245aa045a3ac49ed73, type: 2}
+  Teleport: {fileID: 11400000, guid: 4424302156323f441947137439d753d2, type: 2}
+  GrabPinch: {fileID: 11400000, guid: 6f9f7eb0826aa934ebe4695babddb413, type: 2}
+  GrabGrip: {fileID: 11400000, guid: 11b8a10381d0a424d957810e8454d7b5, type: 2}
+  Pose: {fileID: 11400000, guid: a4387f90175ca0b45a57bcaec4b7b46f, type: 2}
+  SkeletonLeftHand: {fileID: 11400000, guid: 61736bfb501d415458e56d906ee0f3af, type: 2}
+  SkeletonRightHand: {fileID: 11400000, guid: 6980b03d6264f5e44976ad2d589c682a, type: 2}
+  Squeeze: {fileID: 11400000, guid: b227abcb3e52a44429ef8542f5aa8866, type: 2}
+  Fist: {fileID: 11400000, guid: 4da2d7459d66d9f4ea57271b8ea021a6, type: 2}
+  Ready: {fileID: 11400000, guid: 194235ce8c438da4ba6728e021863c45, type: 2}

@@ -1,0 +1,163 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8455836056810418871
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8455836056810418870}
+  - component: {fileID: 8455836056810418874}
+  - component: {fileID: 8455836056810418875}
+  - component: {fileID: 8455836056810418872}
+  - component: {fileID: 8455836056810418873}
+  - component: {fileID: 49458344}
+  - component: {fileID: 49458345}
+  m_Layer: 0
+  m_Name: QuipCombatGameLogic
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8455836056810418870
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8455836056810418871}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8455836056810418874
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8455836056810418871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 957cd1de756ae8e4c83b3f3c7dc52558, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  quipState: 0
+  quipOrderState: 0
+  currentPlayer: 0
+  whoStartedTheQuip: 0
+  startingQuipTime: 3
+  quipBaseTime: 3
+  currentQuipTime: 0
+  egoUI: {fileID: 49458345}
+  comebackBaseTime: 3
+  currentComebackTime: 0
+  quipContext: {fileID: 8455836056810418873}
+  currentQuipBattle: []
+  manosStarts:
+  - I am on the RIGHT side of this fight
+  - Yeah, right about to lose!
+  - When this is over there will be nothing LEFT
+  chadStarts:
+  - u suck
+  - no u
+  - haha
+--- !u!114 &8455836056810418875
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8455836056810418871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56c13f6a884c19d49a9fbf147bd984f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: 1
+  dialogManager: {fileID: 8455836056810418874}
+  quipTimer: 3
+--- !u!114 &8455836056810418872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8455836056810418871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56c13f6a884c19d49a9fbf147bd984f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: 2
+  dialogManager: {fileID: 8455836056810418874}
+  quipTimer: 3
+--- !u!114 &8455836056810418873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8455836056810418871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10b166fe3d7a51f4aad9831f131987d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  quipTarget: {fileID: 0}
+  _speechBubbles:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+--- !u!114 &49458344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8455836056810418871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e6949cd37aa56749a8566348190a761, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  quipTarget: {fileID: 0}
+  quipTargetFixed: {x: 0, y: 0, z: 0}
+  egoBar: {fileID: 49458345}
+  letterTypingPauseNormal: 0.005
+  letterTypingPauseComma: 0.15
+  letterTypingPausePeriod: 0.2
+  readyFlashFrequency: 2
+  promptedFlashFrequency: 8
+--- !u!114 &49458345
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8455836056810418871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62b456afccd42544d9a301824523f20e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UIAnimator: {fileID: 0}
+  portraitManos: {fileID: 0}
+  portraitChad: {fileID: 0}
+  portraitMaxScale: 1.3
+  THRESH_DIRE: 0.085
+  THRESH_ADVANTAGE: 0.33
+  barMaskManos: {fileID: 0}
+  barMaskChad: {fileID: 0}
+  balanceMarker: {fileID: 0}
+  egoBarScale: 5
+  egoBarHalfLength: 250
+  barCatchupSpeed: 0.5
+  _egoBalanceTarget: 0.5

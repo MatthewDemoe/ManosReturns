@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: SphereBarrier1Mat
+  m_Shader: {fileID: 4800000, guid: 93d79988791e1254f8e1fd53b0db4cd4, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - <noninit>:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BumpMap:
+        m_Texture: {fileID: 2800000, guid: 026103a5e6d9c4c4eb96f5b52117f5ac, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DissolveTex:
+        m_Texture: {fileID: 2800000, guid: 5ea7b75e8c8121e4fa5665d89fc8a537, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 496e9cd2bf7efc346955206a317ca6f1, type: 3}
+        m_Scale: {x: 2, y: 2}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - <noninit>: 0
+    - _Dissolve: 0
+    - _DissolveRimWidth: 0.02
+    - _DistortAmount: 17.3
+    - _Fade: 0.8
+    - _HeightFactor: 0
+    - _IntersectPower: 0.13
+    - _InvertHeightCut: 0
+    - _InvertPattern: 0
+    - _PatternSpeedX: 0
+    - _PatternSpeedY: -0.08
+    - _PatternStrength: 3.81
+    - _RimPower: 19.4
+    - _RimSpread: 0.85
+    - _SpeedX: 0
+    - _SpeedY: -0.43
+    m_Colors:
+    - <noninit>: {r: 7.313806e-37, g: 1.095849e-31, b: 2.0545467e-33, a: 2.689832e-32}
+    - _DissolveRimColor: {r: 0, g: 0.66896534, b: 1, a: 1}
+    - _RimColor: {r: 1, g: 0, b: 0, a: 0.134}

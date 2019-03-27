@@ -1,0 +1,97 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: SphereBarrier2Mat
+  m_Shader: {fileID: 4800000, guid: 93d79988791e1254f8e1fd53b0db4cd4, type: 3}
+  m_ShaderKeywords: _FLIPALBEDOALPHA_ON
+  m_LightmapFlags: 4
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  m_SavedProperties:
+    serializedVersion: 2
+    m_TexEnvs:
+    - first:
+        name: <noninit>
+      second:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
+        name: _BumpMap
+      second:
+        m_Texture: {fileID: 2800000, guid: 026103a5e6d9c4c4eb96f5b52117f5ac, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
+        name: _DissolveTex
+      second:
+        m_Texture: {fileID: 2800000, guid: 5ea7b75e8c8121e4fa5665d89fc8a537, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
+        name: _MainTex
+      second:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - first:
+        name: <noninit>
+      second: 0
+    - first:
+        name: _Dissolve
+      second: 0
+    - first:
+        name: _DissolveRimWidth
+      second: 0.015
+    - first:
+        name: _DistortAmount
+      second: 1
+    - first:
+        name: _Fade
+      second: 0.9
+    - first:
+        name: _HeightFactor
+      second: 0
+    - first:
+        name: _IntersectPower
+      second: 0.16
+    - first:
+        name: _InvertPattern
+      second: 0
+    - first:
+        name: _PatternSpeedX
+      second: 0
+    - first:
+        name: _PatternSpeedY
+      second: 0
+    - first:
+        name: _PatternStrength
+      second: 3
+    - first:
+        name: _RimPower
+      second: 40.5
+    - first:
+        name: _RimSpread
+      second: 0.92
+    - first:
+        name: _SpeedX
+      second: 0
+    - first:
+        name: _SpeedY
+      second: -0.65
+    m_Colors:
+    - first:
+        name: <noninit>
+      second: {r: 7.313806e-37, g: 1.118599e-31, b: 2.0535945e-33, a: 2.689832e-32}
+    - first:
+        name: _DissolveRimColor
+      second: {r: 1, g: 1, b: 1, a: 1}
+    - first:
+        name: _RimColor
+      second: {r: 0, g: 0.8629818, b: 0.9852941, a: 0.034}
