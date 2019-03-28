@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 [System.Serializable]
 public class ThrowTrigger : MonoBehaviour
@@ -113,14 +114,25 @@ public class ThrowTrigger : MonoBehaviour
     GameObject sonicBoom;
 
     bool _canThrow = true;
+    bool _pickupEnabled = true;
+
+    [SerializeField]
+    FootballFactory factory;
+
+    [SerializeField]
+    Text footballText;
+
+    [SerializeField]
+    Image footballSprite;
 
     public bool canThrowBomb { get { return _canThrow; } set { _canThrow = value; } }
 
-    GameObject _pickup;
 
     // Start is called before the first frame update
     void Start()
     {
+        
+
         //Instantiat our target sprite and hide it
         targetBall = Instantiate(targetPrefab);
         targetRender = false;
@@ -295,7 +307,7 @@ public class ThrowTrigger : MonoBehaviour
         _animM.EndThrow();
 
         currentFootballs--;
-
+        footballText.text = "" + currentFootballs;
     }
 
     void ChargeCase()
@@ -415,27 +427,28 @@ public class ThrowTrigger : MonoBehaviour
         return charge;
     }
 
-    public void SetPickup(GameObject obj)
+    public void EnableNet()
     {
-        _pickup = obj;
+        _pickupEnabled = true;
     }
 
-    public void ResetPickup()
+    public void DisableNet()
     {
-        _pickup = null;
+        _pickupEnabled = false;
     }
 
-    public void PickUpBomb()
+    public bool PickUpFootball(bool alreadyPicked)
     {
-        if (currentFootballs < maxFootballs)
+        if ((currentFootballs < maxFootballs) && !alreadyPicked)
         {
-            if (_pickup != null)
-            {
-                _pickup.GetComponent<FootballPickup>().PickUp();
-
-                currentFootballs++;
-            }
+            currentFootballs++;
+            footballText.text = "" + currentFootballs;
+            footballSprite.GetComponent<Animator>().SetTrigger("PingTrigger");
+            factory.PickedUp();
+            return true;
         }
+
+        return false;
     }
 }
 

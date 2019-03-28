@@ -9,7 +9,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{A2582D7F-8CF8-290B-31FE-C4526AA059E0}</ProjectGuid>
+    <ProjectGuid>{C95771EE-1FDD-3CE4-70E4-776C4C492C67}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -72,6 +72,7 @@
     <Compile Include="Assets\_Scripts\Enums.cs" />
     <Compile Include="Assets\_Scripts\FlashEmissionMaterial.cs" />
     <Compile Include="Assets\_Scripts\FootBomb.cs" />
+    <Compile Include="Assets\_Scripts\GenericFollow.cs" />
     <Compile Include="Assets\_Scripts\ManosViewPlayerHealth.cs" />
     <Compile Include="Assets\_Scripts\MeshShaker.cs" />
     <Compile Include="Assets\_Scripts\Non-Networking\ChangeSceneAfterDuration.cs" />
@@ -451,19 +452,19 @@
     <None Include="Assets\Imported Assets\Particlecollection_Free samples\Plugins\Effect\Shader\ParticleBlendEffect.shader" />
     <None Include="Assets\Imported Assets\SteamVR\InteractionSystem\Readme_InteractionSystem.txt" />
     <Reference Include="Unity.TextMeshPro.Editor">
-      <HintPath>C:/Users/Tom/Desktop/Unity Projects/ManosReturns-FourthPlayable/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+      <HintPath>C:/Users/Tom/Desktop/Unity Projects/ManosReturns-FifthPlayable/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.PackageManagerUI.Editor">
-      <HintPath>C:/Users/Tom/Desktop/Unity Projects/ManosReturns-FourthPlayable/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
+      <HintPath>C:/Users/Tom/Desktop/Unity Projects/ManosReturns-FifthPlayable/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.CollabProxy.Editor">
-      <HintPath>C:/Users/Tom/Desktop/Unity Projects/ManosReturns-FourthPlayable/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
+      <HintPath>C:/Users/Tom/Desktop/Unity Projects/ManosReturns-FifthPlayable/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>C:/Users/Tom/Desktop/Unity Projects/ManosReturns-FourthPlayable/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+      <HintPath>C:/Users/Tom/Desktop/Unity Projects/ManosReturns-FifthPlayable/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.DataPrivacy">
-      <HintPath>C:/Users/Tom/Desktop/Unity Projects/ManosReturns-FourthPlayable/Library/ScriptAssemblies/Unity.Analytics.DataPrivacy.dll</HintPath>
+      <HintPath>C:/Users/Tom/Desktop/Unity Projects/ManosReturns-FifthPlayable/Library/ScriptAssemblies/Unity.Analytics.DataPrivacy.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>D:/Programs/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
@@ -670,16 +671,16 @@
       <HintPath>D:/Programs/Unity/Editor/Data/UnityExtensions/Unity/UnitySpatialTracking/RuntimeEditor/UnityEngine.SpatialTracking.dll</HintPath>
     </Reference>
     <Reference Include="Valve.Newtonsoft.Json">
-      <HintPath>C:/Users/Tom/Desktop/Unity Projects/ManosReturns-FourthPlayable/Assets/Imported Assets/SteamVR/Input/Plugins/JSON.NET/Valve.Newtonsoft.Json.dll</HintPath>
+      <HintPath>C:/Users/Tom/Desktop/Unity Projects/ManosReturns-FifthPlayable/Assets/Imported Assets/SteamVR/Input/Plugins/JSON.NET/Valve.Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.Editor">
-      <HintPath>C:/Users/Tom/Desktop/Unity Projects/ManosReturns-FourthPlayable/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Editor.dll</HintPath>
+      <HintPath>C:/Users/Tom/Desktop/Unity Projects/ManosReturns-FifthPlayable/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.StandardEvents">
-      <HintPath>C:/Users/Tom/Desktop/Unity Projects/ManosReturns-FourthPlayable/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.StandardEvents.dll</HintPath>
+      <HintPath>C:/Users/Tom/Desktop/Unity Projects/ManosReturns-FifthPlayable/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.StandardEvents.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.Tracker">
-      <HintPath>C:/Users/Tom/Desktop/Unity Projects/ManosReturns-FourthPlayable/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Tracker.dll</HintPath>
+      <HintPath>C:/Users/Tom/Desktop/Unity Projects/ManosReturns-FifthPlayable/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Tracker.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
       <HintPath>D:/Programs/Unity/Editor/Data/NetStandard/ref/2.0.0/netstandard.dll</HintPath>

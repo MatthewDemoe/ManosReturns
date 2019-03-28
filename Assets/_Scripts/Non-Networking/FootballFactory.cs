@@ -8,17 +8,17 @@ public class FootballFactory : MonoBehaviour
     List<GameObject> spawnPoints;
 
     [SerializeField]
-    float spawnTime = 10.0f;
+    float spawnRadius = 2.0f;
 
     [SerializeField]
-    GameObject pickup;
+    float spawnTime = 1.0f;
 
+    [SerializeField]
+    int maxSpawned = 20;
+    int currentSpawned = 0;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        InvokeRepeating("SpawnFootballs", spawnTime, spawnTime);
-    }
+    [SerializeField]
+    GameObject pickup;    
 
     // Update is called once per frame
     void Update()
@@ -26,10 +26,24 @@ public class FootballFactory : MonoBehaviour
         
     }
 
+    public void BeginSpawning()
+    {
+        InvokeRepeating("SpawnFootballs", spawnTime, spawnTime);
+    }
+
     private void SpawnFootballs()
     {
-        int spawnPoint = Random.Range(0, spawnPoints.Count - 1);
+        if (currentSpawned < maxSpawned)
+        {
+            int spawnPoint = Random.Range(0, spawnPoints.Count);
+            
+            Instantiate(pickup, spawnPoints[spawnPoint].transform.position + new Vector3(Random.Range(-spawnRadius, spawnRadius), 0.0f, Random.Range(-spawnRadius, spawnRadius)), Quaternion.identity);
+            currentSpawned++;
+        }
+    }
 
-        Instantiate(pickup, spawnPoints[spawnPoint].transform);
+    public void PickedUp()
+    {
+        currentSpawned--;
     }
 }

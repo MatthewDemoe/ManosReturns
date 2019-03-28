@@ -122,6 +122,8 @@ public class ManosBullet : MonoBehaviour
 
             foreach (RaycastHit hit in hits)
             {
+
+                Debug.Log("ray hit " + hit.collider.name);
                 Vector3 impactPoint = hit.point;
                 Destroy(Instantiate(collisionParticles, impactPoint, transform.rotation), 2.0f);
             }
@@ -131,8 +133,12 @@ public class ManosBullet : MonoBehaviour
 
             foreach (RaycastHit hit in hits)
             {
-                Vector3 impactPoint = hit.point;
-                Destroy(Instantiate(collisionParticlesReverse, impactPoint, transform.rotation), 5.0f);
+                if(hit.collider.gameObject.layer != LayerMask.NameToLayer("Manos"))
+                {
+                    Vector3 impactPoint = hit.point;
+                    Destroy(Instantiate(collisionParticlesReverse, impactPoint, transform.rotation), 5.0f);
+                }
+                Debug.Log("ray hit backward " + hit.collider.name);
             }
         }
     }

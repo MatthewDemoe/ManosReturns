@@ -9,7 +9,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{C36001E9-1F19-71AC-48C4-F133289D1B53}</ProjectGuid>
+    <ProjectGuid>{AF135A32-FED2-A69E-2C36-4501DB914EC1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp-Editor</AssemblyName>
@@ -96,19 +96,19 @@
     <Compile Include="Assets\Imported Assets\VRArmIK\Scripts\Utils\Editor\LabelOverrideInspector.cs" />
     <Compile Include="Assets\Imported Assets\VRArmIK\Scripts\Utils\Editor\ReadOnlyInspector.cs" />
     <Reference Include="Unity.TextMeshPro.Editor">
-      <HintPath>C:/Users/Tom/Desktop/Unity Projects/ManosReturns-FourthPlayable/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+      <HintPath>C:/Users/Tom/Desktop/Unity Projects/ManosReturns-FifthPlayable/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.PackageManagerUI.Editor">
-      <HintPath>C:/Users/Tom/Desktop/Unity Projects/ManosReturns-FourthPlayable/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
+      <HintPath>C:/Users/Tom/Desktop/Unity Projects/ManosReturns-FifthPlayable/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.CollabProxy.Editor">
-      <HintPath>C:/Users/Tom/Desktop/Unity Projects/ManosReturns-FourthPlayable/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
+      <HintPath>C:/Users/Tom/Desktop/Unity Projects/ManosReturns-FifthPlayable/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>C:/Users/Tom/Desktop/Unity Projects/ManosReturns-FourthPlayable/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+      <HintPath>C:/Users/Tom/Desktop/Unity Projects/ManosReturns-FifthPlayable/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.DataPrivacy">
-      <HintPath>C:/Users/Tom/Desktop/Unity Projects/ManosReturns-FourthPlayable/Library/ScriptAssemblies/Unity.Analytics.DataPrivacy.dll</HintPath>
+      <HintPath>C:/Users/Tom/Desktop/Unity Projects/ManosReturns-FifthPlayable/Library/ScriptAssemblies/Unity.Analytics.DataPrivacy.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>D:/Programs/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
@@ -357,25 +357,25 @@
       <HintPath>C:/Program Files (x86)/Microsoft Visual Studio Tools for Unity/15.0/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
     </Reference>
     <Reference Include="JMOAssets_CartoonFXFreeWelcome">
-      <HintPath>C:/Users/Tom/Desktop/Unity Projects/ManosReturns-FourthPlayable/Assets/Imported Assets/JMO Assets/Editor/JMOAssets_CartoonFXFreeWelcome.dll</HintPath>
+      <HintPath>C:/Users/Tom/Desktop/Unity Projects/ManosReturns-FifthPlayable/Assets/Imported Assets/JMO Assets/Editor/JMOAssets_CartoonFXFreeWelcome.dll</HintPath>
     </Reference>
     <Reference Include="Valve.Newtonsoft.Json">
-      <HintPath>C:/Users/Tom/Desktop/Unity Projects/ManosReturns-FourthPlayable/Assets/Imported Assets/SteamVR/Input/Plugins/JSON.NET/Valve.Newtonsoft.Json.dll</HintPath>
+      <HintPath>C:/Users/Tom/Desktop/Unity Projects/ManosReturns-FifthPlayable/Assets/Imported Assets/SteamVR/Input/Plugins/JSON.NET/Valve.Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.Advertisements">
-      <HintPath>C:/Users/Tom/Desktop/Unity Projects/ManosReturns-FourthPlayable/Library/PackageCache/com.unity.ads@2.0.8/Editor/UnityEditor.Advertisements.dll</HintPath>
+      <HintPath>C:/Users/Tom/Desktop/Unity Projects/ManosReturns-FifthPlayable/Library/PackageCache/com.unity.ads@2.0.8/Editor/UnityEditor.Advertisements.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.Editor">
-      <HintPath>C:/Users/Tom/Desktop/Unity Projects/ManosReturns-FourthPlayable/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Editor.dll</HintPath>
+      <HintPath>C:/Users/Tom/Desktop/Unity Projects/ManosReturns-FifthPlayable/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.StandardEvents">
-      <HintPath>C:/Users/Tom/Desktop/Unity Projects/ManosReturns-FourthPlayable/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.StandardEvents.dll</HintPath>
+      <HintPath>C:/Users/Tom/Desktop/Unity Projects/ManosReturns-FifthPlayable/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.StandardEvents.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.Tracker">
-      <HintPath>C:/Users/Tom/Desktop/Unity Projects/ManosReturns-FourthPlayable/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Tracker.dll</HintPath>
+      <HintPath>C:/Users/Tom/Desktop/Unity Projects/ManosReturns-FifthPlayable/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Tracker.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.Purchasing">
-      <HintPath>C:/Users/Tom/Desktop/Unity Projects/ManosReturns-FourthPlayable/Library/PackageCache/com.unity.purchasing@2.0.3/Editor/UnityEditor.Purchasing.dll</HintPath>
+      <HintPath>C:/Users/Tom/Desktop/Unity Projects/ManosReturns-FifthPlayable/Library/PackageCache/com.unity.purchasing@2.0.3/Editor/UnityEditor.Purchasing.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
       <HintPath>D:/Programs/Unity/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>
@@ -734,7 +734,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp.csproj">
-      <Project>{A2582D7F-8CF8-290B-31FE-C4526AA059E0}</Project>
+      <Project>{C95771EE-1FDD-3CE4-70E4-776C4C492C67}</Project>
       <Name>Assembly-CSharp</Name>
     </ProjectReference>
   </ItemGroup>

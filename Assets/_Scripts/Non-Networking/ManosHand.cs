@@ -57,6 +57,13 @@ public class ManosHand : MonoBehaviour
     [SerializeField]
     UnityEngine.UI.Text hpText;
 
+    [SerializeField]
+    UnityEngine.UI.Image hpBar;
+
+    Material mat;
+    [SerializeField]
+    Material vMat;
+
     ManosBullet bullet;
 
     GameObject gunBarrel;
@@ -85,6 +92,9 @@ public class ManosHand : MonoBehaviour
     float healthRegenRate;
 
     [SerializeField]
+    float manosDamageModifier = 1f;
+
+    [SerializeField]
     bool armDisabled;
 
     [SerializeField]
@@ -109,13 +119,6 @@ public class ManosHand : MonoBehaviour
 
     GameObject chadMesh;
 
-    /// <summary>
-    /// The scale of Manos's hands when charged
-    /// </summary>
-    //[SerializeField]
-    //[Tooltip("The scale of Manos's hands when charged")]
-    //float chargedSize;
-
     float prevAxis = 0;
 
     [SerializeField]
@@ -128,6 +131,14 @@ public class ManosHand : MonoBehaviour
 
     [SerializeField]
     ManosBullet bulletPrefab;
+
+    /// <summary>
+    /// Time before actually cancelling
+    /// </summary>
+    [SerializeField]
+    [Tooltip("Time before actually cancelling")]
+    float stickyFist;
+    bool inputsLifted;
 
     AudioManager am;
 
@@ -152,17 +163,24 @@ public class ManosHand : MonoBehaviour
     private void OnDisable()
     {
         if (fistAction != null)
+        {
             fistAction.RemoveOnChangeListener(OnFistActionChange, skeltal.inputSource);
+        }
     }
 
     private void OnFistActionChange(SteamVR_Action_In actionIn)
     {
-        if (fistAction.GetStateDown(skeltal.inputSource))
+        if (fistAction.GetStateDown(skeltal.inputSource) && !armDisabled)
         {
             if (!manos.PosedOnce(thisHand) && !manos.IsFistPowered(thisHand))
             {
                 if (!am.IsSoundPlaying(AudioManager.Sound.ManosCharging, transform))
                     am.PlaySoundOnce(AudioManager.Sound.ManosCharging, transform);
+            }
+            if (inputsLifted)
+            {
+                StopCoroutine(CancelChargeDelayed());
+                inputsLifted = false;
             }
         }
 
@@ -184,11 +202,16 @@ public class ManosHand : MonoBehaviour
 
     void OnGunActionChange(SteamVR_Action_In actionIn)
     {
-        if (gunAction.GetStateDown(skeltal.inputSource) && !manos.IsFistActioning(thisHand))
+        if (gunAction.GetStateDown(skeltal.inputSource) && !manos.IsFistActioning(thisHand) && !armDisabled)
         {
             if (!manos.PosedOnce(thisHand) && !manos.IsFistPowered(thisHand))
             {
                 am.PlaySoundOnce(AudioManager.Sound.ManosCharging, transform);
+            }
+            if (inputsLifted)
+            {
+                StopCoroutine(CancelChargeDelayed());
+                inputsLifted = false;
             }
         }
 
@@ -218,6 +241,8 @@ public class ManosHand : MonoBehaviour
         handHealth = handHealthMax;
 
         pHealth = GetComponentInParent<PlayerHealth>();
+
+        mat = GetComponentInChildren<SkinnedMeshRenderer>().material;
 
         gunBarrel = transform.GetChild(transform.childCount - 3).gameObject;
 
@@ -262,9 +287,9 @@ public class ManosHand : MonoBehaviour
             //CheckGrabGem();
 
             CheckPoses();
-        }
 
-        ModifyArmHealth(healthRegenRate * Time.deltaTime);
+            ModifyArmHealth(healthRegenRate * Time.deltaTime);
+        }
 
         realSpeed = velocity.magnitude;
 
@@ -598,6 +623,9 @@ public class ManosHand : MonoBehaviour
 
     void CancelCharge()
     {
+        //inputsLifted = true;
+        //StartCoroutine(CancelChargeDelayed());
+
         StopCoroutine("PowerPose");
         flash.Deactivate();
         manos.ResetChargeTimer(thisHand);
@@ -610,6 +638,23 @@ public class ManosHand : MonoBehaviour
         am.StopSoundLoop(AudioManager.Sound.ManosAura, true);
         am.StopSoundLoop(AudioManager.Sound.ManosCharging, true);
         //am.StopSoundLoop(AudioManager.Sound.IntenseFire, true);
+    }
+
+    IEnumerator CancelChargeDelayed()
+    {
+        yield return new WaitForSeconds(stickyFist);
+        StopCoroutine("PowerPose");
+        flash.Deactivate();
+        manos.ResetChargeTimer(thisHand);
+        interp.SetLerp(manos.GetInterpMax());
+        interp.SetOffsetActive(false);
+        SetParticlePower(0);
+        manos.SetFistPowered(thisHand, false);
+        routineOnce = false;
+        transform.localScale = Vector3.one;
+        am.StopSoundLoop(AudioManager.Sound.ManosAura, true);
+        am.StopSoundLoop(AudioManager.Sound.ManosCharging, true);
+        inputsLifted = false;
     }
 
     private void GrabPlayer()
@@ -681,9 +726,15 @@ public class ManosHand : MonoBehaviour
     /// Deals damage to the arm
     /// </summary>
     /// <param name="damage">A positive value</param>
-    public void TakeDamage(float damage)
+    /// <returns>True if damage was dealt</returns>
+    public bool TakeDamage(float damage)
     {
-        ModifyArmHealth(-Mathf.Abs(damage));
+        bool b = !armDisabled;
+        if (!armDisabled)
+        {
+            ModifyArmHealth(-Mathf.Abs(damage));
+        }
+        return b;
     }
 
     public void ModifyArmHealth(float h)
@@ -694,14 +745,21 @@ public class ManosHand : MonoBehaviour
             DisableArm();
         }
         handHealth = Mathf.Clamp(handHealth, 0, handHealthMax);
-        hpText.text = Mathf.RoundToInt(handHealth / handHealthMax * 100).ToString() + "%";
+        float healthPercent = handHealth / handHealthMax;
+        hpText.text = Mathf.RoundToInt(healthPercent * 100).ToString() + "%";
+        hpBar.fillAmount = healthPercent;
     }
 
     public void DisableArm()
     {
         armDisabled = true;
-        pHealth.TakeDamage(handHealthMax);
+        rapidFire = false;
+        CancelCharge();
+        pHealth.TakeDamage(handHealthMax * manosDamageModifier);
+        am.PlaySoundOnce(AudioManager.Sound.ManosCrash);
         StartCoroutine("RepairArm");
+        mat.SetFloat("_Glow", -0.9f);
+        vMat.SetFloat("_Glow", -0.9f);
     }
 
     IEnumerator RepairArm()
@@ -709,6 +767,8 @@ public class ManosHand : MonoBehaviour
         yield return new WaitForSeconds(manos.GetArmRepairTime());
         armDisabled = false;
         ModifyArmHealth(handHealthMax);
+        mat.SetFloat("_Glow", 0);
+        vMat.SetFloat("_Glow", 0);
     }
 
     void OnTriggerEnter(Collider other)

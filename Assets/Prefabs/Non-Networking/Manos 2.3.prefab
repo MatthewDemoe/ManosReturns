@@ -7253,6 +7253,7 @@ MonoBehaviour:
   bulletLife: 0.5
   bulletSpeed: 300
   bulletDamage: 0
+  armRepairTime: 0
   selfCamera: {fileID: 1965781412571856}
   manosUI: {fileID: 8873278565026790216}
   handVisibleL: 0
@@ -7269,6 +7270,8 @@ MonoBehaviour:
   poweredR: 0
   posedOnceR: 0
   chargeTimerR: 0
+  leftHand: {fileID: 0}
+  rightHand: {fileID: 0}
 --- !u!1 &1603965799137780
 GameObject:
   m_ObjectHideFlags: 0

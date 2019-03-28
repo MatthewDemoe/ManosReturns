@@ -35,7 +35,6 @@ public class FootBomb : MonoBehaviour
 
     void UpdateRotation()
     {
-     
         transform.forward=GetComponent<Rigidbody>().velocity.normalized;
         _rotation += rotationSpeed * Time.deltaTime;
         transform.RotateAround(transform.position, GetComponent<Rigidbody>().velocity.normalized,_rotation);
@@ -51,22 +50,44 @@ public class FootBomb : MonoBehaviour
     {
         if (collision.gameObject.tag == "Hittable")
         {
-            ManosHand h = collision.gameObject.GetComponent<ManosHand>();
-
             //Shake the mesh that you hit
             MeshShaker m = collision.gameObject.GetComponent<MeshShaker>();
             if (m == null) m = collision.gameObject.GetComponentInChildren<MeshShaker>();
-            m.enabled = true;
 
-            if (h)
+            if (collision.gameObject.name == "GauntletParent_L")
             {
-                h.TakeDamage(damageScale);
+                //Returns true if damage was dealt
+                if (collision.transform.root.GetComponent<NoNetManos>().DealDamageToArm(Enums.Hand.Left, damageScale))
+                {
+                    m.enabled = true;
+                }
+            }
+            else if (collision.gameObject.name == "GauntletParent_R")
+            {
+                //Returns true if damage was dealt
+                if (collision.transform.root.GetComponent<NoNetManos>().DealDamageToArm(Enums.Hand.Right, damageScale))
+                {
+                    m.enabled = true;
+                }
             }
             else
             {
-                PlayerHealth hp = collision.gameObject.transform.root.GetComponent<PlayerHealth>();
-                if (hp)
-                    hp.TakeDamage(damageScale);
+                ManosHand h = collision.gameObject.GetComponent<ManosHand>();
+
+                if (h)
+                {
+                    if (h.TakeDamage(damageScale))
+                    {
+                        m.enabled = true;
+                    }
+                }
+                else
+                {
+                    PlayerHealth hp = collision.gameObject.transform.root.GetComponent<PlayerHealth>();
+                    if (hp)
+                        hp.TakeDamage(damageScale);
+                    m.enabled = true;
+                }
             }
         }
 
@@ -78,24 +99,48 @@ public class FootBomb : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Hittable")
+        if (other.tag == "Hittable")
         {
-            ManosHand h = other.GetComponent<ManosHand>();
-
             //Shake the mesh that you hit
             MeshShaker m = other.GetComponent<MeshShaker>();
             if (m == null) m = other.GetComponentInChildren<MeshShaker>();
-            m.enabled = true;
+            if (m == null) m = other.GetComponentInParent<MeshShaker>();
 
-            if (h)
+            if (other.name == "GauntletParent_L")
             {
-                h.TakeDamage(damageScale);
+                //Returns true if damage was dealt
+                if (other.transform.root.GetComponent<NoNetManos>().DealDamageToArm(Enums.Hand.Left, damageScale))
+                {
+                    m.enabled = true;
+                }
+            }
+            else if (other.name == "GauntletParent_R")
+            {
+                //Returns true if damage was dealt
+                if (other.transform.root.GetComponent<NoNetManos>().DealDamageToArm(Enums.Hand.Right, damageScale))
+                {
+                    m.enabled = true;
+                }
             }
             else
             {
-                PlayerHealth hp = other.transform.root.GetComponent<PlayerHealth>();
-                if (hp)
-                    hp.TakeDamage(damageScale);
+                ManosHand h = other.GetComponent<ManosHand>();
+                if (h == null) h = other.GetComponentInParent<ManosHand>();
+
+                if (h)
+                {
+                    if (h.TakeDamage(damageScale))
+                    {
+                        m.enabled = true;
+                    }
+                }
+                else
+                {
+                    PlayerHealth hp = other.transform.root.GetComponent<PlayerHealth>();
+                    if (hp)
+                        hp.TakeDamage(damageScale);
+                    m.enabled = true;
+                }
             }
         }
 

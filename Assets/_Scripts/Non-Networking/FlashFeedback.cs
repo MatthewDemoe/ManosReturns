@@ -102,25 +102,25 @@ public class FlashFeedback : MonoBehaviour
     {
         yield return new WaitForSeconds(warmup);
 
-        while (_damageFlashCounter < numFlashes)
-        {
-            _damageFlashCounter++;
-
-            for (int i = 0; i < bodyParts.Count; i++)
-            {
-                bodyParts[i].material.SetFloat("_Glow", 0.75f);
-            }
-
-            yield return new WaitForSeconds(timeOn);
-
-            for (int i = 0; i < bodyParts.Count; i++)
-            {
-                bodyParts[i].material.SetFloat("_Glow", 0.0f);
-            }
-
-            yield return new WaitForSeconds(timeOff);
-
-        }
+        //while (_damageFlashCounter < numFlashes)
+        //{
+        //    _damageFlashCounter++;
+        //
+        //    for (int i = 0; i < bodyParts.Count; i++)
+        //    {
+        //        bodyParts[i].material.SetFloat("_Glow", 0.75f);
+        //    }
+        //
+        //    yield return new WaitForSeconds(timeOn);
+        //
+        //    for (int i = 0; i < bodyParts.Count; i++)
+        //    {
+        //        bodyParts[i].material.SetFloat("_Glow", 0.0f);
+        //    }
+        //
+        //    yield return new WaitForSeconds(timeOff);
+        //
+        //}
 
         _damageFlashCounter = 0;
     }

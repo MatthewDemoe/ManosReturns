@@ -128,14 +128,14 @@ public class LobbyScript : MonoBehaviour
             chadReadyTimer = 0.0f;
         }
 
-        //if (readyAction.GetState(SteamVR_Input_Sources.Any) )
-        //{
-        //    manosReadyTimer += Time.deltaTime;
-        //}
-        //else if (readyAction.GetStateUp(SteamVR_Input_Sources.Any))
-        //{
-        //    manosReadyTimer = 0;
-        //}
+        if (readyAction.GetState(SteamVR_Input_Sources.Any) )
+        {
+            manosReadyTimer += Time.deltaTime;
+        }
+        else if (readyAction.GetStateUp(SteamVR_Input_Sources.Any))
+        {
+            manosReadyTimer = 0;
+        }
     }
 
     public IEnumerator JonWaalerTeleportMP3()
@@ -149,6 +149,8 @@ public class LobbyScript : MonoBehaviour
         chad.GetComponent<CharacterController>().enabled = false;
         chad.transform.position = tp.transform.position;
         chad.GetComponent<CharacterController>().enabled = true;
+
+        //GameObject.Find("FakeChad").SetActive(false);
 
         StartCoroutine("BeginCountdown");
 
@@ -180,6 +182,7 @@ public class LobbyScript : MonoBehaviour
         GetComponent<FadeOut>().BeginFadeIn();
 
         AudioManager.GetInstance().PlayMusic(AudioManager.Music.Skeletons);
+        GetComponent<FootballFactory>().BeginSpawning();
 
         enabled = false;
     }
@@ -213,20 +216,20 @@ public class LobbyScript : MonoBehaviour
                 break;
 
             case 3:
-                tt.text = "Hold         on the ground or in the air to charge a <color=red>dash attack</color>";
+                tt.text = "Hold         on the ground or in the air to charge a <color=red>dash attack.</color>\nTry chaining it with your jumps!\nCharging longer increases <color=red>distance</color> and <color=red>damage.</color>";
                 ButtonsTwo.SetActive(false);
                 ButtonsThree.SetActive(true);
                 break;
 
             case 4:
-                tt.text = "Hold         to start throwing an <color=red>exploding football </color> \nFeel free to practice your abilities";
+                tt.text = "Hold         to start throwing an <color=red>exploding football. </color> \n\nHold the button to throw it farther. \nYou have a limited amount, but more are available around the level.";
                 skipText.text = "You have nothing more to learn. Hold         to <color=red>ready up.</color>";
                 SkipButtonOne.SetActive(false);
                 ButtonsThree.SetActive(false);
                 SkipButtonTwo.SetActive(true);
                 ButtonsFour.SetActive(true);
                 Destroy(waypoint);
-                break;           
+                break;
         }
 
         tutorialTracker.transform.position = chad.transform.position;

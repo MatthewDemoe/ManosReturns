@@ -598,14 +598,14 @@ public class MovementManager : MonoBehaviour
 
             ParticleSystem trail = Instantiate(dustTrail, characterSprite.transform);
 
-            GetComponent<PlayerManager>().SetChargeState(Enums.ChargingState.Dashing);
+            pManager.SetChargeState(Enums.ChargingState.Dashing);
 
-            if (GetComponent<PlayerManager>().GetPlayerState() == 1)
+            if (pManager.GetPlayerState() == 1)
             {
-                GetComponent<PlayerManager>().SetPlayerState(Enums.PlayerState.Falling);
+                pManager.SetPlayerState(Enums.PlayerState.Falling);
             }
 
-            _velocity = Vector3.zero;
+            _velocity /= 100;//Vector3.zero;
 
             // FOV change effect
             float fovMax = 90;
@@ -622,14 +622,17 @@ public class MovementManager : MonoBehaviour
 
     public void Cancel()
     {
-        EndDash();
-
-        _am.StopSound(AudioManager.Sound.ChadCharge);
+        if (pManager.GetEnumChargeState() == Enums.ChargingState.Dashing)
+        {
+            EndDash();
+        }else if (pManager.GetEnumChargeState() == Enums.ChargingState.ChargingJump)
+        {
+            CancelJumpCharge();
+        }
 
         pManager.SetChargeState(Enums.ChargingState.None);
 
-        CancelJumpCharge();
-
+        _am.StopSound(AudioManager.Sound.ChadCharge);
         _chargingDash = false;
     }
 
@@ -660,6 +663,7 @@ public class MovementManager : MonoBehaviour
     {
         if ((pManager.GetEnumChargeState() == Enums.ChargingState.Dashing))
         {
+            print(hit.transform.name);
 
             // determine kickoff speed
             float kickOffSpeed = (Mathf.Lerp(kickOffSpeedMin, kickOffSpeedMax, _dashChargeNormalized));
@@ -673,7 +677,7 @@ public class MovementManager : MonoBehaviour
             _kicking = true;
 
             _movementDisabledDurationTimer = kickoffDelay + 0.3f;
-            GetComponent<PlayerManager>().SetChargeState(Enums.ChargingState.Flip);
+            pManager.SetChargeState(Enums.ChargingState.Flip);
 
             yield return new WaitForSeconds(kickoffDelay);
 
@@ -682,21 +686,45 @@ public class MovementManager : MonoBehaviour
             if (damageManos)
             {
                 ManosHand h = hit.transform.GetComponent<ManosHand>();
+                if (h == null) h = hit.transform.GetComponentInParent<ManosHand>();
 
                 //Shake the mesh that you hit
                 MeshShaker m = hit.transform.GetComponent<MeshShaker>();
                 if (m == null) m = hit.transform.GetComponentInChildren<MeshShaker>();
-                m.enabled = true;
 
-                if (h)
+                if (hit.transform.name == "GauntletParent_L")
                 {
-                    h.TakeDamage(_dashDamage);
+                    //Returns true if damage was dealt
+                    if (hit.transform.root.GetComponent<NoNetManos>().DealDamageToArm(Enums.Hand.Left, _dashDamage))
+                    {
+                        m.enabled = true;
+                    }
+                }
+                else if (hit.transform.name == "GauntletParent_R")
+                {
+                    //Returns true if damage was dealt
+                    if (hit.transform.root.GetComponent<NoNetManos>().DealDamageToArm(Enums.Hand.Right, _dashDamage))
+                    {
+                        m.enabled = true;
+                    }
                 }
                 else
                 {
-                    PlayerHealth hp = hit.transform.transform.root.GetComponent<PlayerHealth>();
-                    if (hp)
-                        hp.TakeDamage(_dashDamage);
+                    if (h)
+                    {
+                        // If damage was successfuly dealt
+                        if (h.TakeDamage(_dashDamage))
+                        {
+                            m.enabled = true;
+                        }
+                    }
+                    else
+                    {
+                        PlayerHealth hp = hit.transform.transform.root.GetComponent<PlayerHealth>();
+                        if (hp)
+                            hp.TakeDamage(_dashDamage);
+                        m.enabled = true;
+                    }
                 }
             }
 
@@ -783,7 +811,7 @@ public class MovementManager : MonoBehaviour
         {
             if ((hit.distance <= 1.5f))
             {
-                if ((hit.transform.gameObject.tag.Equals("Hittable") && (GetComponent<PlayerManager>().GetEnumChargeState() == Enums.ChargingState.Dashing)))
+                if ((hit.transform.gameObject.tag.Equals("Hittable") && (pManager.GetEnumChargeState() == Enums.ChargingState.Dashing)))
                 {
                     StartCoroutine(KickOff(hit, true));
                 }

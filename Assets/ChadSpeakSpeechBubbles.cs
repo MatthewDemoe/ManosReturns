@@ -3,25 +3,29 @@ using System.Collections.Generic;
 using UnityEngine;
 using VikingCrewTools.UI;
 
-class QuipBattle
-{
-    public string opener;
-    public string followUp;
-}
-
 public class ChadSpeakSpeechBubbles : MonoBehaviour
 {
+    ChadSpeakSpeechBubbles Instance;
+
     [SerializeField]
     float speechBubbleStayTime = 3.0f;
 
     [SerializeField]
-    string[] zingers;
+    string[] randomComments;
 
     //[SerializeField]
     //QuipBattle zinger;
 
     //[SerializeField]
     //string message = "Hello!";
+
+    [SerializeField]
+    Vector2 timeBetweenRandomComments = new Vector2(10.0f, 15.0f);
+
+    // time until next random comment
+    float _randomCommentTimer;
+
+    public bool randomCommentsEnabled = true;
 
     bool _isSpeaking = false;
 
@@ -33,22 +37,41 @@ public class ChadSpeakSpeechBubbles : MonoBehaviour
     void Start()
     {
         _audioMgr = AudioManager.GetInstance();
+        _randomCommentTimer = 1.0f;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(randomCommentsEnabled)
+        {
+            _randomCommentTimer -= Time.deltaTime;
+            if(_randomCommentTimer < 0.0f)
+            {
+                AttemptSpeak();
+            }
+        }
+
         if(Input.GetKeyDown(KeyCode.O))
         {
             //int lineIdx = Random.Range(0, zingers.Length);
-            if(!_isSpeaking)
+            AttemptSpeak();
+        }
+    }
+
+    void AttemptSpeak()
+    {
+        if (!_isSpeaking)
+        {
+            //next line
+            if(_lineIdx < randomComments.Length)
             {
-                //Speak
-                string toSpeak = zingers[_lineIdx];
+                string toSpeak = randomComments[_lineIdx];
                 _lineIdx++;
-                _lineIdx = _lineIdx % zingers.Length;
+                //_lineIdx = _lineIdx % randomComments.Length;
 
                 StartCoroutine(SpeakLine(toSpeak, SpeechBubbleManager.SpeechbubbleType.NORMAL));
+                _randomCommentTimer = Random.Range(timeBetweenRandomComments.x, timeBetweenRandomComments.y);
             }
         }
     }

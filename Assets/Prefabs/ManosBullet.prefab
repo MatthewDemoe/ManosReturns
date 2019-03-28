@@ -113,11 +113,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   manos: {fileID: 0}
-  knockBack: {x: 70, y: 10, z: 70}
+  knockBack: {x: 0, y: 15, z: 30}
   enableLaser: 1
   bulletLayerMask:
     serializedVersion: 2
-    m_Bits: 15365
+    m_Bits: 15361
   spawnOffset: 4
   line: {fileID: 1206}
   trailSpeedMultiplier: 0.1

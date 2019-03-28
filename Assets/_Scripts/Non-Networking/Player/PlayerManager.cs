@@ -198,10 +198,15 @@ public class PlayerManager : MonoBehaviour
         else if (inputManager.GetButtonUp(InputManager.Buttons.B))
             _bUp.execute();
 
-        if (inputManager.GetButtonDown(InputManager.Buttons.X))
-        {
-            GetComponentInChildren<ThrowTrigger>().PickUpBomb();
-        }
+        //if (inputManager.GetButtonDown(InputManager.Buttons.X))
+        //{
+        //    GetComponentInChildren<ThrowTrigger>().EnableNet();
+        //}
+        //
+        //else if (inputManager.GetButtonUp(InputManager.Buttons.X))
+        //{
+        //    GetComponentInChildren<ThrowTrigger>().DisableNet();
+        //}
 
         if (inputManager.RTrigDown() )
             _rTriggerDown.execute();
@@ -254,7 +259,7 @@ public class PlayerManager : MonoBehaviour
         {
             if (move.GetDashDuration() <= 0.0f)
             {
-                move.EndDash();
+                move.EndDash();                
 
                 _cState = (Enums.ChargingState.None);
             }
@@ -285,9 +290,6 @@ public class PlayerManager : MonoBehaviour
             else
                 _cState = Enums.ChargingState.None;
         }
-
-        //_anim.SetInteger("PlayerState", (int)_pState);
-        //_anim.SetInteger("ChargingState", (int)_cState);
     }
 
     public int GetPlayerState()

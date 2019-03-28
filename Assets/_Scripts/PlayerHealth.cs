@@ -23,11 +23,14 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField]
     bool invincible;
 
+    FlashFeedback flash;
+
     // Use this for initialization
     void Start() {
         health = baseHealth;
         psm = GameObject.Find("OverlordController").GetComponent<PlayerStateManager>();
         _anim = GetComponent<Animator>();
+        flash = GetComponent<FlashFeedback>();
     }
 
     // Update is called once per frame
@@ -84,7 +87,7 @@ public class PlayerHealth : MonoBehaviour
             if (_anim != null)
                 _anim.SetTrigger("DamageTaken");
 
-            GetComponent<FlashFeedback>().ReactToDamage(0.0f);
+            flash.ReactToDamage(0.0f);
         }
     }
 

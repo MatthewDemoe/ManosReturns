@@ -1,9 +1,7 @@
-﻿using System.Collections;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEditor;
 
 /// <summary>
 /// AudioManager singleton that manages all audio in the game
@@ -27,6 +25,7 @@ public class AudioManager : MonoBehaviour {
         ChadBomb,
         ManosAura,
         ManosGunActive,
+        ManosCrash,
         Count
     }
 

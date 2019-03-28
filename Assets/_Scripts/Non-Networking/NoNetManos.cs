@@ -162,6 +162,13 @@ public class NoNetManos : MonoBehaviour
     [SerializeField]
     float chargeTimerR;
 
+    [SerializeField]
+    ManosHand leftHand;
+    [SerializeField]
+    ManosHand rightHand;
+
+    FlashFeedback flash;
+
     public static GameObject manos;
 
     PlayerHealth health;
@@ -170,6 +177,16 @@ public class NoNetManos : MonoBehaviour
     void Start()
     {
         manos = gameObject;
+
+        if (leftHand == null)
+        {
+            ManosHand[] m = GetComponentsInChildren<ManosHand>();
+
+            leftHand = m[0];
+            rightHand = m[1];
+        }
+
+        flash = GetComponent<FlashFeedback>();
     }
 
     private void OnEnable()
@@ -489,5 +506,21 @@ public class NoNetManos : MonoBehaviour
     public float GetArmRepairTime()
     {
         return armRepairTime;
+    }
+
+    public bool DealDamageToArm(Enums.Hand hand, float amount)
+    {
+        bool damageDealt = false;
+        switch (hand)
+        {
+            case Enums.Hand.Left:
+                damageDealt = leftHand.TakeDamage(amount);
+                break;
+            case Enums.Hand.Right:
+                damageDealt = rightHand.TakeDamage(amount);
+                break;
+        }
+        if (damageDealt) flash.ReactToDamage(0.0f);
+        return damageDealt;
     }
 }

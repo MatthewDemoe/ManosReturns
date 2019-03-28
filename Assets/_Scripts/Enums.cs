@@ -21,6 +21,16 @@ public struct Enums {
         Both
     }
 
+    public enum ManosParts
+    {
+        Head,
+        LeftHand,
+        RightHand,
+        LeftVambrace,
+        RightVambrace,
+        Chest,
+    }
+
     public enum Player
     {
         None,
