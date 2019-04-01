@@ -92,10 +92,19 @@ public class ManosBullet : MonoBehaviour
     // Fires the bullet
     private void OnEnable()
     {
+        laser.enabled = true;
         fired = false;
         line.enabled = false;
-        if (col != null) col.enabled = false;
-        if (laser != null) laser.enabled = true;
+    }
+
+    /// <summary>
+    /// Cause haha
+    /// </summary>
+    public void EnableLaser()
+    {
+        laser.enabled = true;
+        fired = false;
+        line.enabled = false;
     }
 
     public void FireBullet()
@@ -109,8 +118,8 @@ public class ManosBullet : MonoBehaviour
         transform.position -= transform.up * spawnOffset;
         col.enabled = true;
         line.enabled = true;
+        print("FIRE!");
         laser.enabled = false;
-        StartCoroutine("LifeTimer");
         line.StartPos = Vector3.zero;
         
         //Show hit FX where the laser hits an object
@@ -198,13 +207,5 @@ public class ManosBullet : MonoBehaviour
                 }
             }
         //}
-    }
-
-    IEnumerator LifeTimer()
-    {
-        yield return new WaitForSeconds(lifeTime);
-
-        mesh.enabled = false;
-        gameObject.SetActive(false);
     }
 }

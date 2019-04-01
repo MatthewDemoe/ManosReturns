@@ -139,6 +139,7 @@
     <Compile Include="Assets\ChadSpeakSpeechBubbles.cs" />
     <Compile Include="Assets\ChadVFXManager.cs" />
     <Compile Include="Assets\DashTrailScript.cs" />
+    <Compile Include="Assets\FlashDab.cs" />
     <Compile Include="Assets\Imported Assets\Cartoon ConvertibleCar C01\script\brake_light.cs" />
     <Compile Include="Assets\Imported Assets\Cartoon ConvertibleCar C01\script\on_off_light.cs" />
     <Compile Include="Assets\Imported Assets\Cartoon ConvertibleCar C01\script\OpenElement.cs" />

@@ -64,6 +64,9 @@ public class LobbyScript : MonoBehaviour
     GameObject ButtonsFour;
 
     [SerializeField]
+    GameObject TutorialB;
+
+    [SerializeField]
     GameObject trainingEnvironment;
 
     [SerializeField]
@@ -225,18 +228,30 @@ public class LobbyScript : MonoBehaviour
                 break;
 
             case 3:
-                tt.text = "Hold         on the ground or in the air to charge a <color=red>dash attack.</color>\nTry chaining it with your jumps!\nCharging longer increases <color=red>distance</color> and <color=red>damage.</color>";
+                tt.text = "Hold         on the ground or in the air to charge a <color=red>dash attack.</color>\n\nTry chaining it with your jumps!\nCharging longer increases <color=red>distance</color> and <color=red>damage.</color>";
                 ButtonsTwo.SetActive(false);
                 ButtonsThree.SetActive(true);
                 break;
 
             case 4:
-                tt.text = "Hold         to start throwing an <color=red>exploding football. </color> \n\nHold the button to throw it farther. \nYou have a limited amount, but more are available around the level.";
-                skipText.text = "You have nothing more to learn. Hold         to <color=red>ready up.</color>";
-                SkipButtonOne.SetActive(false);
+                tt.text = "You can use your dash attack to <color=red>kick Manos.</color> \nGive it a try on the target";
                 ButtonsThree.SetActive(false);
-                SkipButtonTwo.SetActive(true);
+                break;
+
+            case 5:
+                tt.text = "Hold         to start throwing an <color=red>exploding football. </color> \n\nHold the button to throw it farther. \nYou have a limited amount, but more are available around the level.";
+                ButtonsThree.SetActive(false);
                 ButtonsFour.SetActive(true);
+                break;
+
+            case 6:
+                tt.text = "Press         while moving to <color=red>dab away from danger. </color>\n\nYou have a short period of <color=red>invincibility</color> while dabbing";
+                skipText.text = "You have nothing more to learn. Hold         to <color=red>ready up.</color>";
+                ButtonsFour.SetActive(false);
+                TutorialB.SetActive(true);
+                SkipButtonOne.SetActive(false);
+                SkipButtonTwo.SetActive(true);
+
                 Destroy(waypoint);
                 break;
         }

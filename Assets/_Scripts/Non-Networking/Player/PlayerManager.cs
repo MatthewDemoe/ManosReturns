@@ -260,6 +260,9 @@ public class PlayerManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.K))
             GetComponent<PlayerHealth>().TakeDamage(1.0f);
 
+        if (Input.GetKeyDown(KeyCode.S))
+            camManager.GetComponent<CameraManager>().DoCameraShake(0.5f, 1.0f);
+
         if (Input.GetKeyDown(KeyCode.B))
             move.Knockback(new Vector3(100.0f, 100.0f, 100.0f));
     }
@@ -406,5 +409,13 @@ public class PlayerManager : MonoBehaviour
     public bool IsPlayerControllable()
     {
         return _pState != Enums.PlayerState.Grabbed && _pState != Enums.PlayerState.Knocked;
+    }
+
+    public bool IsInDisabledState()
+    {
+        bool disabled = _pState != Enums.PlayerState.Grabbed
+            && _pState != Enums.PlayerState.Knocked;
+
+        return disabled;
     }
 }

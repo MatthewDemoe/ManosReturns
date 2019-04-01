@@ -159,6 +159,8 @@ public class MovementManager : MonoBehaviour
 
     float _spinRotation = 0;
 
+    FlashDab _dab;
+
     /// <summary>
     /// Amount of time after knockback where the player is immune to damage
     /// </summary>
@@ -259,6 +261,8 @@ public class MovementManager : MonoBehaviour
         _playerHealth = GetComponent<PlayerHealth>();
 
         _rumble = GetComponent<RumbleController>();
+
+        _dab = GetComponent<FlashDab>();
     }
 
     // Update is called once per frame
@@ -660,7 +664,7 @@ public class MovementManager : MonoBehaviour
 
         bar.SetChargeAmount(_dashChargeNormalized);
 
-        _rumble.SetVibration(_dashChargeNormalized, 0.0f);
+        _rumble.SetVibration(_dashChargeNormalized / 2.0f, 0.0f);
 
         if (!controller.isGrounded)
             _velocity = Vector3.zero;
@@ -1073,8 +1077,9 @@ public class MovementManager : MonoBehaviour
                 _anim.SetTrigger("Dab");
 
                 _am.PlaySoundOnce(AudioManager.Sound.ChadDab, transform);
-
+                _dab.DabFlash();
                 StartCoroutine("DabFrames");
+
                 //ChadSpeakSpeechBubbles.Instance().OnDab();
             }
         }

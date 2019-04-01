@@ -17,7 +17,7 @@ public class CameraManager : MonoBehaviour
     public float camSensX, camSensY;
 
     [SerializeField]
-     float _aimSpeedModifier = 1.0f;
+    float _aimSpeedModifier = 1.0f;
 
     public Transform target;
     public Transform lockOnTarget;
@@ -63,6 +63,20 @@ public class CameraManager : MonoBehaviour
     [SerializeField]
     LayerMask cameraCollisionMask;
 
+    [Header("Camera Shake Properties")]
+    [SerializeField]
+    float linearDecay = 0.1f;
+
+    [SerializeField]
+    float nonLinearDecay = 0.1f;
+
+    [SerializeField]
+    float tweenTime = 0.1f;
+
+    float _trauma = 0.0f;
+    float _flip = 1.0f;
+
+
     private void Start()
     {
 
@@ -87,14 +101,12 @@ public class CameraManager : MonoBehaviour
 
     private void Update()
     {
-        //Tick(Time.deltaTime);
 
-        //CollideCamera();
     }
     public void SetAimSpeed(float newValue)
     {
-        _aimSpeedModifier =  newValue;
-      
+        _aimSpeedModifier = newValue;
+
     }
 
     public void ResetAimSpeed()
@@ -110,14 +122,17 @@ public class CameraManager : MonoBehaviour
 
     public void Tick(float delta)
     {
-        h = Input.GetAxis("Right Stick X");
-        v = Input.GetAxis("Right Stick Y") * ((lookInvertY) ? -1 : 1);
+        //if (!(_trauma > 0.0f))
+        {
+            h = Input.GetAxis("Right Stick X");
+            v = Input.GetAxis("Right Stick Y") * ((lookInvertY) ? -1 : 1);
 
-        FollowTarget(delta);
-        HandleRotations(delta, v, h);
+            FollowTarget(delta);
+            HandleRotations(delta, v, h);
 
-        CollideCamera();
-        HandleFOV();
+            CollideCamera();
+            HandleFOV();
+        }
     }
 
     public void ResetFOV()
@@ -125,7 +140,7 @@ public class CameraManager : MonoBehaviour
         cam.fieldOfView = fov_default;
     }
 
-        void HandleFOV()
+    void HandleFOV()
     {
         if (fovTimer != -5f)
         {
@@ -227,7 +242,7 @@ public class CameraManager : MonoBehaviour
     void CollideCamera()
     {
         Vector3 castDir = (cam.transform.position - _pivot.position).normalized;
-        
+
 
         RaycastHit hit;
 
@@ -235,7 +250,7 @@ public class CameraManager : MonoBehaviour
         float capsuleCastWidth = 1.4f;
         float rayCastPaddingDistance = capsuleCastWidth;
 
-        Vector3 point1 = _pivot.position - (castDir * (rayCastPaddingDistance) ) - Vector3.right * capsuleCastWidth * 0.5f;
+        Vector3 point1 = _pivot.position - (castDir * (rayCastPaddingDistance)) - Vector3.right * capsuleCastWidth * 0.5f;
         Vector3 point2 = point1 + Vector3.right * capsuleCastWidth;
 
         // = (1 << LayerMask.NameToLayer("Player"));
@@ -258,10 +273,10 @@ public class CameraManager : MonoBehaviour
         _currentFollowDistance = Mathf.Min(_currentFollowDistance, _cameraFollowDistanceDefault);
         Vector3 localPlacement = _cameraOffsetDefault.normalized * _currentFollowDistance;
 
-       cam.transform.localPosition = localPlacement;
+        cam.transform.localPosition = localPlacement;
     }
 
-    public Transform GetReference(){
+    public Transform GetReference() {
         return _refTrans;
     }
 
@@ -302,5 +317,35 @@ public class CameraManager : MonoBehaviour
         //    
         //}
         //singleton = this;
+    }
+
+    public void DoCameraShake(float tr, float intensity)
+    {
+        StartCoroutine(StartShake(tr, intensity));
+
+    }
+
+    IEnumerator StartShake(float tr, float intensity)
+    {
+        _trauma = tr;
+
+        while(_trauma > 0.0f)
+        {
+            
+
+            _trauma = Mathf.Min(_trauma, 1.0f);
+            _trauma -= ((linearDecay * Time.deltaTime) + (nonLinearDecay * _trauma * Time.deltaTime));
+            _trauma = Mathf.Max(_trauma, 0.0f);
+
+            Vector3 dir = transform.position;
+
+            dir.x += _trauma * intensity * _flip;
+
+            transform.position = dir;
+
+            _flip = -_flip;
+
+            yield return new WaitForSeconds(tweenTime);
+        }
     }
 }

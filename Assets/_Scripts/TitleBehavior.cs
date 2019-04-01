@@ -8,6 +8,7 @@ public class TitleBehavior : MonoBehaviour {
     [SerializeField]
     InputManager input;
 
+    [SerializeField]
     Animator anim;
     
     bool playing = true;
@@ -15,8 +16,10 @@ public class TitleBehavior : MonoBehaviour {
 
     bool starting = false;
 
-    float animationLength = 4.2f;
-    float startDelay = 1.0f;
+    [SerializeField]
+    float animationLength = 0.3f;
+
+    float startDelay = 1.25f;
     float dt = 0.0f;
 
     [SerializeField]
@@ -31,11 +34,13 @@ public class TitleBehavior : MonoBehaviour {
     [SerializeField]
     GameObject exitButtonDisabled;
 
+    [SerializeField]
+    GameObject loadingText;
+
     // Use this for initialization
     void Start ()
     {
-        input = GetComponent<InputManager>();
-        anim = GetComponent<Animator>();
+        //anim = GetComponent<Animator>();
 	}
 	
 	// Update is called once per frame
@@ -56,6 +61,8 @@ public class TitleBehavior : MonoBehaviour {
 
         if (starting)
         {
+            loadingText.SetActive(true);
+
             if (dt >= startDelay) {
                 SceneManager.LoadScene("Main");
             }
@@ -81,18 +88,6 @@ public class TitleBehavior : MonoBehaviour {
     {
         if ((input.GetLStick().y > 0.01f) || (input.GetLStick().x < -0.1f))
         {
-            
-            playButtonEnabled.SetActive(false);
-            playButtonDisabled.SetActive(true);
-
-            exitButtonEnabled.SetActive(true);
-            exitButtonDisabled.SetActive(false);
-
-
-        }
-
-        if ((input.GetLStick().y < -0.01f) || (input.GetLStick().x > 0.1f))
-        {
             playButtonEnabled.SetActive(true);
             playButtonDisabled.SetActive(false);
 
@@ -100,11 +95,20 @@ public class TitleBehavior : MonoBehaviour {
             exitButtonDisabled.SetActive(true);
         }
 
+        if ((input.GetLStick().y < -0.01f) || (input.GetLStick().x > 0.1f))
+        {
+            playButtonEnabled.SetActive(false);
+            playButtonDisabled.SetActive(true);
+
+            exitButtonEnabled.SetActive(true);
+            exitButtonDisabled.SetActive(false);
+        }
+
         if (input.GetButtonDown(InputManager.Buttons.A))
         {
             if (playButtonEnabled.activeInHierarchy)
             {
-                anim.SetBool("PressedPlay", true);
+                anim.SetTrigger("PressedPlay");
 
                 playButtonEnabled.SetActive(false);
                 playButtonDisabled.SetActive(false);

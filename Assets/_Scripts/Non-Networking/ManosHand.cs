@@ -534,6 +534,7 @@ public class ManosHand : MonoBehaviour
                 break;
             case Enums.Poses.Gun:
                 bullet.gameObject.SetActive(true);
+                bullet.EnableLaser();
                 gunBarrel.SetActive(true);
                 travelDistance = manos.GetGunDistance();
                 am.PlaySoundLoop(AudioManager.Sound.ManosGunActive, transform, AudioManager.Priority.Spam);
@@ -649,6 +650,7 @@ public class ManosHand : MonoBehaviour
 
         am.StopSoundLoop(AudioManager.Sound.ManosAura, true, transform);
         am.StopSoundLoop(AudioManager.Sound.ManosCharging, true, transform);
+        am.StopSoundLoop(AudioManager.Sound.ManosGunActive, true, transform);
         //am.StopSoundLoop(AudioManager.Sound.IntenseFire, true);
     }
 

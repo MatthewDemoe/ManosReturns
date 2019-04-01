@@ -429,6 +429,10 @@ public class ThrowTrigger : MonoBehaviour
 
     public bool PickUpFootball(int balls=1)
     {
+        if (currentFootballs == maxFootballs)
+        {
+            return false;
+        }
         if (currentFootballs+balls < maxFootballs)
         {
             currentFootballs+=balls;
@@ -437,7 +441,7 @@ public class ThrowTrigger : MonoBehaviour
             UpdateFootballCount();
             return true;
         }
-        if (currentFootballs + balls >= maxFootballs)
+        else if (currentFootballs + balls >= maxFootballs)
         {
             currentFootballs=maxFootballs;
             footballSprite.GetComponent<Animator>().SetTrigger("PingTrigger");
@@ -445,6 +449,7 @@ public class ThrowTrigger : MonoBehaviour
             UpdateFootballCount();
             return true;
         }
+      
         return false;
     }
 

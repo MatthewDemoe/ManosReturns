@@ -484,12 +484,26 @@ public class NoNetManos : MonoBehaviour
         switch (theHand)
         {
             case Enums.Hand.Left:
-                animLeft.time = chargeTimerL;
+                if (chargeDecayL)
+                {
+                    animLeft.time = chargeTimerL;
+                }
+                else
+                {
+                    animLeft.time = chargeTimerL;
+                }
                 anim.Play();
                 if (!vBigL.enabled && animLeft.time > 0.1f) vBigL.enabled = true;
                 break;
             case Enums.Hand.Right:
-                animRight.time = chargeTimerR;
+                if (chargeDecayR)
+                {
+                    animRight.time = chargeTimerR;
+                }
+                else
+                {
+                    animRight.time = chargeTimerR;
+                }
                 anime.Play();
                 if (!vBigR.enabled && animRight.time > 0.1f) vBigR.enabled = true;
                 break;
