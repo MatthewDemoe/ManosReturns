@@ -10,9 +10,9 @@ class InputManager : MonoBehaviour
 
     //Controller sticks
     Vector2 _lStick, _rStick;
-    bool Last_A = false, Last_B = false, Last_X = false, Last_Y = false, Last_L_Trig = false, Last_R_Trig = false, Last_LB = false, Last_RB = false, Last_Select = false, Last_Start = false;
+    bool Last_A = false, Last_B = false, Last_X = false, Last_Y = false, Last_L_Trig = false, Last_R_Trig = false, Last_LB = false, Last_RB = false, Last_Select = false, Last_Start = false, Last_DPadUp = false, Last_DPadDown = false, Last_DPadLeft = false, Last_DPadRight = false;
 
-    public enum Buttons { A, B, X, Y, LB, RB, Select, Start };
+    public enum Buttons { A, B, X, Y, LB, RB, Select, Start, DPadUp, DPadDown, DPadLeft, DPadRight };
 
     // Start is called before the first frame update
     void Start()
@@ -93,7 +93,30 @@ class InputManager : MonoBehaviour
 
         else
             Last_Start = false;
+        // DPadUp, DPadDown, DPadLeft, DPadRight
+        if (state.DPad.Up== ButtonState.Pressed)
+            Last_DPadUp = true;
 
+        else
+            Last_DPadUp = false;
+
+        if (state.DPad.Down == ButtonState.Pressed)
+            Last_DPadDown = true;
+
+        else
+            Last_DPadDown = false;
+
+        if (state.DPad.Left == ButtonState.Pressed)
+            Last_DPadLeft = true;
+
+        else
+            Last_DPadLeft = false;
+
+        if (state.DPad.Right == ButtonState.Pressed)
+            Last_DPadRight = true;
+
+        else
+            Last_DPadRight = false;
         //Check new states
         state = GamePad.GetState(PlayerIndex.One);
 
@@ -193,6 +216,44 @@ class InputManager : MonoBehaviour
                 }
 
                 return false;
+
+            case (Buttons.DPadUp):
+                if (Last_DPadUp)
+                {
+                    if (state.DPad.Up == ButtonState.Released)
+                        return true;
+                }
+
+                return false;
+
+            case (Buttons.DPadDown):
+                if (Last_DPadDown)
+                {
+                    if (state.DPad.Down == ButtonState.Released)
+                        return true;
+                }
+
+                return false;
+
+            case (Buttons.DPadLeft):
+                if (Last_DPadLeft)
+                {
+                    if (state.DPad.Left == ButtonState.Released)
+                        return true;
+                }
+
+                return false;
+
+            case (Buttons.DPadRight):
+                if (Last_DPadRight)
+                {
+                    if (state.DPad.Right == ButtonState.Released)
+                        return true;
+                }
+
+                return false;
+
+
         }
 
         return false;
@@ -276,6 +337,43 @@ class InputManager : MonoBehaviour
                 }
 
                 return false;
+
+
+            case (Buttons.DPadUp):
+                if (!Last_DPadUp)
+                {
+                    if (state.DPad.Up == ButtonState.Pressed)
+                        return true;
+                }
+
+                return false;
+
+            case (Buttons.DPadDown):
+                if (!Last_DPadDown)
+                {
+                    if (state.DPad.Down == ButtonState.Pressed)
+                        return true;
+                }
+
+                return false;
+
+            case (Buttons.DPadLeft):
+                if (!Last_DPadLeft)
+                {
+                    if (state.DPad.Left == ButtonState.Pressed)
+                        return true;
+                }
+
+                return false;
+
+            case (Buttons.DPadRight):
+                if (!Last_DPadRight)
+                {
+                    if (state.DPad.Right == ButtonState.Pressed)
+                        return true;
+                }
+
+                return false;
         }
 
         return false;
@@ -332,6 +430,39 @@ class InputManager : MonoBehaviour
             case (Buttons.Start):
                 if (state.Buttons.Start == ButtonState.Pressed)
                     return true;
+
+                return false;
+
+
+            case (Buttons.DPadUp):
+             
+                    if (state.DPad.Up == ButtonState.Pressed)
+                        return true;
+                
+
+                return false;
+
+            case (Buttons.DPadDown):
+            
+                    if (state.DPad.Down == ButtonState.Pressed)
+                        return true;
+           
+
+                return false;
+
+            case (Buttons.DPadLeft):
+            
+                    if (state.DPad.Left == ButtonState.Pressed)
+                        return true;
+                
+
+                return false;
+
+            case (Buttons.DPadRight):
+              
+                    if (state.DPad.Right == ButtonState.Pressed)
+                        return true;
+                
 
                 return false;
         }
@@ -391,5 +522,10 @@ class InputManager : MonoBehaviour
         }
 
         return false;
+    }
+
+    public void SetVibration(float left, float right)
+    {
+        GamePad.SetVibration(PlayerIndex.One, left, right);
     }
 }

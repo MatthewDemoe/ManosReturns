@@ -9,7 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: city_apartment_block_dif
   m_Shader: {fileID: 4800000, guid: c2b5a20ebe489c94da741f004d76731a, type: 3}
-  m_ShaderKeywords: _EMISSION _SHADERONE_ON
+  m_ShaderKeywords: _EMISSION _SHADERTWO_ON
   m_LightmapFlags: 1
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -100,15 +100,15 @@ Material:
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
-    - _OutlineWidth: 0.02
+    - _OutlineWidth: 0.024
     - _Parallax: 0.02
     - _RIMM: 0.5
     - _Redo: 32
     - _Scale: 0
     - _Shade: 0.33
-    - _ShaderOne: 1
+    - _ShaderOne: 0
     - _ShaderThree: 0
-    - _ShaderTwo: 0
+    - _ShaderTwo: 1
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
@@ -121,5 +121,6 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 0}
     - _EmissionColorUI: {r: 1, g: 1, b: 1, a: 1}
+    - _FlashColor: {r: 0, g: 0, b: 0, a: 0}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _RimmColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}

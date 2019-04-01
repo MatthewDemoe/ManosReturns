@@ -4817,7 +4817,7 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.42
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &2078369106901647094
 MonoBehaviour:
@@ -4831,8 +4831,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53058245463a9e245994e6b47e93e645, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageScale: 30
-  explosionfx: {fileID: 9014395646233257873, guid: 51c045315d45ba0479b2439897b1bc54,
+  damageScale: 25
+  explosionfx: {fileID: 1892078723244562, guid: 46876a2780737ec45a19d62f88e5ce56,
     type: 3}
   rotationSpeed: 800
 --- !u!54 &4680509069976953908
@@ -4850,7 +4850,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!96 &5565976471915701587
 TrailRenderer:
   serializedVersion: 2

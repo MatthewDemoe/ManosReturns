@@ -18,7 +18,7 @@ public class AudioManager : MonoBehaviour {
         ChadDash,
         ChadJump,
         ChadDoubleJump,
-        ManosPunch,
+        ManosPunchLight,
         ChadLand,
         ChadCharge,
         ChadThrow,
@@ -26,6 +26,11 @@ public class AudioManager : MonoBehaviour {
         ManosAura,
         ManosGunActive,
         ManosCrash,
+        ChadDab,
+        ManosPunchMedium,
+        ManosPunchHeavy,
+        ChadJumpCharge,
+        ChadChargedJump,
         Count
     }
 
@@ -349,14 +354,19 @@ public class AudioManager : MonoBehaviour {
     /// <summary>
     /// Stops any sound playing through PlaySoundOnce() immediately 
     /// </summary>
-    /// <param name="s"></param>
-    public void StopSound(Sound s)
+    /// <param name="s">The sound to be stopped</param>
+    /// <param name="t">For sources, helps with duplicate soundss</param>
+    public void StopSound(Sound s, Transform t = null)
     {
-        foreach (AudioSource a in sources)
+        for (int i = 0; i < numSources; i++)
         {
-            if (a.clip == clips[(int)s])
+            if (sources[i].clip == clips[(int)s])
             {
-                a.Stop();
+                if (t != null)
+                {
+                    if (sourcePositions[i] != t) continue;
+                }
+                sources[i].Stop();
                 return;
             }
         }
@@ -367,12 +377,16 @@ public class AudioManager : MonoBehaviour {
     /// </summary>
     /// <param name="s"></param>
     /// <param name="stopInstantly">Stops sound instantly if true</param>
-    public void StopSoundLoop(Sound s, bool stopInstantly = false)
+    public void StopSoundLoop(Sound s, bool stopInstantly = false, Transform t = null)
     {
         for (int i = 0; i < loopingSources.Count; i++)
         {
             if (loopingSources[i].clip == clips[(int)s])
             {
+                if (t != null)
+                {
+                    if (sourcePositions[Array.IndexOf(sources, loopingSources[i])] != t) continue;
+                }
                 if (stopInstantly) loopingSources[i].Stop();
                 loopingSources[i].loop = false;
                 loopingSources.RemoveAt(i);

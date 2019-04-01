@@ -10,6 +10,7 @@ public class SlowGenericInterp : MonoBehaviour
 
     [SerializeField]
     float lerpValue;
+    float ogLerp;
 
     [SerializeField]
     float rotLerpValue;
@@ -21,6 +22,11 @@ public class SlowGenericInterp : MonoBehaviour
     float speed;
 
     float shakeFactor;
+
+    private void Start()
+    {
+        ogLerp = lerpValue;
+    }
 
     // Update is called once per frame
     void Update()
@@ -40,6 +46,16 @@ public class SlowGenericInterp : MonoBehaviour
         }
 
         transform.rotation = Quaternion.Lerp(transform.rotation, original.rotation, lerpValue);
-
     }
+
+    public void SetInterpValue(float i)
+    {
+        lerpValue = i;
+    }
+
+    public void ResetInterpValue()
+    {
+        lerpValue = ogLerp;
+    }
+
 }

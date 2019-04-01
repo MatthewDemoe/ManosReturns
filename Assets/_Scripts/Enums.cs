@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public struct Enums {
+﻿public struct Enums {
 
     public enum Poses
     {
@@ -21,14 +17,20 @@ public struct Enums {
         Both
     }
 
+    /// <summary>
+    /// Arms refer to both Vambrace and Hand
+    /// </summary>
     public enum ManosParts
     {
+        None = -1,
         Head,
         LeftHand,
         RightHand,
         LeftVambrace,
         RightVambrace,
         Chest,
+        LeftArm,
+        RightArm
     }
 
     public enum Player
@@ -45,7 +47,8 @@ public struct Enums {
         ChargingDash,
         Dashing,
         Flip, 
-        ChargingThrow
+        ChargingThrow,
+        Dabbing
     }
 
     public enum PlayerState

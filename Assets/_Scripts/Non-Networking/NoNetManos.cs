@@ -130,6 +130,10 @@ public class NoNetManos : MonoBehaviour
     [SerializeField]
     ManosUI manosUI;
 
+    [Header("Syncvars Both")]
+    [SerializeField]
+    bool canGrab;
+
     [Header("Syncvars Left")]
     [SerializeField]
     bool handVisibleL;
@@ -145,6 +149,7 @@ public class NoNetManos : MonoBehaviour
     bool posedOnceL;
     [SerializeField]
     float chargeTimerL;
+    bool chargeDecayL;
 
     [Header("Syncvars Right")]
     [SerializeField]
@@ -161,6 +166,7 @@ public class NoNetManos : MonoBehaviour
     bool posedOnceR;
     [SerializeField]
     float chargeTimerR;
+    bool chargeDecayR;
 
     [SerializeField]
     ManosHand leftHand;
@@ -172,6 +178,17 @@ public class NoNetManos : MonoBehaviour
     public static GameObject manos;
 
     PlayerHealth health;
+
+    AnimationState animLeft;
+    AnimationState animRight;
+
+    Animation anim;
+    Animation anime;
+
+    [SerializeField]
+    MeshRenderer vBigL;
+    [SerializeField]
+    MeshRenderer vBigR;
 
     // Use this for initialization
     void Start()
@@ -187,6 +204,14 @@ public class NoNetManos : MonoBehaviour
         }
 
         flash = GetComponent<FlashFeedback>();
+
+        anim = GetComponent<Animation>();
+        anime = transform.GetChild(0).GetComponent<Animation>();
+
+        animLeft = anim["ManosInterpLeftArm"];
+        animRight = anime["ManosInterpRightArm"];
+
+        canGrab = true;
     }
 
     private void OnEnable()
@@ -210,9 +235,35 @@ public class NoNetManos : MonoBehaviour
         {
             GetComponent<PlayerHealth>().TakeDamage(10);
         }
-        if (Input.GetKeyUp(KeyCode.F))
-        {
 
+        if (chargeDecayL)
+        {
+            chargeTimerL -= Time.deltaTime;
+        }
+        if (chargeDecayR)
+        {
+            chargeTimerR -= Time.deltaTime;
+        }
+    }
+
+    public void DecayCharge(Enums.Hand h, bool b)
+    {
+        switch (h)
+        {
+            case Enums.Hand.Left:
+                chargeDecayL = b;
+                if (b)
+                {
+                    chargeTimerL = freeMoveTime;
+                }
+                break;
+            case Enums.Hand.Right:
+                chargeDecayR = b;
+                if (b)
+                {
+                    chargeTimerR = freeMoveTime;
+                }
+                break;
         }
     }
 
@@ -232,9 +283,10 @@ public class NoNetManos : MonoBehaviour
         {
             case Enums.Hand.Left:
                 return handVisibleL;
-            default:
+            case Enums.Hand.Right:
                 return handVisibleR;
         }
+        return false;
     }
 
     public void SetHandVisible(Enums.Hand theHand, bool b)
@@ -244,7 +296,7 @@ public class NoNetManos : MonoBehaviour
             case Enums.Hand.Left:
                 handVisibleL = b;
                 break;
-            default:
+            case Enums.Hand.Right:
                 handVisibleR = b;
                 break;
         }
@@ -258,9 +310,10 @@ public class NoNetManos : MonoBehaviour
         {
             case Enums.Hand.Left:
                 return fistActioningL;
-            default:
+            case Enums.Hand.Right:
                 return fistActioningR;
         }
+        return false;
     }
 
     public void SetFistActioning(Enums.Hand theHand, bool b)
@@ -270,7 +323,7 @@ public class NoNetManos : MonoBehaviour
             case Enums.Hand.Left:
                 fistActioningL = b;
                 break;
-            default:
+            case Enums.Hand.Right:
                 fistActioningR = b;
                 break;
         }
@@ -282,9 +335,10 @@ public class NoNetManos : MonoBehaviour
         {
             case Enums.Hand.Left:
                 return gunActioningL;
-            default:
+            case Enums.Hand.Right:
                 return gunActioningR;
         }
+        return false;
     }
 
     public void SetGunActioning(Enums.Hand theHand, bool b)
@@ -294,7 +348,7 @@ public class NoNetManos : MonoBehaviour
             case Enums.Hand.Left:
                 gunActioningL = b;
                 break;
-            default:
+            case Enums.Hand.Right:
                 gunActioningR = b;
                 break;
         }
@@ -306,9 +360,10 @@ public class NoNetManos : MonoBehaviour
         {
             case Enums.Hand.Left:
                 return triggerActioningL;
-            default:
+            case Enums.Hand.Right:
                 return triggerActioningR;
         }
+        return false;
     }
 
     public void SetTriggerActioning(Enums.Hand theHand, bool b)
@@ -318,7 +373,7 @@ public class NoNetManos : MonoBehaviour
             case Enums.Hand.Left:
                 triggerActioningL = b;
                 break;
-            default:
+            case Enums.Hand.Right:
                 triggerActioningR = b;
                 break;
         }
@@ -330,9 +385,10 @@ public class NoNetManos : MonoBehaviour
         {
             case Enums.Hand.Left:
                 return poweredL;
-            default:
+            case Enums.Hand.Right:
                 return poweredR;
         }
+        return false;
     }
 
     public void SetFistPowered(Enums.Hand theHand, bool b)
@@ -342,7 +398,7 @@ public class NoNetManos : MonoBehaviour
             case Enums.Hand.Left:
                 poweredL = b;
                 break;
-            default:
+            case Enums.Hand.Right:
                 poweredR = b;
                 break;
         }
@@ -354,9 +410,10 @@ public class NoNetManos : MonoBehaviour
         {
             case Enums.Hand.Left:
                 return posedOnceL;
-            default:
+            case Enums.Hand.Right:
                 return posedOnceR;
         }
+        return false;
     }
 
     public void SetPosedOnce(Enums.Hand theHand, bool b)
@@ -366,7 +423,7 @@ public class NoNetManos : MonoBehaviour
             case Enums.Hand.Left:
                 posedOnceL = b;
                 break;
-            default:
+            case Enums.Hand.Right:
                 posedOnceR = b;
                 break;
         }
@@ -378,9 +435,10 @@ public class NoNetManos : MonoBehaviour
         {
             case Enums.Hand.Left:
                 return chargeTimerL;
-            default:
+            case Enums.Hand.Right:
                 return chargeTimerR;
         }
+        return 0f;
     }
 
     public void ResetChargeTimer(Enums.Hand theHand)
@@ -389,9 +447,15 @@ public class NoNetManos : MonoBehaviour
         {
             case Enums.Hand.Left:
                 chargeTimerL = 0;
+                animLeft.time = 0;
+                anim.Stop();
+                vBigL.enabled = false;
                 break;
-            default:
+            case Enums.Hand.Right:
                 chargeTimerR = 0;
+                animRight.time = 0;
+                anime.Stop();
+                vBigR.enabled = false;
                 break;
         }
     }
@@ -409,8 +473,25 @@ public class NoNetManos : MonoBehaviour
             case Enums.Hand.Left:
                 chargeTimerL += Time.deltaTime;
                 break;
-            default:
+            case Enums.Hand.Right:
                 chargeTimerR += Time.deltaTime;
+                break;
+        }
+    }
+
+    public void UpdateChargeAnimation(Enums.Hand theHand)
+    {
+        switch (theHand)
+        {
+            case Enums.Hand.Left:
+                animLeft.time = chargeTimerL;
+                anim.Play();
+                if (!vBigL.enabled && animLeft.time > 0.1f) vBigL.enabled = true;
+                break;
+            case Enums.Hand.Right:
+                animRight.time = chargeTimerR;
+                anime.Play();
+                if (!vBigR.enabled && animRight.time > 0.1f) vBigR.enabled = true;
                 break;
         }
     }
@@ -428,9 +509,21 @@ public class NoNetManos : MonoBehaviour
         return gripDuration;
     }
 
-    public float GetGripCooldown()
+    public bool CanGrab()
     {
-        return gripCooldown;
+        return canGrab;
+    }
+
+    public void CooldownGrip()
+    {
+        canGrab = false;
+        StartCoroutine(GripCooldown());
+    }
+
+    IEnumerator GripCooldown()
+    {
+        yield return new WaitForSeconds(gripCooldown);
+        canGrab = true;
     }
 
     public float GetPoseChargeTime()
@@ -511,16 +604,27 @@ public class NoNetManos : MonoBehaviour
     public bool DealDamageToArm(Enums.Hand hand, float amount)
     {
         bool damageDealt = false;
+
+        Enums.ManosParts m = Enums.ManosParts.None;
+
         switch (hand)
         {
             case Enums.Hand.Left:
                 damageDealt = leftHand.TakeDamage(amount);
+                m = Enums.ManosParts.LeftVambrace;
                 break;
             case Enums.Hand.Right:
                 damageDealt = rightHand.TakeDamage(amount);
+                m = Enums.ManosParts.RightVambrace;
                 break;
         }
-        if (damageDealt) flash.ReactToDamage(0.0f);
+
+        if (damageDealt) flash.ReactToDamage(0.0f, m);
         return damageDealt;
+    }
+
+    public FlashFeedback GetFlasher()
+    {
+        return flash;
     }
 }

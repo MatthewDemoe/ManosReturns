@@ -59,9 +59,12 @@ public class ManosHand : MonoBehaviour
 
     [SerializeField]
     UnityEngine.UI.Image hpBar;
+    [SerializeField]
+    UnityEngine.UI.Image radialBar;
 
     Material mat;
     [SerializeField]
+    MeshRenderer vambrace;
     Material vMat;
 
     ManosBullet bullet;
@@ -76,6 +79,15 @@ public class ManosHand : MonoBehaviour
     Transform headTransform;
 
     Collider col;
+
+    Rigidbody rb;
+
+    AudioManager am;
+
+    PlayerHealth pHealth;
+
+    [SerializeField]
+    SlowGenericInterp gauntlet;
 
     [Header("Gameplay Properties")]
 
@@ -127,22 +139,12 @@ public class ManosHand : MonoBehaviour
     bool routineOnce;
 
     [SerializeField]
-    FlashEmissionMaterial flash;
-
-    [SerializeField]
     ManosBullet bulletPrefab;
 
-    /// <summary>
-    /// Time before actually cancelling
-    /// </summary>
+    bool _training = true;
+
     [SerializeField]
-    [Tooltip("Time before actually cancelling")]
-    float stickyFist;
-    bool inputsLifted;
-
-    AudioManager am;
-
-    PlayerHealth pHealth;
+    bool flashing;
 
     void Awake()
     {
@@ -177,11 +179,6 @@ public class ManosHand : MonoBehaviour
                 if (!am.IsSoundPlaying(AudioManager.Sound.ManosCharging, transform))
                     am.PlaySoundOnce(AudioManager.Sound.ManosCharging, transform);
             }
-            if (inputsLifted)
-            {
-                StopCoroutine(CancelChargeDelayed());
-                inputsLifted = false;
-            }
         }
 
         if (fistAction.GetStateUp(skeltal.inputSource))
@@ -189,12 +186,12 @@ public class ManosHand : MonoBehaviour
             if (manos.PosedOnce(thisHand))
             {
                 manos.SetPosedOnce(thisHand, false);
-                am.StopSound(AudioManager.Sound.ManosCharging);
+                am.StopSound(AudioManager.Sound.ManosCharging, transform);
                 CancelCharge();
             }
             else if (!manos.IsFistPowered(thisHand))
             {
-                am.StopSound(AudioManager.Sound.ManosCharging);
+                am.StopSound(AudioManager.Sound.ManosCharging, transform);
                 CancelCharge();
             }
         }
@@ -208,11 +205,6 @@ public class ManosHand : MonoBehaviour
             {
                 am.PlaySoundOnce(AudioManager.Sound.ManosCharging, transform);
             }
-            if (inputsLifted)
-            {
-                StopCoroutine(CancelChargeDelayed());
-                inputsLifted = false;
-            }
         }
 
         if (gunAction.GetStateUp(skeltal.inputSource))
@@ -220,7 +212,7 @@ public class ManosHand : MonoBehaviour
             if (manos.PosedOnce(thisHand) || !manos.IsFistPowered(thisHand))
             {
                 manos.SetPosedOnce(thisHand, false);
-                am.StopSound(AudioManager.Sound.ManosCharging);
+                am.StopSound(AudioManager.Sound.ManosCharging, transform);
                 rapidFire = false;
                 CancelCharge();
             }
@@ -231,6 +223,7 @@ public class ManosHand : MonoBehaviour
     {
         interp = GetComponent<SlowLimbInterp>();
         vInterp = GetComponent<VelocityInterp>();
+        rb = GetComponent<Rigidbody>();
         am = AudioManager.GetInstance();
         SetParticlePower(0);
 
@@ -243,6 +236,7 @@ public class ManosHand : MonoBehaviour
         pHealth = GetComponentInParent<PlayerHealth>();
 
         mat = GetComponentInChildren<SkinnedMeshRenderer>().material;
+        vMat = vambrace.material;
 
         gunBarrel = transform.GetChild(transform.childCount - 3).gameObject;
 
@@ -270,17 +264,21 @@ public class ManosHand : MonoBehaviour
         {
             TakeDamage(50);
         }
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            DisableArm();
+        }
 
         UpdateSyncVars();
 
         //We no longer care about this mechanic
         //UpdateHandVisiblity();
 
-        if (objectInHand == null)
-            CheckActions();
-
         if (!armDisabled)
         {
+            if (objectInHand == null)
+                CheckActions();
+
             CheckGrab();
 
             //Gem is no longer a thing :(
@@ -288,7 +286,12 @@ public class ManosHand : MonoBehaviour
 
             CheckPoses();
 
-            ModifyArmHealth(healthRegenRate * Time.deltaTime);
+            if (healthRegenRate != 0)
+            {
+                ModifyArmHealth(healthRegenRate * Time.deltaTime);
+            }
+
+            manos.UpdateChargeAnimation(thisHand);
         }
 
         realSpeed = velocity.magnitude;
@@ -315,9 +318,13 @@ public class ManosHand : MonoBehaviour
 
     void CheckActions()
     {
-        if ((currentPose != Enums.Poses.None || manos.IsFistPowered(thisHand)) && !manos.PosedOnce(thisHand))
+        if ((currentPose != Enums.Poses.None && !manos.IsFistPowered(thisHand)) && !manos.PosedOnce(thisHand))
         {
-            flash.Activate();
+            if (!flashing)
+            {
+                manos.GetFlasher().ManosChargeActivate(thisHand);
+                flashing = true;
+            }
             manos.TickChargeTimer(thisHand);
 
             float power;
@@ -341,8 +348,9 @@ public class ManosHand : MonoBehaviour
                 interp.SetLerp(manos.GetInterpMax());
             }
         }
-        else if (currentPose == Enums.Poses.None && !manos.IsFistPowered(thisHand)){
-            flash.Deactivate();
+        else if (currentPose == Enums.Poses.None && !manos.IsFistPowered(thisHand)) {
+            manos.GetFlasher().ManosChargeDeactivate(thisHand, handHealth / handHealthMax);
+            flashing = false;
             SetParticlePower(0);
             //Don't need to cancel charge
         }
@@ -389,7 +397,7 @@ public class ManosHand : MonoBehaviour
             {
                 if (!collidingObject.CompareTag("Gem"))
                 {
-                    if (collidingObject.CompareTag("Player") && fistAction.GetStateDown(skeltal.inputSource))
+                    if (collidingObject.CompareTag("Player") && fistAction.GetStateDown(skeltal.inputSource) && manos.CanGrab())
                     {
                         GrabPlayer();
                     }
@@ -505,10 +513,13 @@ public class ManosHand : MonoBehaviour
     IEnumerator PowerPose()
     {
         //am.PlaySoundLoop(AudioManager.Sound.IntenseFire, transform, AudioManager.Priority.Spam);
-        am.StopSound(AudioManager.Sound.ManosCharging);
+        manos.GetFlasher().ManosChargeDeactivate(thisHand, handHealth / handHealthMax);
+        am.StopSound(AudioManager.Sound.ManosCharging, transform);
         manos.SetFistPowered(thisHand, true);
         interp.SetLerp(manos.GetInterpReleased());
         powerPose = currentPose;
+        manos.DecayCharge(thisHand, true);
+
         switch (currentPose)
         {
             case Enums.Poses.Punch:
@@ -530,7 +541,6 @@ public class ManosHand : MonoBehaviour
         }
 
         yield return new WaitForSeconds(manos.GetFreeMoveTime());
-        CancelCharge();
         //print("YIELDED");
 
         switch (powerPose)
@@ -545,31 +555,29 @@ public class ManosHand : MonoBehaviour
                 break;
             case Enums.Poses.Gun:
                 //if (manos.IsGunActioning(thisHand))
-                    //manos.SetPosedOnce(thisHand, true);
+                //manos.SetPosedOnce(thisHand, true);
                 bullet.gameObject.SetActive(false);
                 gunBarrel.SetActive(false);
                 break;
         }
 
-        rapidFire = false;
-
-        am.StopSoundLoop(AudioManager.Sound.ManosGunActive, true);
-        am.StopSoundLoop(AudioManager.Sound.ManosAura, true);
-
-        energyFist.SetActive(false);
+        am.StopSoundLoop(AudioManager.Sound.ManosGunActive, true, transform);
+        am.StopSoundLoop(AudioManager.Sound.ManosAura, true, transform);
 
         routineOnce = false;
+
+        CancelCharge();
     }
 
     public void FireBullet()
     {
         haptics.Execute(0, Time.deltaTime, 1, 1, skeltal.inputSource);
         gunBarrel.SetActive(false);
-        am.StopSoundLoop(AudioManager.Sound.ManosGunActive, true);
+        am.StopSoundLoop(AudioManager.Sound.ManosGunActive, true, transform);
         am.PlaySoundOnce(AudioManager.Sound.ManosBullet, transform);
-        rapidFire = true;
         bullet.FireBullet();
         CancelCharge();
+        rapidFire = true; //This overwrites the rapidFire = false in CancelCharge
     }
 
     /// <summary>
@@ -623,38 +631,25 @@ public class ManosHand : MonoBehaviour
 
     void CancelCharge()
     {
-        //inputsLifted = true;
-        //StartCoroutine(CancelChargeDelayed());
-
         StopCoroutine("PowerPose");
-        flash.Deactivate();
+
+        manos.DecayCharge(thisHand, false);
+        manos.SetFistPowered(thisHand, false);
         manos.ResetChargeTimer(thisHand);
+
+        manos.GetFlasher().ManosChargeDeactivate(thisHand, handHealth / handHealthMax);
+        flashing = false;
         interp.SetLerp(manos.GetInterpMax());
         interp.SetOffsetActive(false);
         SetParticlePower(0);
-        manos.SetFistPowered(thisHand, false);
         routineOnce = false;
-        transform.localScale = Vector3.one;
-        am.StopSoundLoop(AudioManager.Sound.ManosAura, true);
-        am.StopSoundLoop(AudioManager.Sound.ManosCharging, true);
+        rapidFire = false;
+        gunBarrel.SetActive(false);
+        energyFist.SetActive(false);
+
+        am.StopSoundLoop(AudioManager.Sound.ManosAura, true, transform);
+        am.StopSoundLoop(AudioManager.Sound.ManosCharging, true, transform);
         //am.StopSoundLoop(AudioManager.Sound.IntenseFire, true);
-    }
-
-    IEnumerator CancelChargeDelayed()
-    {
-        yield return new WaitForSeconds(stickyFist);
-        StopCoroutine("PowerPose");
-        flash.Deactivate();
-        manos.ResetChargeTimer(thisHand);
-        interp.SetLerp(manos.GetInterpMax());
-        interp.SetOffsetActive(false);
-        SetParticlePower(0);
-        manos.SetFistPowered(thisHand, false);
-        routineOnce = false;
-        transform.localScale = Vector3.one;
-        am.StopSoundLoop(AudioManager.Sound.ManosAura, true);
-        am.StopSoundLoop(AudioManager.Sound.ManosCharging, true);
-        inputsLifted = false;
     }
 
     private void GrabPlayer()
@@ -662,7 +657,9 @@ public class ManosHand : MonoBehaviour
         print("GRABBED!");
 
         //Clear power settings
-        flash.Deactivate();
+        manos.GetFlasher().ManosChargeDeactivate(thisHand, handHealth / handHealthMax);
+        flashing = false;
+
         manos.ResetChargeTimer(thisHand);
         interp.SetLerp(manos.GetInterpMax());
         interp.SetOffsetActive(false);
@@ -677,14 +674,19 @@ public class ManosHand : MonoBehaviour
 
         objectInHand = collidingObject;
         //objectInHand.GetComponent<PlayerHealth>().TakeDamage(15);
-        objectInHand.GetComponent<PlayerManager>().SetGrabbed(true,this);
+
+        //if (!_training)
+        //{
+            objectInHand.GetComponent<PlayerManager>().SetGrabbed(true, this);
+
+            chadMesh.SetActive(true);
+        //}
+
         objectInHand.transform.parent = transform;
         objectInHand.transform.localPosition = grabOffset;
         objectInHand.transform.localRotation = Quaternion.identity;
 
-        am.StopSound(AudioManager.Sound.ManosCharging);
-
-        chadMesh.SetActive(true);
+        am.StopSound(AudioManager.Sound.ManosCharging, transform);
 
         StartCoroutine("GrabPlayerCountdown");
     }
@@ -705,6 +707,9 @@ public class ManosHand : MonoBehaviour
     public void ReleasePlayer(bool throwPlayer = true)
     {
         StopCoroutine("GrabPlayerCountdown");
+
+        manos.CooldownGrip();
+
         objectInHand.GetComponent<MovementManager>().ResetVelocity();
         objectInHand.GetComponent<PlayerManager>().SetGrabbed(false, this);
         objectInHand.transform.parent = null;
@@ -729,25 +734,31 @@ public class ManosHand : MonoBehaviour
     /// <returns>True if damage was dealt</returns>
     public bool TakeDamage(float damage)
     {
-        bool b = !armDisabled;
         if (!armDisabled)
         {
             ModifyArmHealth(-Mathf.Abs(damage));
+            // Rumble for 2 seconds
+            haptics.Execute(0, 1.5f, 90, 0.9f, skeltal.inputSource);
         }
+        bool b = !armDisabled;
         return b;
     }
 
     public void ModifyArmHealth(float h)
     {
         handHealth += h;
-        if (handHealth < 0)
+        if (handHealth <= 0)
         {
             DisableArm();
         }
         handHealth = Mathf.Clamp(handHealth, 0, handHealthMax);
         float healthPercent = handHealth / handHealthMax;
         hpText.text = Mathf.RoundToInt(healthPercent * 100).ToString() + "%";
+        radialBar.fillAmount = healthPercent;
         hpBar.fillAmount = healthPercent;
+
+        mat.SetFloat("_Glow", Mathf.Lerp(-0.9f, 0, healthPercent));
+        vMat.SetFloat("_Glow", Mathf.Lerp(-0.9f, 0, healthPercent));
     }
 
     public void DisableArm()
@@ -760,29 +771,76 @@ public class ManosHand : MonoBehaviour
         StartCoroutine("RepairArm");
         mat.SetFloat("_Glow", -0.9f);
         vMat.SetFloat("_Glow", -0.9f);
+        bullet.gameObject.SetActive(false);
+        skeltal.enabled = false;
+
+        EnableGravity();
+    }
+
+    void EnableGravity()
+    {
+        interp.enabled = false;
+        rb.isKinematic = false;
+        rb.useGravity = true;
+
+        gauntlet.enabled = false;
+        gauntlet.gameObject.AddComponent<Rigidbody>();
+    }
+
+    void DisableGravity()
+    {
+        interp.enabled = true;
+        rb.isKinematic = true;
+        rb.useGravity = false;
+
+        gauntlet.enabled = true;
+        Destroy(gauntlet.GetComponent<Rigidbody>());
     }
 
     IEnumerator RepairArm()
     {
-        yield return new WaitForSeconds(manos.GetArmRepairTime());
+        yield return new WaitForSeconds(1.5f); //Time it takes the white flashes to stop
+
+        mat.SetFloat("_Glow", -0.9f);
+        vMat.SetFloat("_Glow", -0.9f);
+
+        yield return new WaitForSeconds(manos.GetArmRepairTime() - 1.5f);
         armDisabled = false;
         ModifyArmHealth(handHealthMax);
         mat.SetFloat("_Glow", 0);
         vMat.SetFloat("_Glow", 0);
+
+        DisableGravity();
+
+        //Magic numbers lol
+        gauntlet.SetInterpValue((manos.GetInterpMin() + manos.GetInterpMax()) / 2);
+        skeltal.enabled = true;
+
+        yield return new WaitForSeconds(2.5f);
+
+        gauntlet.ResetInterpValue();
+    }
+
+    /// <summary>
+    /// Called by CollisionDamage on hitting Chad
+    /// </summary>
+    public void HitImpulse()
+    {
+        haptics.Execute(0, 1f, 120, 0.9f, skeltal.inputSource);
     }
 
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Ground"))
         {
-            if (vInterp.enabled == false)
+            if (vInterp.enabled == false && !armDisabled)
             {
                 //interp.enabled = false;
                 //vInterp.enabled = true;
                 //vInterp.SetDirection(velocity);
                 //skeltal.enabled = false;
                 //haptics.Execute(0, 0.5f, 120, 0.9f, skeltal.inputSource);
-                haptics.Execute(0, Time.deltaTime, 120, 0.9f, skeltal.inputSource);
+                //haptics.Execute(0, Time.deltaTime, 120, 0.9f, skeltal.inputSource);
                 //trueHand.SetActive(true);
             }
         }
@@ -799,9 +857,9 @@ public class ManosHand : MonoBehaviour
     {
         if (other.CompareTag("Ground"))
         {
-            if (vInterp.enabled == false)
+            if (vInterp.enabled == false && !armDisabled)
             {
-                haptics.Execute(0, Time.deltaTime, 120, 0.9f, skeltal.inputSource);
+                //haptics.Execute(0, Time.deltaTime, 120, 0.9f, skeltal.inputSource);
             }
         }
         else if (other.CompareTag("Player"))
@@ -839,5 +897,10 @@ public class ManosHand : MonoBehaviour
     public Enums.Hand GetHand()
     {
         return thisHand;
+    }
+
+    public void SetTraining(bool t)
+    {
+        _training = t;
     }
 }

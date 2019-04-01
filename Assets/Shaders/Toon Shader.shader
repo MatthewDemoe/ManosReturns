@@ -10,10 +10,10 @@ Shader "Custom/Toon Shader" {
 		_FourthTex("Dark Texture", 2D) = "white" {}
 		_FifthTex("Darker Texture", 2D) = "white" {}
 		_SixthTex("Black Texture", 2D) = "white" {}
-		_SeventhTex("Blackest Texture", 2D) = "white" {}
 		_OutlineColor("Outline Color", Color) = (0,0,0,1)
 		_OutlineWidth("Line Width", Range(0,0.2)) = 0.02
-		_Color("Main Color", Color) = (0.5,0.5,0.5,1)
+		[HDR]_Color("Main Color", Color) = (0.5,0.5,0.5,1)
+		[HDR]_FlashColor("Flash Color", Color) = (0,0,0,0)
 		_Redo("Redos", Range(1,100)) = 4
 			_Threshold("Threshold", Range(0,1)) = 0
 		[Toggle]_ShaderOne("Regular Outline", float) = 1
@@ -24,8 +24,7 @@ Shader "Custom/Toon Shader" {
 			_Shade("Shadow CTRL",Range(0,1))=0.33
 			_UVs("UV Scale", Range(0,2)) = 0.1
 			[Toggle]_Glow("Glow",float) = 0.0
-			_Scale("Cammera Dist Scale",Range(0,1)) = 0.0
-			_Test("test",float) = 0.0
+		
 	}
 		CGINCLUDE
 
@@ -76,6 +75,7 @@ Shader "Custom/Toon Shader" {
 	uniform float _OutlineWidth;
 	uniform float4 _OutlineColor;
 	uniform float4 _Color;
+	uniform float4 _FlashColor;
 	uniform float _ShaderOne;
 	uniform float _ShaderTwo;
 	uniform float _ShaderThree;
@@ -89,7 +89,7 @@ Shader "Custom/Toon Shader" {
 	sampler2D _FourthTex;
 	sampler2D _FifthTex;
 	sampler2D _SixthTex;
-	sampler2D _SeventhTex;
+
 	fixed _Threshold;
 	float2 textCopy;
 	fixed _Redo;
@@ -97,7 +97,7 @@ Shader "Custom/Toon Shader" {
 	float _UVs;
 	float _Glow;
 	float _Scale;
-	float _Test;
+	
 	//vf2 is interface block containing position, normal and colour on a per-vertex basis.
 	//appdata is vertex containing vertex position and normal in object space.
 	v2f vert(appdata v) {
@@ -178,7 +178,7 @@ Shader "Custom/Toon Shader" {
 					
 					o.tex =bedo.rgb;// +float3(value, value, value)*_RimmColor;
 					
-						o.Emission = float3(1.0, 1.0, 1.0)*_Glow;
+						o.Emission = _FlashColor*_Glow;
 					
 					o.Alpha = bedo.a;
 					o.val = v;

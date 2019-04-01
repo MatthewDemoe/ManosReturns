@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="Assets\_Scripts\Abilities.cs" />
     <Compile Include="Assets\_Scripts\AudioManager.cs" />
+    <Compile Include="Assets\_Scripts\ButtonMash.cs" />
     <Compile Include="Assets\_Scripts\CameraManager.cs" />
     <Compile Include="Assets\_Scripts\CameraSwap.cs" />
     <Compile Include="Assets\_Scripts\ChestFollow.cs" />
@@ -88,6 +89,7 @@
     <Compile Include="Assets\_Scripts\Non-Networking\ManosBullet.cs" />
     <Compile Include="Assets\_Scripts\Non-Networking\ManosEnergyFist.cs" />
     <Compile Include="Assets\_Scripts\Non-Networking\ManosHand.cs" />
+    <Compile Include="Assets\_Scripts\Non-Networking\ManosTutorializer.cs" />
     <Compile Include="Assets\_Scripts\Non-Networking\ManosUI.cs" />
     <Compile Include="Assets\_Scripts\Non-Networking\MouseCharacterController.cs" />
     <Compile Include="Assets\_Scripts\Non-Networking\NoNetManos.cs" />
@@ -97,16 +99,19 @@
     <Compile Include="Assets\_Scripts\Non-Networking\Player\MovementManager.cs" />
     <Compile Include="Assets\_Scripts\Non-Networking\Player\PlayerCamera.cs" />
     <Compile Include="Assets\_Scripts\Non-Networking\Player\PlayerManager.cs" />
+    <Compile Include="Assets\_Scripts\Non-Networking\Player\PlayerStamina.cs" />
     <Compile Include="Assets\_Scripts\Non-Networking\Player\ShaderVariables.cs" />
     <Compile Include="Assets\_Scripts\Non-Networking\Player\ThrowTrigger.cs" />
     <Compile Include="Assets\_Scripts\Non-Networking\Player\Utils.cs" />
     <Compile Include="Assets\_Scripts\Non-Networking\PlayerStateManager.cs" />
     <Compile Include="Assets\_Scripts\Non-Networking\PlayerUserInterface.cs" />
+    <Compile Include="Assets\_Scripts\Non-Networking\RumbleController.cs" />
     <Compile Include="Assets\_Scripts\Non-Networking\SpawnObject.cs" />
     <Compile Include="Assets\_Scripts\Non-Networking\SpeedControlFollow.cs" />
     <Compile Include="Assets\_Scripts\Non-Networking\SpeedControlTable.cs" />
     <Compile Include="Assets\_Scripts\Non-Networking\VRTorsoFollow.cs" />
     <Compile Include="Assets\_Scripts\PlayerHealth.cs" />
+    <Compile Include="Assets\_Scripts\PressStart.cs" />
     <Compile Include="Assets\_Scripts\SlowGeneralInterp.cs" />
     <Compile Include="Assets\_Scripts\SlowGenericInterp.cs" />
     <Compile Include="Assets\_Scripts\SlowLimbInterp.cs" />
@@ -123,14 +128,16 @@
     <Compile Include="Assets\_Scripts\UI\SpeechBubble.cs" />
     <Compile Include="Assets\_Scripts\UI\SpeechBubble2D.cs" />
     <Compile Include="Assets\_Scripts\UI\SpeechBubble2DFlyweight.cs" />
+    <Compile Include="Assets\_Scripts\UI\StaminaBarUI.cs" />
     <Compile Include="Assets\_Scripts\UI\StatusBarController.cs" />
     <Compile Include="Assets\_Scripts\UI\TextPlacement.cs" />
     <Compile Include="Assets\_Scripts\UI\UIShake.cs" />
     <Compile Include="Assets\_Scripts\Util\UtilMath.cs" />
     <Compile Include="Assets\_Scripts\VelocityInterp.cs" />
     <Compile Include="Assets\_Scripts\XInputManager.cs" />
-    <Compile Include="Assets\ButtonMash.cs" />
+    <Compile Include="Assets\BarShakeController.cs" />
     <Compile Include="Assets\ChadSpeakSpeechBubbles.cs" />
+    <Compile Include="Assets\ChadVFXManager.cs" />
     <Compile Include="Assets\DashTrailScript.cs" />
     <Compile Include="Assets\Imported Assets\Cartoon ConvertibleCar C01\script\brake_light.cs" />
     <Compile Include="Assets\Imported Assets\Cartoon ConvertibleCar C01\script\on_off_light.cs" />
@@ -385,7 +392,9 @@
     <Compile Include="Assets\Imported Assets\VRArmIK\Scripts\VRArmIK.cs" />
     <Compile Include="Assets\Imported Assets\VRArmIK\Scripts\VRTrackingReferences.cs" />
     <Compile Include="Assets\Models\Chad_Stride\AtomicEagleExpressionStates.cs" />
+    <Compile Include="Assets\Scripts\Statbar.cs" />
     <Compile Include="Assets\Shaders\OutlinePost.cs" />
+    <Compile Include="Assets\StartScreenController.cs" />
     <Compile Include="Assets\SteamVR_Input\ActionObjects\SteamVR_Input_ActionSet_buggy.cs" />
     <Compile Include="Assets\SteamVR_Input\ActionObjects\SteamVR_Input_ActionSet_buggy_In.cs" />
     <Compile Include="Assets\SteamVR_Input\ActionObjects\SteamVR_Input_ActionSet_default.cs" />

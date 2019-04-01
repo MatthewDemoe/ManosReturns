@@ -15,17 +15,26 @@ public class FootballPickup : MonoBehaviour
         
     }
 
-    public void OnTriggerEnter(Collider other)
+
+    public void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.tag == "Player")
+        if (!_pickedUp)
         {
-            if (other.gameObject.GetComponentInChildren<ThrowTrigger>().PickUpFootball(_pickedUp))
+            if (other.gameObject.tag == "Player")
             {
-                GetComponentInChildren<Animator>().SetTrigger("PickupTrigger");
-                Destroy(Instantiate(particleEffect, transform), 1.0f);
-                Destroy(gameObject, 1.0f);
-                _pickedUp = true;
+                if (other.gameObject.GetComponentInChildren<ThrowTrigger>().PickUpFootball())
+                {
+                    GetComponentInChildren<Animator>().SetTrigger("PickupTrigger");
+                    Destroy(Instantiate(particleEffect, transform), 1.0f);
+                    Destroy(gameObject, 1.0f);
+                    _pickedUp = true;
+                }
             }
         }
+    }
+
+    public void OnTriggerEnter(Collider other)
+    {
+       
     }
 }

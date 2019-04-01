@@ -42,7 +42,6 @@ public class CollisionDamage : MonoBehaviour
     [SerializeField]
     float heavyDamage;
     
-
     // Use this for initialization
     void Start()
     {
@@ -79,29 +78,32 @@ public class CollisionDamage : MonoBehaviour
                         GameObject p = Instantiate(lightPrefab, contactPt, Quaternion.identity);
                         ph.TakeDamage(lightDamage);
                         Destroy(p, 2f);
+                        AudioManager.GetInstance().PlaySoundOnce(AudioManager.Sound.ManosPunchLight, transform, AudioManager.Priority.Default, AudioManager.Pitches.Low);
                     }
                     else if (velocity.magnitude > lightHitThresh && velocity.magnitude <= medHitThresh)
                     {
                         GameObject p = Instantiate(medPrefab, contactPt, Quaternion.identity);
                         ph.TakeDamage(medDamage);
                         Destroy(p, 2f);
+                        AudioManager.GetInstance().PlaySoundOnce(AudioManager.Sound.ManosPunchMedium, transform, AudioManager.Priority.Default, AudioManager.Pitches.Low);
                     }
                     else if (velocity.magnitude > medHitThresh)
                     {
                         GameObject p = Instantiate(heavyPrefab, contactPt, Quaternion.identity);
                         ph.TakeDamage(heavyDamage);
                         Destroy(p, 2f);
+                        AudioManager.GetInstance().PlaySoundOnce(AudioManager.Sound.ManosPunchHeavy, transform, AudioManager.Priority.Default, AudioManager.Pitches.Low);
                     }
 
                     if (velocity.magnitude > minimumSpeed)
                     {
-                        AudioManager.GetInstance().PlaySoundOnce(AudioManager.Sound.ManosPunch, transform, AudioManager.Priority.Default, AudioManager.Pitches.Low);
-
                         player.Knockback(new Vector3(
                         velocity.x * knockBackMultiplier.x,
                         velocity.y * knockBackMultiplier.y,
                         velocity.z * knockBackMultiplier.z
                         ));
+
+                        hand.HitImpulse();
                     }
                 }
             }

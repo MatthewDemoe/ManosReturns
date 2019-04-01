@@ -25,12 +25,16 @@ public class PlayerHealth : MonoBehaviour
 
     FlashFeedback flash;
 
+    string _attachedPlayer; 
+
     // Use this for initialization
     void Start() {
         health = baseHealth;
         psm = GameObject.Find("OverlordController").GetComponent<PlayerStateManager>();
         _anim = GetComponent<Animator>();
         flash = GetComponent<FlashFeedback>();
+
+        _attachedPlayer = gameObject.name;
     }
 
     // Update is called once per frame
@@ -56,7 +60,7 @@ public class PlayerHealth : MonoBehaviour
         health = h;
     }
 
-    public void TakeDamage(float damage) {
+    public void TakeDamage(float damage, Enums.ManosParts m = Enums.ManosParts.None) {
 
         if (invincible) return;
         float damageDealt = damage * globalDamageMultiplier;
@@ -69,6 +73,8 @@ public class PlayerHealth : MonoBehaviour
         {
             health -= damageDealt;
         }
+
+
 
         if (health == 0)
             psm.RegisterPlayerDeath(gameObject);
@@ -87,7 +93,7 @@ public class PlayerHealth : MonoBehaviour
             if (_anim != null)
                 _anim.SetTrigger("DamageTaken");
 
-            flash.ReactToDamage(0.0f);
+            flash.ReactToDamage(0.0f, m);
         }
     }
 
@@ -109,4 +115,5 @@ public class PlayerHealth : MonoBehaviour
     {
         return baseHealth;
     }
+
 }

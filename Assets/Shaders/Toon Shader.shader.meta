@@ -2,7 +2,15 @@ fileFormatVersion: 2
 guid: c2b5a20ebe489c94da741f004d76731a
 ShaderImporter:
   externalObjects: {}
-  defaultTextures: []
+  defaultTextures:
+  - _MainTex: {instanceID: 0}
+  - _NormalMap: {instanceID: 0}
+  - _FirstTex: {fileID: 2800000, guid: 23a60550a91ac4b4da7d4556e715f989, type: 3}
+  - _SecondTex: {fileID: 2800000, guid: 59ee9e5a4d0c55c499a25e0ba691f523, type: 3}
+  - _ThirdTex: {fileID: 2800000, guid: b81be06f1dcd84f4d87f30ceab12920c, type: 3}
+  - _FourthTex: {fileID: 2800000, guid: 2a2802f072fad3442926fec6dca61281, type: 3}
+  - _FifthTex: {fileID: 2800000, guid: c8f9998de84c7d74c891044f78f28a17, type: 3}
+  - _SixthTex: {fileID: 2800000, guid: 0d695ebf2b7363c46ac85d8699820abe, type: 3}
   nonModifiableTextures: []
   userData: 
   assetBundleName: 

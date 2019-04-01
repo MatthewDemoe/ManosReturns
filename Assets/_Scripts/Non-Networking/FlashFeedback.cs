@@ -55,7 +55,11 @@ public class FlashFeedback : MonoBehaviour
     [SerializeField]
     GameObject deathParticles;
 
-
+    //More variables for Manos
+    [SerializeField]
+    bool flashL;
+    [SerializeField]
+    bool flashR;
 
     // Start is called before the first frame update
     void Start()
@@ -66,12 +70,76 @@ public class FlashFeedback : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
-    public void ReactToDamage(float warmup)
+    public void ReactToDamage(float warmup, Enums.ManosParts m)
     {
-        StartCoroutine("damageFlash", warmup);
+        switch (m)
+        {
+            case Enums.ManosParts.None:
+                StartCoroutine(damageFlash(warmup));
+                break;
+            case Enums.ManosParts.Head:
+            case Enums.ManosParts.LeftHand:
+            case Enums.ManosParts.RightHand:
+            case Enums.ManosParts.LeftVambrace:
+            case Enums.ManosParts.RightVambrace:
+            case Enums.ManosParts.Chest:
+                StartCoroutine(damageFlash(warmup, m));
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Flash left arm or white arm
+    /// </summary>
+    /// <param name="h">This better be either LeftHand or RightHand</param>
+    public void ManosChargeActivate(Enums.Hand h)
+    {
+        switch (h)
+        {
+            case Enums.Hand.Left:
+                flashL = true;
+                StartCoroutine(chargingFlashManosLeft());
+                break;
+            case Enums.Hand.Right:
+                flashR = true;
+                StartCoroutine(chargingFlashManosRight());
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Deactivate flashing for left/right arm
+    /// </summary>
+    /// <param name="h">The hand in question</param>
+    /// <param name="value">The hand's health, affecting it's shade</param>
+    public void ManosChargeDeactivate(Enums.Hand h, float value)
+    {
+        float theVal = Mathf.Lerp(-0.9f, 0, value);
+        switch (h)
+        {
+            case Enums.Hand.Left:
+                flashL = false;
+                StopCoroutine(chargingFlashManosLeft());
+                break;
+            case Enums.Hand.Right:
+                flashR = false;
+                StopCoroutine(chargingFlashManosRight());
+                break;
+        }
+        switch (h)
+        {
+            case Enums.Hand.Left:
+                bodyParts[(int)Enums.ManosParts.LeftHand].material.SetFloat("_Glow", theVal);
+                bodyParts[(int)Enums.ManosParts.LeftVambrace].material.SetFloat("_Glow", theVal);
+                break;
+            case Enums.Hand.Right:
+                bodyParts[(int)Enums.ManosParts.RightHand].material.SetFloat("_Glow", theVal);
+                bodyParts[(int)Enums.ManosParts.RightVambrace].material.SetFloat("_Glow", theVal);
+                break;
+        }
     }
 
     public void CooldownReact()
@@ -81,7 +149,7 @@ public class FlashFeedback : MonoBehaviour
 
     public void ChargingFeedback()
     {
-        if(!_charging)
+        if (!_charging)
             StartCoroutine("chargingFlash");
     }
 
@@ -100,27 +168,111 @@ public class FlashFeedback : MonoBehaviour
 
     IEnumerator damageFlash(float warmup)
     {
+        StopCoroutine("chargingFlash");
+
         yield return new WaitForSeconds(warmup);
 
-        //while (_damageFlashCounter < numFlashes)
-        //{
-        //    _damageFlashCounter++;
-        //
-        //    for (int i = 0; i < bodyParts.Count; i++)
-        //    {
-        //        bodyParts[i].material.SetFloat("_Glow", 0.75f);
-        //    }
-        //
-        //    yield return new WaitForSeconds(timeOn);
-        //
-        //    for (int i = 0; i < bodyParts.Count; i++)
-        //    {
-        //        bodyParts[i].material.SetFloat("_Glow", 0.0f);
-        //    }
-        //
-        //    yield return new WaitForSeconds(timeOff);
-        //
-        //}
+        while (_cdFlashCounter < numFlashes)
+        {
+            _cdFlashCounter++;
+
+            for (int i = 0; i < bodyParts.Count; i++)
+            {
+                bodyParts[i].material.SetFloat("_Glow", 0.75f);
+            }
+
+            yield return new WaitForSeconds(timeOn);
+
+            for (int i = 0; i < bodyParts.Count; i++)
+            {
+                bodyParts[i].material.SetFloat("_Glow", 0.0f);
+            }
+
+            yield return new WaitForSeconds(timeOff);
+
+        }
+
+        if (_charging)
+            StartCoroutine("chargingFlash");
+
+        _cdFlashCounter = 0;
+    }
+
+    IEnumerator damageFlash(float warmup, Enums.ManosParts m)
+    {
+        float ogValue = bodyParts[(int)m].material.GetFloat("_Glow");
+
+        yield return new WaitForSeconds(warmup);
+
+        while (_damageFlashCounter < numFlashes)
+        {
+            _damageFlashCounter++;
+
+            switch (m)
+            {
+                case Enums.ManosParts.LeftArm:
+                    bodyParts[(int)Enums.ManosParts.LeftHand].material.SetFloat("_Glow", 0.75f);
+                    bodyParts[(int)Enums.ManosParts.LeftVambrace].material.SetFloat("_Glow", 0.75f);
+                    break;
+                case Enums.ManosParts.RightArm:
+                    bodyParts[(int)Enums.ManosParts.RightHand].material.SetFloat("_Glow", 0.75f);
+                    bodyParts[(int)Enums.ManosParts.RightVambrace].material.SetFloat("_Glow", 0.75f);
+                    break;
+                case Enums.ManosParts.Head:
+                case Enums.ManosParts.LeftHand:
+                case Enums.ManosParts.RightHand:
+                case Enums.ManosParts.LeftVambrace:
+                case Enums.ManosParts.RightVambrace:
+                case Enums.ManosParts.Chest:
+                    bodyParts[(int)m].material.SetFloat("_Glow", 0.75f);
+                    break;
+            }
+
+            yield return new WaitForSeconds(timeOn);
+
+            switch (m)
+            {
+                case Enums.ManosParts.LeftArm:
+                    bodyParts[(int)Enums.ManosParts.LeftHand].material.SetFloat("_Glow", 0.0f);
+                    bodyParts[(int)Enums.ManosParts.LeftVambrace].material.SetFloat("_Glow", 0.0f);
+                    break;
+                case Enums.ManosParts.RightArm:
+                    bodyParts[(int)Enums.ManosParts.RightHand].material.SetFloat("_Glow", 0.0f);
+                    bodyParts[(int)Enums.ManosParts.RightVambrace].material.SetFloat("_Glow", 0.0f);
+                    break;
+                case Enums.ManosParts.Head:
+                case Enums.ManosParts.LeftHand:
+                case Enums.ManosParts.RightHand:
+                case Enums.ManosParts.LeftVambrace:
+                case Enums.ManosParts.RightVambrace:
+                case Enums.ManosParts.Chest:
+                    bodyParts[(int)m].material.SetFloat("_Glow", 0.0f);
+                    break;
+            }
+
+            yield return new WaitForSeconds(timeOff);
+
+        }
+
+        switch (m)
+        {
+            case Enums.ManosParts.LeftArm:
+                bodyParts[(int)Enums.ManosParts.LeftHand].material.SetFloat("_Glow", ogValue);
+                bodyParts[(int)Enums.ManosParts.LeftVambrace].material.SetFloat("_Glow", ogValue);
+                break;
+            case Enums.ManosParts.RightArm:
+                bodyParts[(int)Enums.ManosParts.RightHand].material.SetFloat("_Glow", ogValue);
+                bodyParts[(int)Enums.ManosParts.RightVambrace].material.SetFloat("_Glow", ogValue);
+                break;
+            case Enums.ManosParts.Head:
+            case Enums.ManosParts.LeftHand:
+            case Enums.ManosParts.RightHand:
+            case Enums.ManosParts.LeftVambrace:
+            case Enums.ManosParts.RightVambrace:
+            case Enums.ManosParts.Chest:
+                bodyParts[(int)m].material.SetFloat("_Glow", ogValue);
+                break;
+        }
 
         _damageFlashCounter = 0;
     }
@@ -182,6 +334,38 @@ public class FlashFeedback : MonoBehaviour
         }
 
         _charging = false;
+    }
+
+    IEnumerator chargingFlashManosLeft()
+    {
+        while (flashL)
+        {
+            bodyParts[(int)Enums.ManosParts.LeftHand].material.SetFloat("_Glow", 0.75f);
+            bodyParts[(int)Enums.ManosParts.LeftVambrace].material.SetFloat("_Glow", 0.75f);
+
+            yield return new WaitForSeconds(0.25f);
+
+            bodyParts[(int)Enums.ManosParts.LeftHand].material.SetFloat("_Glow", 0.0f);
+            bodyParts[(int)Enums.ManosParts.LeftVambrace].material.SetFloat("_Glow", 0.0f);
+
+            yield return new WaitForSeconds(0.25f);
+        }
+    }
+
+    IEnumerator chargingFlashManosRight()
+    {
+        while (flashR)
+        {
+            bodyParts[(int)Enums.ManosParts.RightHand].material.SetFloat("_Glow", 0.75f);
+            bodyParts[(int)Enums.ManosParts.RightVambrace].material.SetFloat("_Glow", 0.75f);
+
+            yield return new WaitForSeconds(0.25f);
+
+            bodyParts[(int)Enums.ManosParts.RightHand].material.SetFloat("_Glow", 0.0f);
+            bodyParts[(int)Enums.ManosParts.RightVambrace].material.SetFloat("_Glow", 0.0f);
+
+            yield return new WaitForSeconds(0.25f);
+        }
     }
 
     IEnumerator manosDeathFlashes()

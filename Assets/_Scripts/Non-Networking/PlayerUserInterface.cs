@@ -53,7 +53,6 @@ public class PlayerUserInterface : MonoBehaviour
         if (mUpdateTimer < updateTime)
         {
             mDmgImg1.fillAmount = Mathf.Lerp(mOldValue, manosHP.GetHealthPercentage(), mUpdateTimer / updateTime);
-            Debug.Log(mDmgImg1.fillAmount);
             mUpdateTimer += Time.deltaTime;
         }
     }

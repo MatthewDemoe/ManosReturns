@@ -63,6 +63,12 @@ public class LobbyScript : MonoBehaviour
     [SerializeField]
     GameObject ButtonsFour;
 
+    [SerializeField]
+    GameObject trainingEnvironment;
+
+    [SerializeField]
+    GameObject[] manosTrainingRemotes;
+
     void Start()
     {
 
@@ -108,6 +114,7 @@ public class LobbyScript : MonoBehaviour
         {
             manosReady = true;
             manos_countdown.enabled = true;
+            GameObject.Find("Manos 2.3").GetComponentInChildren<ManosHand>().SetTraining(false);
         }
 
         if (chadReady && manosReady)
@@ -174,6 +181,8 @@ public class LobbyScript : MonoBehaviour
         tx = "Get ready... \n\n1";
         countdown.text = tx;
         manos_countdown.text = tx;
+
+        Destroy(trainingEnvironment);
 
         yield return new WaitForSeconds(1.0f);
         countdown.enabled = false;
@@ -257,5 +266,12 @@ public class LobbyScript : MonoBehaviour
         ButtonsTwo.SetActive(false);
         ButtonsThree.SetActive(false);
         ButtonsFour.SetActive(false);
+
+        chad.GetComponentInChildren<ThrowTrigger>().PickUpFootball(10);
+
+        foreach(GameObject g in manosTrainingRemotes)
+        {
+            g.SetActive(false);
+        }
     }
 }

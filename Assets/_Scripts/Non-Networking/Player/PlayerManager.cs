@@ -28,21 +28,25 @@ public class PlayerManager : MonoBehaviour
 
     Command _aDown;
     Command _aUp;
+    Command _aHeld;
 
     Command _bDown;
     Command _bUp;
 
     Command _rBumperDown;
     Command _rBumperUp;
+    Command _rBumperHeld;
 
     Command _rTriggerDown;
     Command _rTriggerUp;
 
+    Command _lTriggerDown;
+    Command _lTriggerUp;
+    Command _rTriggerHeld;
+
     JumpCmd _jumpCmd;
     DashCmd _dashCmd;
-
     CancelCmd _cancelCmd;
-
     ChargeJumpCmd _chargeJumpCmd;
     ChargeDashCmd _chargeDashCmd;
 
@@ -79,7 +83,8 @@ public class PlayerManager : MonoBehaviour
     ButtonMash buttonMasher;
 
     CameraManager camManager;
-    Animator _anim; 
+    Animator _anim;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -100,15 +105,22 @@ public class PlayerManager : MonoBehaviour
 
         _aUp = _jumpCmd;
         _aDown = _chargeJumpCmd;
+        _aHeld = _chargeJumpCmd;
 
         _rBumperDown = _chargeJumpCmd;
         _rBumperUp = _jumpCmd;
+        _rBumperHeld = _chargeJumpCmd;
 
         _bDown = _cancelCmd;
         _bUp = new NullCommand();
 
         _rTriggerDown = _chargeDashCmd;
         _rTriggerUp = _dashCmd;
+        _rTriggerHeld = _chargeDashCmd;
+
+        //_lTriggerDown = _throwChargeCmd;
+        //_lTriggerUp = _throwCmd;
+
 
         _health = GetComponent<PlayerHealth>();
 
@@ -144,7 +156,7 @@ public class PlayerManager : MonoBehaviour
                     camManager.SetAimSpeed(aimSpeedModifierDashing);
                     break;
                 case Enums.ChargingState.ChargingThrow:
-                    camManager.SetAimSpeed(aimSpeedModifierDashing);
+                    camManager.SetAimSpeed(aimSpeedModifierThrowing);
                     break;
                 default:
                     camManager.ResetAimSpeed();
@@ -170,7 +182,9 @@ public class PlayerManager : MonoBehaviour
             _timesPressed = 0.0f;
             _cHand.ReleasePlayer(false);
             buttonMasher.Reset();
-           // SetGrabbed(false);
+            // SetGrabbed(false);
+
+            Debug.Log("memes");
         }
     }
 
@@ -183,11 +197,21 @@ public class PlayerManager : MonoBehaviour
         else if(inputManager.GetButtonUp(InputManager.Buttons.RB))
             _rBumperUp.execute();
 
+        else if (inputManager.GetButtonUp(InputManager.Buttons.RB))
+            _rBumperHeld.execute();
+
+
+
         if (inputManager.GetButtonDown(InputManager.Buttons.A))
             _aDown.execute();
 
         else if(inputManager.GetButtonUp(InputManager.Buttons.A))
             _aUp.execute();
+
+        else if (inputManager.GetButton(InputManager.Buttons.A))
+            _aHeld.execute();
+
+
 
         if (inputManager.GetButtonDown(InputManager.Buttons.Select))
             camManager.ToggleLookInvert();
@@ -198,23 +222,34 @@ public class PlayerManager : MonoBehaviour
         else if (inputManager.GetButtonUp(InputManager.Buttons.B))
             _bUp.execute();
 
-        //if (inputManager.GetButtonDown(InputManager.Buttons.X))
-        //{
-        //    GetComponentInChildren<ThrowTrigger>().EnableNet();
-        //}
-        //
-        //else if (inputManager.GetButtonUp(InputManager.Buttons.X))
-        //{
-        //    GetComponentInChildren<ThrowTrigger>().DisableNet();
-        //}
+
+
+        if (inputManager.GetButtonDown(InputManager.Buttons.X) || inputManager.GetButtonDown(InputManager.Buttons.LB))
+            move.DabOnManos();
+
+
 
         if (inputManager.RTrigDown() )
             _rTriggerDown.execute();
 
         else if (inputManager.RTrigUp())
-        {
             _rTriggerUp.execute();
-        }
+
+        else if (inputManager.RTrigDown())
+            _rTriggerDown.execute();
+
+
+
+        if (inputManager.LTrigDown())
+            throwTrigger.AttemptChargeFootball();
+
+        if (inputManager.LTrigUp()) 
+            throwTrigger.ThrowFootball();
+
+        if (inputManager.GetTriggerL() < 0.25f)
+            throwTrigger.ThrowFootball();
+
+
 
         if (Input.GetKeyDown(KeyCode.G))
             SetGrabbed(true);
@@ -259,18 +294,21 @@ public class PlayerManager : MonoBehaviour
         {
             if (move.GetDashDuration() <= 0.0f)
             {
-                move.EndDash();                
+                move.EndDash();
 
                 _cState = (Enums.ChargingState.None);
             }
         }
 
+        else if (_cState == Enums.ChargingState.Dabbing)
+            return;
+
         else if (_cState == Enums.ChargingState.Flip)
         {
             if (_pState == Enums.PlayerState.Grounded)
-                {
-                    _cState = Enums.ChargingState.None;
-                }
+            {
+                _cState = Enums.ChargingState.None;
+            }
         }
 
         else if (throwTrigger.IsCharging())
@@ -362,7 +400,11 @@ public class PlayerManager : MonoBehaviour
             meshes[0].enabled = true;
             meshes[1].enabled = true;
             buttonMasher.Reset();
-        }
+        }  
     }
 
+    public bool IsPlayerControllable()
+    {
+        return _pState != Enums.PlayerState.Grabbed && _pState != Enums.PlayerState.Knocked;
+    }
 }

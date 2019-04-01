@@ -7256,6 +7256,7 @@ MonoBehaviour:
   armRepairTime: 0
   selfCamera: {fileID: 1965781412571856}
   manosUI: {fileID: 8873278565026790216}
+  canGrab: 0
   handVisibleL: 0
   fistActioningL: 0
   gunActioningL: 0
@@ -7272,6 +7273,8 @@ MonoBehaviour:
   chargeTimerR: 0
   leftHand: {fileID: 0}
   rightHand: {fileID: 0}
+  vBigL: {fileID: 0}
+  vBigR: {fileID: 0}
 --- !u!1 &1603965799137780
 GameObject:
   m_ObjectHideFlags: 0
@@ -12288,9 +12291,14 @@ MonoBehaviour:
   wristTransform: {fileID: 4022484715526652}
   energyFist: {fileID: 0}
   hpText: {fileID: 0}
+  hpBar: {fileID: 0}
+  radialBar: {fileID: 0}
+  vambrace: {fileID: 0}
+  gauntlet: {fileID: 0}
   handHealthMax: 0
   handHealth: 0
   healthRegenRate: 0
+  manosDamageModifier: 1
   armDisabled: 0
   currentPose: 0
   powerPose: 0
@@ -12299,8 +12307,8 @@ MonoBehaviour:
   rapidFire: 0
   grabOffset: {x: 0, y: 0, z: 0}
   velocity: {x: 0, y: 0, z: 0}
-  flash: {fileID: 0}
   bulletPrefab: {fileID: 0}
+  flashing: 0
 --- !u!114 &114514984590150292
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12840,7 +12848,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 89cfd56e72055bf4d9be5dc1092f0c79, type: 2}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -13185,9 +13193,14 @@ MonoBehaviour:
   wristTransform: {fileID: 1833301255107954369}
   energyFist: {fileID: 0}
   hpText: {fileID: 0}
+  hpBar: {fileID: 0}
+  radialBar: {fileID: 0}
+  vambrace: {fileID: 0}
+  gauntlet: {fileID: 0}
   handHealthMax: 0
   handHealth: 0
   healthRegenRate: 0
+  manosDamageModifier: 1
   armDisabled: 0
   currentPose: 0
   powerPose: 0
@@ -13196,8 +13209,8 @@ MonoBehaviour:
   rapidFire: 0
   grabOffset: {x: 0, y: 0, z: 0}
   velocity: {x: 0, y: 0, z: 0}
-  flash: {fileID: 0}
   bulletPrefab: {fileID: 0}
+  flashing: 0
 --- !u!114 &114908589923835702
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19394,7 +19407,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 89cfd56e72055bf4d9be5dc1092f0c79, type: 2}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

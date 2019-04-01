@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class TitleBehavior : MonoBehaviour {
 
+    [SerializeField]
+    InputManager input;
 
     Animator anim;
     
@@ -32,6 +34,7 @@ public class TitleBehavior : MonoBehaviour {
     // Use this for initialization
     void Start ()
     {
+        input = GetComponent<InputManager>();
         anim = GetComponent<Animator>();
 	}
 	
@@ -54,7 +57,7 @@ public class TitleBehavior : MonoBehaviour {
         if (starting)
         {
             if (dt >= startDelay) {
-                SceneManager.LoadScene("ItsJustWorkingVr");
+                SceneManager.LoadScene("Main");
             }
                 
         }
@@ -76,7 +79,7 @@ public class TitleBehavior : MonoBehaviour {
 
     void getInput()
     {
-        if ((Input.GetAxis("Vertical") > 0.1f) || (Input.GetAxis("Horizontal") < -0.1f))
+        if ((input.GetLStick().y > 0.01f) || (input.GetLStick().x < -0.1f))
         {
             
             playButtonEnabled.SetActive(false);
@@ -88,7 +91,7 @@ public class TitleBehavior : MonoBehaviour {
 
         }
 
-        if ((Input.GetAxis("Vertical") < -0.1f) || (Input.GetAxis("Horizontal") > 0.1f))
+        if ((input.GetLStick().y < -0.01f) || (input.GetLStick().x > 0.1f))
         {
             playButtonEnabled.SetActive(true);
             playButtonDisabled.SetActive(false);
@@ -97,7 +100,7 @@ public class TitleBehavior : MonoBehaviour {
             exitButtonDisabled.SetActive(true);
         }
 
-        if (Input.GetButton("Fire1"))
+        if (input.GetButtonDown(InputManager.Buttons.A))
         {
             if (playButtonEnabled.activeInHierarchy)
             {

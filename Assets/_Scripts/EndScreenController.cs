@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class EndScreenController : MonoBehaviour {
 
+    InputManager input;
+
     [SerializeField]
     GameObject restartButtonEnabled;
 
@@ -20,18 +22,19 @@ public class EndScreenController : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-		
+        input = GetComponent<InputManager>();
 	}
 	
 	// Update is called once per frame
 	void Update ()
     {
+
         getInput();
 	}
 
     void getInput()
     {
-        if (Input.GetAxis("Vertical") < 0)
+        if (input.GetLStick().y>0.0f)
         {      
             restartButtonEnabled.SetActive(false);
             restartButtonDisabled.SetActive(true);
@@ -40,7 +43,7 @@ public class EndScreenController : MonoBehaviour {
             exitButtonDisabled.SetActive(false);
         }
 
-        if (Input.GetAxis("Vertical") > 0)
+        if (input.GetLStick().y < 0.0f)
         {
             restartButtonEnabled.SetActive(true);
             restartButtonDisabled.SetActive(false);
@@ -49,7 +52,7 @@ public class EndScreenController : MonoBehaviour {
             exitButtonDisabled.SetActive(true);
         }
 
-        if (Input.GetButton("Fire1"))
+        if (input.GetButtonDown(InputManager.Buttons.A))
         {
             if (restartButtonEnabled.activeInHierarchy)
                 SceneManager.LoadScene("Title");

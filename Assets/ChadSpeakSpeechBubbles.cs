@@ -5,13 +5,37 @@ using VikingCrewTools.UI;
 
 public class ChadSpeakSpeechBubbles : MonoBehaviour
 {
-    ChadSpeakSpeechBubbles Instance;
+    static ChadSpeakSpeechBubbles _instance = null;
 
     [SerializeField]
     float speechBubbleStayTime = 3.0f;
 
     [SerializeField]
     string[] randomComments;
+
+    /// <summary>
+    /// When chad has no footballs
+    /// </summary>
+    [SerializeField]
+    [Tooltip("When chad has no footballs")]
+    string[] noFootballs;
+
+    [SerializeField]
+    [Tooltip("When chad takes damage")]
+    string[] tookDamage;
+
+    [SerializeField]
+    [Tooltip("When chad lands a kick")]
+    string[] dealtDamage;
+
+    [SerializeField]
+    [Tooltip("When chad Dabs")]
+    string[] onDab;
+
+    [SerializeField]
+    float chanceOfDabLine = 0.5f;
+
+    SpeechBubbleBehaviour feedbackBubble;
 
     //[SerializeField]
     //QuipBattle zinger;
@@ -33,11 +57,21 @@ public class ChadSpeakSpeechBubbles : MonoBehaviour
 
     AudioManager _audioMgr;
 
+    public static ChadSpeakSpeechBubbles Instance()
+    {
+        return _instance;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         _audioMgr = AudioManager.GetInstance();
         _randomCommentTimer = 1.0f;
+
+        if(!_instance)
+        {
+            _instance = this;
+        }
     }
 
     // Update is called once per frame
@@ -48,18 +82,18 @@ public class ChadSpeakSpeechBubbles : MonoBehaviour
             _randomCommentTimer -= Time.deltaTime;
             if(_randomCommentTimer < 0.0f)
             {
-                AttemptSpeak();
+                AttemptSpeakRandom();
             }
         }
 
         if(Input.GetKeyDown(KeyCode.O))
         {
             //int lineIdx = Random.Range(0, zingers.Length);
-            AttemptSpeak();
+            AttemptSpeakRandom();
         }
     }
 
-    void AttemptSpeak()
+    void AttemptSpeakRandom()
     {
         if (!_isSpeaking)
         {
@@ -76,12 +110,22 @@ public class ChadSpeakSpeechBubbles : MonoBehaviour
         }
     }
 
+    void SpeakFeedback(string toSpeak)
+    {
+        StartCoroutine(SpeakLine(toSpeak, SpeechBubbleManager.SpeechbubbleType.NORMAL));
+    }
+
     IEnumerator SpeakLine(string message, SpeechBubbleManager.SpeechbubbleType bubbleType)
     {
+        if(feedbackBubble)
+        {
+            feedbackBubble.Clear();
+        }
+
         _isSpeaking = true;
 
         string myCurrentText = message;
-        SpeechBubbleBehaviour bubble = SpeechBubbleManager.Instance.AddSpeechBubble(transform, myCurrentText, bubbleType, speechBubbleStayTime);
+        feedbackBubble = SpeechBubbleManager.Instance.AddSpeechBubble(transform, myCurrentText, bubbleType, speechBubbleStayTime);
         
         float typingDelay = 0.2f;
         float totalDuration = typingDelay * message.Length;
@@ -108,6 +152,7 @@ public class ChadSpeakSpeechBubbles : MonoBehaviour
 
         yield return new WaitForSeconds(speechBubbleStayTime);
         _isSpeaking = false;
+        feedbackBubble = null;
     }
 
     void RepeatSpeakingSound()
@@ -116,5 +161,20 @@ public class ChadSpeakSpeechBubbles : MonoBehaviour
         //float pitchShift = Random.Range(-0.5f, 0.5f);
         _audioMgr.PlaySoundOnce(AudioManager.Sound.ChadVoice, transform, AudioManager.Priority.Default);
     }
-    
+
+
+    public void OnDab()
+    {
+        //if(Random.value <= chanceOfDabLine)
+        //{
+            int randLine = Random.Range(0, onDab.Length);
+            StartCoroutine(SpeakLine(onDab[randLine], SpeechBubbleManager.SpeechbubbleType.NORMAL));
+        //}
+    }
+
+    //void OnDab()
+    //{
+    //    int randLine = Random.Range(0, t.Length);
+    //    StartCoroutine(SpeakLine(onDab[randLine], SpeechBubbleManager.SpeechbubbleType.NORMAL));
+    //}
 }

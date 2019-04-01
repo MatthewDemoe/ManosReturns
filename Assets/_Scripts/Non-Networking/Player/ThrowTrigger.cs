@@ -109,6 +109,7 @@ public class ThrowTrigger : MonoBehaviour
     Animator _anim;
     AnimationManager _animM;
     AudioManager _am;
+    PlayerManager _pm;
 
     [SerializeField]
     GameObject sonicBoom;
@@ -125,20 +126,22 @@ public class ThrowTrigger : MonoBehaviour
     [SerializeField]
     Image footballSprite;
 
+
     public bool canThrowBomb { get { return _canThrow; } set { _canThrow = value; } }
 
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        UpdateFootballCount();
 
         //Instantiat our target sprite and hide it
         targetBall = Instantiate(targetPrefab);
         targetRender = false;
-      
+
         chad = GameObject.Find("Chad");
         _anim = chad.GetComponent<Animator>();
+        _pm = chad.GetComponent<PlayerManager>();
 
         _animM = GetComponentInParent<AnimationManager>();
 
@@ -152,7 +155,6 @@ public class ThrowTrigger : MonoBehaviour
     void FixedUpdate()
     {
         test = currentstate;
-        CheckInput();//Checking player input
         if (IsOnCD())//if is on cooldown
         {
             DecreaseCD();//Decrease cooldown timmer
@@ -162,7 +164,6 @@ public class ThrowTrigger : MonoBehaviour
         if (IsCharging())//if in charging state
         {
 
-            
             if (line.enabled == false)//enables the line render if it was disabled before
                 line.enabled = true;
             ChargeUp(chargeSpeed * Time.fixedDeltaTime);//charge up our speed and distance
@@ -171,17 +172,20 @@ public class ThrowTrigger : MonoBehaviour
                 CancelThrow();
         }
     }
-     void CancelThrow()
+    public void CancelThrow()
     {
-        targetRender = false;
-        line.enabled = false;
-        throwCD = throwCDtime;
-        SetState("OnCD");
-        //Throw();
-        charge = 0;
-        // _am.PlaySoundOnce(AudioManager.Sound.ChadThrow, transform);
-        _footballDoll.SetActive(false);
-        _animM.EndThrow();
+        if (IsCharging())
+        {
+            targetRender = false;
+            line.enabled = false;
+
+            throwCD = throwCDtime;
+            SetState("Ready");
+            charge = 0;
+
+            _animM.EndThrow();
+            _footballDoll.SetActive(false);
+        }
     }
 
     void DisarmChad()
@@ -192,11 +196,11 @@ public class ThrowTrigger : MonoBehaviour
     void RearmChad()
     {
         _canThrow = true;
-        
+
     }
     void SimulateTrajectory()//Flight path simulator
     {
-        
+
         Vector3[] _positions = new Vector3[numOfVertices];//array of all the verticies along the flight path
         _positions[0] = transform.position;//set the first on to the launch position
 
@@ -210,7 +214,7 @@ public class ThrowTrigger : MonoBehaviour
 
             _segVel = (_segVel + (Physics.gravity * segmentTime));//update the new segement velocity base on previous velocity plus gravity
             RaycastHit ray;
-            if (Physics.SphereCast(_positions[i - 1], 0.5f, _segVel, out ray, segmentScale, mask))//sphere casting since the thrown object is a sphere
+            if (Physics.SphereCast(_positions[i - 1], 0.42f, _segVel, out ray, segmentScale, mask))//sphere casting since the thrown object is a sphere
             {
 
                 _hitObject = ray.collider;//the collider of the hit object
@@ -244,12 +248,7 @@ public class ThrowTrigger : MonoBehaviour
             targetRender = false;
 
         }
-        Color _c1 = Color.red;
-        Color _c2 = _c1;
-        _c1.a = 1.0f;
-        _c2.a = 0.1f;
-        line.startColor = _c1;
-        line.endColor = _c2;
+
         line.positionCount = numOfVertices;
         for (int i = 0; i < numOfVertices; i++)
             line.SetPositions(_positions);
@@ -271,49 +270,40 @@ public class ThrowTrigger : MonoBehaviour
 
     }
 
-   
-
-    void CheckInput()
+    public void ThrowFootball()
     {
-        if (inputManager.GetButtonDown(InputManager.Buttons.LB) && IsReady()&&_canThrow)
-        {
-            if (chad.GetComponent<PlayerManager>().GetEnumPlayerState() != Enums.PlayerState.Grabbed)
-            {
-                if (currentFootballs > 0)
-                {
-                    _footballDoll.SetActive(true);
-                    ChargeCase();
-                }
-            }
-        }
+        _canThrow = _pm.IsPlayerControllable();
 
-        if ((inputManager.GetButtonUp(InputManager.Buttons.LB)|| !inputManager.GetButton(InputManager.Buttons.LB)) && IsCharging()&&_canThrow)
+        if (IsCharging() && _canThrow)
         {
             _footballDoll.SetActive(false);
-            ThrowCase();
-        } 
+            targetRender = false;
+            line.enabled = false;
+            throwCD = throwCDtime;
+            SetState("OnCD");
+            Throw();
+            charge = 0;
+            _am.PlaySoundOnce(AudioManager.Sound.ChadThrow, transform);
+            _animM.EndThrow();
+
+            currentFootballs--;
+            UpdateFootballCount();
+        }
     }
 
-    void ThrowCase()
+    public void AttemptChargeFootball()
     {
-       
-        targetRender = false;
-        line.enabled = false;
-        throwCD = throwCDtime;
-        SetState("OnCD");
-        Throw();
-        charge = 0;
-        _am.PlaySoundOnce(AudioManager.Sound.ChadThrow, transform);
-        _animM.EndThrow();
+        _canThrow = _pm.IsPlayerControllable();
 
-        currentFootballs--;
-        footballText.text = "" + currentFootballs;
-    }
+        if (IsReady() && currentFootballs > 0 && _canThrow && !IsCharging())
+        {
+            _footballDoll.SetActive(true);
+            SetState("Charging");
+            _animM.BeginThrow();
 
-    void ChargeCase()
-    {
-        SetState("Charging");
-        _animM.BeginThrow();
+
+            charge = 0;
+        }
     }
 
     void SetState(string s)
@@ -406,9 +396,9 @@ public class ThrowTrigger : MonoBehaviour
         FootBomb _bomb = _tempThrowable.GetComponent<FootBomb>();
         _bomb.Boost(_lanchVector());
         Instantiate(sonicBoom, _bomb.transform.position, _bomb.transform.rotation);
-       // sonicBoom.SetActive(true);
-       // sonicBoom.transform.position = _bomb.transform.position;
-       // sonicBoom.transform.rotation = _bomb.transform.rotation;
+        // sonicBoom.SetActive(true);
+        // sonicBoom.transform.position = _bomb.transform.position;
+        // sonicBoom.transform.rotation = _bomb.transform.rotation;
         //sonicBoom.GetComponentInChildren<ParticleSystem>().Play();
     }
 
@@ -437,18 +427,30 @@ public class ThrowTrigger : MonoBehaviour
         _pickupEnabled = false;
     }
 
-    public bool PickUpFootball(bool alreadyPicked)
+    public bool PickUpFootball(int balls=1)
     {
-        if ((currentFootballs < maxFootballs) && !alreadyPicked)
+        if (currentFootballs+balls < maxFootballs)
         {
-            currentFootballs++;
-            footballText.text = "" + currentFootballs;
+            currentFootballs+=balls;
             footballSprite.GetComponent<Animator>().SetTrigger("PingTrigger");
             factory.PickedUp();
+            UpdateFootballCount();
             return true;
         }
-
+        if (currentFootballs + balls >= maxFootballs)
+        {
+            currentFootballs=maxFootballs;
+            footballSprite.GetComponent<Animator>().SetTrigger("PingTrigger");
+            factory.PickedUp();
+            UpdateFootballCount();
+            return true;
+        }
         return false;
+    }
+
+    void UpdateFootballCount()
+    {
+        footballText.text = "" + currentFootballs;
     }
 }
 

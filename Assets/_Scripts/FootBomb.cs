@@ -48,13 +48,15 @@ public class FootBomb : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Hittable")
+        GameObject bigG = collision.gameObject;
+
+        if (bigG.tag == "Hittable")
         {
             //Shake the mesh that you hit
             MeshShaker m = collision.gameObject.GetComponent<MeshShaker>();
             if (m == null) m = collision.gameObject.GetComponentInChildren<MeshShaker>();
 
-            if (collision.gameObject.name == "GauntletParent_L")
+            if (bigG.name == "GauntletParent_L")
             {
                 //Returns true if damage was dealt
                 if (collision.transform.root.GetComponent<NoNetManos>().DealDamageToArm(Enums.Hand.Left, damageScale))
@@ -62,7 +64,7 @@ public class FootBomb : MonoBehaviour
                     m.enabled = true;
                 }
             }
-            else if (collision.gameObject.name == "GauntletParent_R")
+            else if (bigG.name == "GauntletParent_R")
             {
                 //Returns true if damage was dealt
                 if (collision.transform.root.GetComponent<NoNetManos>().DealDamageToArm(Enums.Hand.Right, damageScale))
@@ -72,20 +74,40 @@ public class FootBomb : MonoBehaviour
             }
             else
             {
-                ManosHand h = collision.gameObject.GetComponent<ManosHand>();
+                ManosHand h = bigG.GetComponent<ManosHand>();
+
+                Enums.ManosParts part = Enums.ManosParts.None;
+
+                if (bigG.name == "vr_glove_left")
+                {
+                    part = Enums.ManosParts.LeftHand;
+                }
+                else if (bigG.name == "vr_glove_right")
+                {
+                    part = Enums.ManosParts.RightHand;
+                }
+                else if (bigG.name == "Chest")
+                {
+                    part = Enums.ManosParts.Chest;
+                }
+                else if (bigG.name == "Head")
+                {
+                    part = Enums.ManosParts.Head;
+                }
 
                 if (h)
                 {
                     if (h.TakeDamage(damageScale))
                     {
                         m.enabled = true;
+                        collision.transform.root.GetComponent<FlashFeedback>().ReactToDamage(0.0f, part);
                     }
                 }
                 else
                 {
-                    PlayerHealth hp = collision.gameObject.transform.root.GetComponent<PlayerHealth>();
+                    PlayerHealth hp = collision.transform.root.GetComponent<PlayerHealth>();
                     if (hp)
-                        hp.TakeDamage(damageScale);
+                        hp.TakeDamage(damageScale, part);
                     m.enabled = true;
                 }
             }
@@ -99,6 +121,7 @@ public class FootBomb : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+
         if (other.tag == "Hittable")
         {
             //Shake the mesh that you hit
@@ -127,18 +150,39 @@ public class FootBomb : MonoBehaviour
                 ManosHand h = other.GetComponent<ManosHand>();
                 if (h == null) h = other.GetComponentInParent<ManosHand>();
 
+                Enums.ManosParts part = Enums.ManosParts.None;
+
+                if (other.attachedRigidbody.name == "vr_glove_left")
+                {
+                    part = Enums.ManosParts.LeftHand;
+                }
+                else if (other.attachedRigidbody.name == "vr_glove_right")
+                {
+                    part = Enums.ManosParts.RightHand;
+                }
+                else if (other.name == "Chest")
+                {
+                    part = Enums.ManosParts.Chest;
+                }
+                else if (other.name == "Head")
+                {
+                    part = Enums.ManosParts.Head;
+                }
+
                 if (h)
                 {
                     if (h.TakeDamage(damageScale))
                     {
+                        print("POW!");
                         m.enabled = true;
+                        other.transform.root.GetComponent<FlashFeedback>().ReactToDamage(0.0f, part);
                     }
                 }
                 else
                 {
                     PlayerHealth hp = other.transform.root.GetComponent<PlayerHealth>();
                     if (hp)
-                        hp.TakeDamage(damageScale);
+                        hp.TakeDamage(damageScale, part);
                     m.enabled = true;
                 }
             }

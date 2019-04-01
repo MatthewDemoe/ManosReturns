@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 
 public class MovementManager : MonoBehaviour
@@ -10,6 +11,8 @@ public class MovementManager : MonoBehaviour
     GameObject player;
     CharacterController controller;
     PlayerManager pManager;
+
+    RumbleController _rumble;
 
     [SerializeField]
     GameObject characterSprite;
@@ -35,6 +38,7 @@ public class MovementManager : MonoBehaviour
     [SerializeField]
     float chargeMoveSpeedMultiplier = 0.5f;
 
+    [SerializeField]
     Vector3 _velocity = new Vector3(0.0f, 0.0f, 0.0f);
     Vector2 _desiredVelocity = new Vector2(0.0f, 0.0f);
 
@@ -173,11 +177,21 @@ public class MovementManager : MonoBehaviour
     [SerializeField]
     ParticleSystem jumpDust;
 
+    [SerializeField]
+    ParticleSystem chargingParticles;
+
+    [SerializeField]
+    ParticleSystem fullyChargedParticles;
+
+    float _fireEmissionRateMax;
+    ParticleSystem.EmissionModule _chargeEmitter;
+    
     bool _wasGroundedLastFrame = false;
 
     bool _chargingJump = false;
     bool _chargingDash = false;
 
+    //[SerializeField]
     bool _kicking = false;
     bool _jumpUsed = false;
     bool _doubleJumpUsed = false;
@@ -195,9 +209,44 @@ public class MovementManager : MonoBehaviour
 
     Vector3 _targetRotation = new Vector3(0.0f, 0.0f, 0.0f);
 
+    [Header("Dab Properties")]
+    [SerializeField]
+    float dabLength = 0.3f;
+
+    [SerializeField]
+    float maxDabStrength = 1.0f;
+
+    [SerializeField]
+    float minDabStrength = 1.0f;
+
+    [SerializeField]
+    float invStart = 0.1f;
+
+    [SerializeField]
+    float dabIFrames = 0.2f;
+
+    [SerializeField]
+    float dabStamCost = 20.0f;
+
+    Vector3 _dabDir;
+
+    float _dabTimer = 0.0f;
+
+    bool _dabbing = false;
+
+    [SerializeField]
+    BarShakeController bar;
+
     // Start is called before the first frame update
     void Start()
     {
+        // setup particle
+        _chargeEmitter = chargingParticles.emission;
+        _fireEmissionRateMax = _chargeEmitter.rateOverTime.constant;
+        EndDashChargeParticles();
+
+
+
         player = gameObject;
         controller = GetComponent<CharacterController>();
         jumpChargeRate = (jumpMax - jumpMin) / chargeTime;
@@ -208,6 +257,8 @@ public class MovementManager : MonoBehaviour
         _am = AudioManager.GetInstance();
         _anim = GetComponent<Animator>();
         _playerHealth = GetComponent<PlayerHealth>();
+
+        _rumble = GetComponent<RumbleController>();
     }
 
     // Update is called once per frame
@@ -290,18 +341,34 @@ public class MovementManager : MonoBehaviour
         return _movementDisabledDurationTimer > 0.0f;
     }
 
+    void UpdateDab()
+    {
+        if (_dabTimer < 0.0f)
+        {
+            ResetRotation();
+            pManager.SetChargeState(Enums.ChargingState.None);
+
+        } else
+        {
+            float val = _dabTimer;
+            val = UtilMath.Lmap(val, 0.0f, dabLength, 0.0f, 1.0f);
+            float str = UtilMath.EasingFunction.EaseOutCubic(minDabStrength, maxDabStrength, val);
+
+            //Debug.Log(str);
+
+            _velocity = _dabDir * str;
+            _dabTimer -= Time.deltaTime;
+        }
+    }
+
     public void MoveUpdate(float horizontal, float vertical)
     {
         _lateralInput = horizontal * cameraStand.transform.right.normalized;
         _forwardInput = vertical * cameraStand.transform.forward.normalized;
 
-        bool isMovementEnabled = pManager.GetEnumPlayerState() != Enums.PlayerState.Grabbed && !_kicking;
+        _desiredVelocity = new Vector2((_lateralInput.x + _forwardInput.x), (_lateralInput.z + _forwardInput.z)) * baseMoveSpeed;
 
-        //The edge case where you go off a ledge or are shot into the air while charging
-        if (_chargingJump && !controller.isGrounded)
-        {
-            CancelJumpCharge();
-        }
+        bool isMovementEnabled = pManager.GetEnumPlayerState() != Enums.PlayerState.Grabbed && !_kicking;
 
         if (controller.isGrounded)
         {
@@ -315,8 +382,7 @@ public class MovementManager : MonoBehaviour
             ///////////////////////////////////////////////////////
             // Determine input control ///
             ///////////////////////////////////////////////////////
-            _desiredVelocity = new Vector2((_lateralInput.x + _forwardInput.x), (_lateralInput.z + _forwardInput.z)) * baseMoveSpeed;
-
+           
             if (pManager.GetEnumChargeState() == Enums.ChargingState.Dashing)
             {
                 _dashVelocity = _dashDir * _dashSpeedCurrent;
@@ -325,10 +391,12 @@ public class MovementManager : MonoBehaviour
 
             }
 
-            else
+            else if (pManager.GetEnumChargeState() == Enums.ChargingState.Dabbing)
+            {
+                UpdateDab();
+            } else
             {
                 // Apply user input
-
                 if (!IsInputDisabled())
                 {
                     Vector2 velXZ = new Vector2(_velocity.x, _velocity.z);
@@ -381,7 +449,7 @@ public class MovementManager : MonoBehaviour
                 _velocity = Vector3.ClampMagnitude(_velocity, terminalSpeed);
             }
 
-            _velocity *= (1.0f - drag);
+            _velocity *= (1.0f - (drag * Time.deltaTime));
 
             if (controller.isGrounded && (_desiredVelocity.magnitude >= 3.0f))
             {
@@ -417,6 +485,8 @@ public class MovementManager : MonoBehaviour
         //Don't want to charge both at the same time
         if (!_chargingDash && (pManager.GetEnumPlayerState() != Enums.PlayerState.Grabbed) && (_movementDisabledDurationTimer <= 0.0f))
         {
+            bar.SetColor(Color.white);
+
             GetComponent<FlashFeedback>().ChargingFeedback();
 
             if (controller.isGrounded)
@@ -431,24 +501,37 @@ public class MovementManager : MonoBehaviour
         //Give him the clamps
         _jumpCharge += jumpChargeRate * Time.deltaTime;
         _jumpCharge = Mathf.Clamp(_jumpCharge, jumpMin, jumpMax);
+        float _jumpChargeNormalized = UtilMath.Lmap(_jumpCharge, jumpMin, jumpMax, 0.0f, 1.0f);
+
+        bar.SetChargeAmount(_jumpChargeNormalized);
+        _rumble.SetVibration(_jumpChargeNormalized / 2.0f, 0.0f);
+
+        if (!_am.IsSoundPlaying(AudioManager.Sound.ChadJumpCharge) && GetJumpChargePercent() > 0.075f)
+        {
+            _am.PlaySoundOnce(AudioManager.Sound.ChadJumpCharge, transform);
+        }
     }
 
     public void Jump()
     {
+        _am.StopSound(AudioManager.Sound.ChadJumpCharge);
+
         //Cancel Charging if you jump
         if ((pManager.GetChargeState() >= 3))
         {
             Cancel();
-            return;
+            //return;
         }
 
-        if ((pManager.GetEnumPlayerState() != Enums.PlayerState.Grabbed) && (_movementDisabledDurationTimer <= 0.0f))
+        if (pManager.IsPlayerControllable() && (_movementDisabledDurationTimer <= 0.0f))
         {
             //either grounded, or not grounded and still having coyote time
             bool canJump = !_jumpUsed && (controller.isGrounded || (!controller.isGrounded && _coyoteTimer > 0.0f));
 
             if (canJump)
             {
+                _rumble.SetVibration(0.0f, 0.0f);
+
                 pManager.SetPlayerState(Enums.PlayerState.JumpUp);
 
                 if (GetJumpChargePercent() < 0.1f)
@@ -465,6 +548,8 @@ public class MovementManager : MonoBehaviour
             {
                 DoubleJump();
             }
+
+            bar.SetChargeAmount(0.0f);
         }
 
         else
@@ -495,7 +580,7 @@ public class MovementManager : MonoBehaviour
     {
         _jumpUsed = true;
 
-        _am.PlaySoundOnce(AudioManager.Sound.ChadJump, transform);
+        _am.PlaySoundOnce(AudioManager.Sound.ChadChargedJump, transform);
         _anim.SetTrigger("JumpTrigger");
 
         _velocity.y += _jumpCharge;
@@ -544,6 +629,8 @@ public class MovementManager : MonoBehaviour
         //Don't want to charge both at the same time
         if (!_chargingJump && (pManager.GetEnumPlayerState() != Enums.PlayerState.Grabbed) && (_movementDisabledDurationTimer <= 0.0f))
         {
+            bar.SetColor(Color.red);
+
             if (_dashCooldownTimer <= 0.0f && !_airDashUsed)
             {
                 _chargingDash = true;
@@ -553,6 +640,8 @@ public class MovementManager : MonoBehaviour
                 characterSprite.transform.rotation = transform.rotation;
 
                 _am.PlaySoundOnce(AudioManager.Sound.ChadCharge, transform);
+
+                BeginDashChargeParticles();
             }
         }
     }
@@ -560,18 +649,51 @@ public class MovementManager : MonoBehaviour
     public void ChargeDash()
     {
         _dashChargingTime += Time.deltaTime;
-        _dashChargingTime = Mathf.Clamp(_dashChargingTime, 0.0f, chargeTime);
+
+        if(_dashChargingTime >= chargeTime)
+        {
+            _dashChargingTime = chargeTime;
+            OnFullyCharged();
+        }
+
         _dashChargeNormalized = UtilMath.Lmap(_dashChargingTime, 0.0f, chargeTime, 0.0f, 1.0f);
+
+        bar.SetChargeAmount(_dashChargeNormalized);
+
+        _rumble.SetVibration(_dashChargeNormalized, 0.0f);
 
         if (!controller.isGrounded)
             _velocity = Vector3.zero;
+
+        UpdateDashChargeParticles();
     }
 
+    void OnFullyCharged()
+    {
+        fullyChargedParticles.gameObject.SetActive(true);
+    }
+
+    void EndDashChargeParticles()
+    {
+       chargingParticles.gameObject.SetActive(false);
+       fullyChargedParticles.gameObject.SetActive(false);
+    }
+
+    void BeginDashChargeParticles()
+    {
+        chargingParticles.gameObject.SetActive(true);
+    }
+    void UpdateDashChargeParticles()
+    {
+        //_chargeEmitter.rateOverTime = (Mathf.Lerp(0.0f, _fireEmissionRateMax, _dashChargeNormalized));
+    }
 
     public void Dash()
     {
         if ((_chargingDash) && (pManager.GetEnumPlayerState() != Enums.PlayerState.Grabbed))
         {
+            _rumble.SetVibration(0.0f, 0.0f);
+
             _am.StopSound(AudioManager.Sound.ChadCharge);
 
             _airDashUsed = true;
@@ -614,6 +736,7 @@ public class MovementManager : MonoBehaviour
 
             _am.PlaySoundOnce(AudioManager.Sound.ChadDash, transform);
 
+            bar.SetChargeAmount(0.0f);
         }
 
         else
@@ -629,6 +752,8 @@ public class MovementManager : MonoBehaviour
         {
             CancelJumpCharge();
         }
+        // if throwing, then it will be cancelled
+        GetComponentInChildren<ThrowTrigger>().CancelThrow();
 
         pManager.SetChargeState(Enums.ChargingState.None);
 
@@ -640,6 +765,8 @@ public class MovementManager : MonoBehaviour
     {
         _chargingJump = false;
         _jumpCharge = jumpMin;
+
+        _am.StopSound(AudioManager.Sound.ChadJumpCharge);
     }
 
     public void EndDash()
@@ -657,14 +784,13 @@ public class MovementManager : MonoBehaviour
         camManager.ResetFOV();
 
         _kicking = false;
+        EndDashChargeParticles();
     }
 
     IEnumerator KickOff(RaycastHit hit, bool damageManos = false)
     {
         if ((pManager.GetEnumChargeState() == Enums.ChargingState.Dashing))
         {
-            print(hit.transform.name);
-
             // determine kickoff speed
             float kickOffSpeed = (Mathf.Lerp(kickOffSpeedMin, kickOffSpeedMax, _dashChargeNormalized));
 
@@ -682,6 +808,8 @@ public class MovementManager : MonoBehaviour
             yield return new WaitForSeconds(kickoffDelay);
 
             _anim.SetTrigger("FlipTrigger");
+
+            _airDashUsed = false;
 
             if (damageManos)
             {
@@ -710,19 +838,38 @@ public class MovementManager : MonoBehaviour
                 }
                 else
                 {
+                    Enums.ManosParts part = Enums.ManosParts.None;
+
+                    if (hit.transform.name == "vr_glove_left")
+                    {
+                        part = Enums.ManosParts.LeftHand;
+                    }
+                    else if (hit.transform.name == "vr_glove_right")
+                    {
+                        part = Enums.ManosParts.RightHand;
+                    }
+                    else if (hit.transform.name == "Chest")
+                    {
+                        part = Enums.ManosParts.Chest;
+                    }
+                    else if (hit.transform.name == "Head")
+                    {
+                        part = Enums.ManosParts.Head;
+                    }
+
                     if (h)
                     {
                         // If damage was successfuly dealt
                         if (h.TakeDamage(_dashDamage))
                         {
                             m.enabled = true;
+                            hit.transform.root.GetComponent<FlashFeedback>().ReactToDamage(0.0f, part);
                         }
-                    }
-                    else
+                    } else
                     {
-                        PlayerHealth hp = hit.transform.transform.root.GetComponent<PlayerHealth>();
+                        PlayerHealth hp = hit.transform.root.GetComponent<PlayerHealth>();
                         if (hp)
-                            hp.TakeDamage(_dashDamage);
+                            hp.TakeDamage(_dashDamage, part);
                         m.enabled = true;
                     }
                 }
@@ -732,10 +879,10 @@ public class MovementManager : MonoBehaviour
                 Instantiate(kickOffDust, transform.position, Quaternion.Euler(transform.rotation.eulerAngles + kickOffDust.transform.rotation.eulerAngles));
 
             _velocity = kickoffVelocity;
-
-
-            EndDash();
+            _dashCooldownTimer = dashCooldown;
         }
+
+        _kicking = false;
     }
 
     void OnTriggerEnter(Collider other)
@@ -785,6 +932,8 @@ public class MovementManager : MonoBehaviour
 
         if (_knockDir.magnitude >= 40.0f)
         {
+            Cancel();
+
             _movementDisabledDurationTimer = 100.0f;
             pManager.SetPlayerState(Enums.PlayerState.Knocked);
         }
@@ -796,6 +945,15 @@ public class MovementManager : MonoBehaviour
         yield return new WaitForSeconds(invulnTime);
         _playerHealth.SetInvincible(false);
     }
+
+    IEnumerator DabFrames()
+    {
+        //yield return new WaitForSeconds(invStart);
+        _playerHealth.SetInvincible(true);
+        yield return new WaitForSeconds(dabIFrames);
+        _playerHealth.SetInvincible(false);
+    }
+
 
     public float GetDashDuration()
     {
@@ -811,7 +969,7 @@ public class MovementManager : MonoBehaviour
         {
             if ((hit.distance <= 1.5f))
             {
-                if ((hit.transform.gameObject.tag.Equals("Hittable") && (pManager.GetEnumChargeState() == Enums.ChargingState.Dashing)))
+                if ((hit.transform.gameObject.tag.Equals("Hittable") && (GetComponent<PlayerManager>().GetEnumChargeState() == Enums.ChargingState.Dashing)))
                 {
                     StartCoroutine(KickOff(hit, true));
                 }
@@ -859,11 +1017,12 @@ public class MovementManager : MonoBehaviour
             EndDash();
             ResetRotation();
 
-        }
-        
-        _movementDisabledDurationTimer = 0.0f;
+            if (pManager.GetEnumPlayerState() == Enums.PlayerState.Knocked)
+                _playerHealth.TakeDamage(40.0f);
 
-        _chargingJump = false;
+        }
+
+        _movementDisabledDurationTimer = 0.0f;
 
         _velocity.y = 0.0f;
 
@@ -877,11 +1036,47 @@ public class MovementManager : MonoBehaviour
     private void OnLeaveGround()
     {
         _coyoteTimer = coyoteTime;
-        CancelJumpCharge();
+        StartCoroutine(CancelJumpTimer());
     }
+
+    IEnumerator CancelJumpTimer()
+    {
+        yield return new WaitForSeconds(_coyoteTimer);
+        if (!IsGrounded())
+            CancelJumpCharge();
+    }
+
+
     public void ResetVelocity()
     {
         _velocity = Vector3.zero;
     }
 
+    public void DabOnManos()
+    {
+        if (pManager.GetEnumChargeState() != Enums.ChargingState.Dabbing && pManager.IsPlayerControllable())
+        {
+            if (GetComponent<PlayerStamina>().UseStamina(dabStamCost))
+            {
+                //_rumble.RumbleForDuration(0.5f, 0.0f, 1.0f, true);
+
+                pManager.SetChargeState(Enums.ChargingState.Dabbing);
+                _dabDir = new Vector3(_desiredVelocity.x, 0.0f, _desiredVelocity.y).normalized;
+                _dabTimer = dabLength;
+
+                //float ang = Vector3.Angle(transform.forward, _dabDir.normalized);
+
+                //characterSprite.transform.RotateAround(characterSprite.transform.position, Vector3.up, ang);
+
+                characterSprite.transform.right = -_dabDir;
+
+                _anim.SetTrigger("Dab");
+
+                _am.PlaySoundOnce(AudioManager.Sound.ChadDab, transform);
+
+                StartCoroutine("DabFrames");
+                //ChadSpeakSpeechBubbles.Instance().OnDab();
+            }
+        }
+    }
 }

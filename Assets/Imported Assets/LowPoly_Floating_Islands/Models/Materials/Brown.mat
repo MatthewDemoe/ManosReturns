@@ -114,10 +114,11 @@ Material:
     - _Test: 0
     - _Threshold: 1
     - _UVSec: 0
-    - _UVs: 0.81
+    - _UVs: 0.38
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 0.21960784, g: 0.08627451, b: 0.0627451, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 0}
+    - _FlashColor: {r: 0, g: 0, b: 0, a: 0}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _RimmColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
