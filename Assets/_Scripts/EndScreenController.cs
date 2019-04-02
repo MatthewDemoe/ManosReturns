@@ -34,22 +34,24 @@ public class EndScreenController : MonoBehaviour {
 
     void getInput()
     {
-        if (input.GetLStick().y>0.0f)
-        {      
-            restartButtonEnabled.SetActive(false);
-            restartButtonDisabled.SetActive(true);
-
-            exitButtonEnabled.SetActive(true);
-            exitButtonDisabled.SetActive(false);
-        }
-
-        if (input.GetLStick().y < 0.0f)
+        if (input.GetButtonDown(InputManager.Buttons.DPadUp))
         {
+
             restartButtonEnabled.SetActive(true);
             restartButtonDisabled.SetActive(false);
 
             exitButtonEnabled.SetActive(false);
             exitButtonDisabled.SetActive(true);
+           
+        }
+
+        if (input.GetButtonDown(InputManager.Buttons.DPadDown))
+        {
+          restartButtonEnabled.SetActive(false);
+            restartButtonDisabled.SetActive(true);
+
+            exitButtonEnabled.SetActive(true);
+            exitButtonDisabled.SetActive(false);
         }
 
         if (input.GetButtonDown(InputManager.Buttons.A))

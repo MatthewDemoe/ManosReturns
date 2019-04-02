@@ -86,7 +86,7 @@ public class TitleBehavior : MonoBehaviour {
 
     void getInput()
     {
-        if ((input.GetLStick().y > 0.01f) || (input.GetLStick().x < -0.1f))
+        if (input.GetButtonDown(InputManager.Buttons.DPadUp) || input.GetButtonDown(InputManager.Buttons.DPadRight))
         {
             playButtonEnabled.SetActive(true);
             playButtonDisabled.SetActive(false);
@@ -95,7 +95,7 @@ public class TitleBehavior : MonoBehaviour {
             exitButtonDisabled.SetActive(true);
         }
 
-        if ((input.GetLStick().y < -0.01f) || (input.GetLStick().x > 0.1f))
+        if (input.GetButtonDown(InputManager.Buttons.DPadDown) || input.GetButtonDown(InputManager.Buttons.DPadLeft))
         {
             playButtonEnabled.SetActive(false);
             playButtonDisabled.SetActive(true);

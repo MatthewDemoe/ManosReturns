@@ -383,10 +383,17 @@ public class AudioManager : MonoBehaviour {
         {
             if (loopingSources[i].clip == clips[(int)s])
             {
-                if (t != null)
-                {
-                    if (sourcePositions[Array.IndexOf(sources, loopingSources[i])] != t) continue;
+                for (int j=0; j <sources.Length; j++){
+                    if (sources[j] == loopingSources[i])
+                    {
+                        if (t != sources[j].transform)
+                            continue;
+                    }
                 }
+                //if (t != null)
+                //{
+                //    if (sourcePositions[Array.IndexOf(sources, loopingSources[i])] != t) continue;
+                //s}
                 if (stopInstantly) loopingSources[i].Stop();
                 loopingSources[i].loop = false;
                 loopingSources.RemoveAt(i);

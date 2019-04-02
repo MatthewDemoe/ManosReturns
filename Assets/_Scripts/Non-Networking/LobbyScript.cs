@@ -72,6 +72,9 @@ public class LobbyScript : MonoBehaviour
     [SerializeField]
     GameObject[] manosTrainingRemotes;
 
+    [SerializeField]
+    GameObject HPUI;
+
     void Start()
     {
 
@@ -111,6 +114,8 @@ public class LobbyScript : MonoBehaviour
         {
             chadReady = true;
             skipText.text = "Ready... Waiting for <color=red>Manos</color>";
+            SkipButtonOne.SetActive(false);
+            SkipButtonTwo.SetActive(false);
         }
 
         if (manosReadyTimer >= timetoReady)
@@ -128,12 +133,13 @@ public class LobbyScript : MonoBehaviour
 
     void GetInput()
     {
-        if (inMan.GetButton(InputManager.Buttons.B))
+        if (inMan.GetButton(InputManager.Buttons.X))
         {
             chadReadyTimer += Time.deltaTime;
+            
         }
 
-        if (inMan.GetButtonUp(InputManager.Buttons.B))
+        if (inMan.GetButtonUp(InputManager.Buttons.X))
         {
             chadReadyTimer = 0.0f;
         }
@@ -161,6 +167,8 @@ public class LobbyScript : MonoBehaviour
         chad.GetComponent<CharacterController>().enabled = true;
 
         //GameObject.Find("FakeChad").SetActive(false);
+
+        HPUI.SetActive(true);
 
         StartCoroutine("BeginCountdown");
 
@@ -218,7 +226,7 @@ public class LobbyScript : MonoBehaviour
         {
             case 1:
                 tt.text = "Press         or         in the air to <color=red>double jump</color>";
-                skipText.text = "Hold         to <color=red>skip</color> tutorial";
+                skipText.text = (chadReady) ? "Ready... Waiting for <color=red>Manos</color>" : "Hold         to <color=red>skip</color> tutorial";
                 break;
 
             case 2:
@@ -246,12 +254,21 @@ public class LobbyScript : MonoBehaviour
 
             case 6:
                 tt.text = "Press         while moving to <color=red>dab away from danger. </color>\n\nYou have a short period of <color=red>invincibility</color> while dabbing";
-                skipText.text = "You have nothing more to learn. Hold         to <color=red>ready up.</color>";
+                skipText.text = (chadReady) ? "You have nothing more to learn. Ready... Waiting for <color=red>Manos</color>" : "You have nothing more to learn. Hold         to <color=red>ready up.</color>";
                 ButtonsFour.SetActive(false);
                 TutorialB.SetActive(true);
-                SkipButtonOne.SetActive(false);
-                SkipButtonTwo.SetActive(true);
 
+                if(chadReady)
+                {
+                    SkipButtonOne.SetActive(false);
+                    SkipButtonTwo.SetActive(false);
+                }
+                else
+                {
+                    SkipButtonOne.SetActive(false);
+                    SkipButtonTwo.SetActive(true);
+                }
+                
                 Destroy(waypoint);
                 break;
         }

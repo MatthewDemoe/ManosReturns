@@ -33,6 +33,9 @@ public class PlayerManager : MonoBehaviour
     Command _bDown;
     Command _bUp;
 
+    Command _xDown;
+    Command _xUp;
+
     Command _rBumperDown;
     Command _rBumperUp;
     Command _rBumperHeld;
@@ -114,6 +117,9 @@ public class PlayerManager : MonoBehaviour
         _bDown = _cancelCmd;
         _bUp = new NullCommand();
 
+        _xDown = _cancelCmd;
+        _xUp = new NullCommand();
+
         _rTriggerDown = _chargeDashCmd;
         _rTriggerUp = _dashCmd;
         _rTriggerHeld = _chargeDashCmd;
@@ -173,7 +179,9 @@ public class PlayerManager : MonoBehaviour
     void BreakOutLogic()
     {
         if (inputManager.GetButtonDown(InputManager.Buttons.B))
+        {
             _timesPressed++;
+        }
 
         buttonMasher.ButtonMashPrompt();
         _health.TakeDamage(DOT * Time.deltaTime);
@@ -209,47 +217,73 @@ public class PlayerManager : MonoBehaviour
             _aUp.execute();
 
         else if (inputManager.GetButton(InputManager.Buttons.A))
+        {
             _aHeld.execute();
+        }
+           
 
 
-
+        // Invert Look
         if (inputManager.GetButtonDown(InputManager.Buttons.Select))
+        {
             camManager.ToggleLookInvert();
+        }
+            
 
-        if (inputManager.GetButton(InputManager.Buttons.B))
-            _bDown.execute();
+        // Ready Up
+        if (inputManager.GetButtonDown(InputManager.Buttons.X))
+        {
+            _xDown.execute();
+        }
+        else if (inputManager.GetButtonUp(InputManager.Buttons.X))
+        {
+            _xUp.execute();
+        }
 
-        else if (inputManager.GetButtonUp(InputManager.Buttons.B))
-            _bUp.execute();
-
-
-
-        if (inputManager.GetButtonDown(InputManager.Buttons.X) || inputManager.GetButtonDown(InputManager.Buttons.LB))
+        // Chad Dab
+        if (inputManager.GetButtonDown(InputManager.Buttons.B) || inputManager.GetButtonDown(InputManager.Buttons.LB))
+        {
             move.DabOnManos();
+        }
 
-
+        // Chad Dash
 
         if (inputManager.RTrigDown() )
+        {
             _rTriggerDown.execute();
-
+        }
         else if (inputManager.RTrigUp())
+        {
             _rTriggerUp.execute();
-
+        }
         else if (inputManager.RTrigDown())
+        {
             _rTriggerDown.execute();
+        }
+           
 
 
+        // Football charge and throw
 
         if (inputManager.LTrigDown())
+        {
             throwTrigger.AttemptChargeFootball();
+        }
+            
 
-        if (inputManager.LTrigUp()) 
+        if (inputManager.LTrigUp())
+        {
             throwTrigger.ThrowFootball();
+        }
+            
 
         if (inputManager.GetTriggerL() < 0.25f)
+        {
             throwTrigger.ThrowFootball();
+        }
+            
 
-
+        // Debug inputs
 
         if (Input.GetKeyDown(KeyCode.G))
             SetGrabbed(true);
@@ -265,6 +299,11 @@ public class PlayerManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.B))
             move.Knockback(new Vector3(100.0f, 100.0f, 100.0f));
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            GetComponent<LobbyScript>().PlayersReady();
+        }
     }
 
     public float GetDamage()

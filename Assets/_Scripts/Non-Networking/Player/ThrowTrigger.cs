@@ -455,6 +455,9 @@ public class ThrowTrigger : MonoBehaviour
 
     void UpdateFootballCount()
     {
+        if (currentFootballs == 0)
+            footballText.text = "<color=red>" + currentFootballs + "</color>";
+        else
         footballText.text = "" + currentFootballs;
     }
 }

@@ -1377,6 +1377,8 @@ GameObject:
   - component: {fileID: 599778917}
   - component: {fileID: 528049898}
   - component: {fileID: 528049899}
+  - component: {fileID: 528049890}
+  - component: {fileID: 528049901}
   m_Layer: 11
   m_Name: Chad
   m_TagString: Player
@@ -1493,13 +1495,14 @@ MonoBehaviour:
   controlAccelerationMax: 45
   jumpChargeMoveSpeedMultiplier: 0.5
   chargeMoveSpeedMultiplier: 0.5
-  terminalSpeed: 200
+  _velocity: {x: 0, y: 0, z: 0}
+  terminalSpeed: 150
   terminalFallSpeed: 100
   gravity: -9.8
-  gravityModifier: 5
-  drag: 0.025
+  gravityModifier: 6
+  drag: 0.12
   jumpMin: 25
-  jumpMax: 60
+  jumpMax: 70
   landEaseTime: 0.35
   coyoteTime: 0.25
   _target: {x: 0, y: 0, z: 0}
@@ -1561,9 +1564,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04f464040fce57c4eaef74d1c08311b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aimSpeedModifierCharging: 0.9
+  aimSpeedModifierCharging: 0.7
   aimSpeedModifierDashing: 0.3
-  aimSpeedModifierThrowing: 1
+  aimSpeedModifierThrowing: 0.7
   turnSensitivity: 1
   inputManager: {fileID: 0}
   throwTrigger: {fileID: 1955663986}
@@ -1599,6 +1602,8 @@ MonoBehaviour:
   deathOffTime: 0.1
   timeBetweenExplosions: 1
   deathParticles: {fileID: 0}
+  flashL: 0
+  flashR: 0
 --- !u!114 &528049898
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1629,6 +1634,38 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputMan: {fileID: 0}
+--- !u!114 &528049890
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1632577405}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6be5e97c3f5bfb64a9b7ac65db879c97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  input: {fileID: 0}
+  startUI: {fileID: 0}
+--- !u!114 &528049901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1632577405}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7f134ba48f74d54ea6b863ef7ed4b87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bodyParts:
+  - {fileID: 709568172}
+  - {fileID: 1366777621}
+  timeOn: 0.02
+  timeOff: 0.01
+  numFlashes: 3
 --- !u!1 &1942608359
 GameObject:
   m_ObjectHideFlags: 0
@@ -1771,9 +1808,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxFootballs: 10
-  currentFootballs: 10
+  currentFootballs: 0
   throwCD: 0
-  throwCDtime: 0.5
+  throwCDtime: 0.42
   throwable: {fileID: 8825112378135981683, guid: b93c93efdadaa8a4c8a310b94142de10,
     type: 3}
   chargeSpeed: 1.2
@@ -1785,7 +1822,7 @@ MonoBehaviour:
   cam: {fileID: 0}
   states: 1
   segmentScale: 1
-  numOfVertices: 100
+  numOfVertices: 150
   line: {fileID: 2088019994}
   targetPrefab: {fileID: 2316370848721078857, guid: 2754f3cf2d4fcfc4bb06402ad9bbf2b3,
     type: 3}
@@ -2485,7 +2522,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6186338778036166585
 Transform:
   m_ObjectHideFlags: 0
@@ -12118,7 +12155,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8069448248716188937
 Transform:
   m_ObjectHideFlags: 0

@@ -982,15 +982,15 @@ public class MovementManager : MonoBehaviour
                 {
                     float angleOfDeflection = (Vector3.Angle(_dashDir, -hit.normal));
 
-                    if (angleOfDeflection <= 30.0f)
+                    if (angleOfDeflection <= 70.0f)
                     {
                         if (hit.transform.gameObject.tag.Equals("Ground"))
                             StartCoroutine(KickOff(hit));
                     }
-                    else if (angleOfDeflection <= 45.0f)
-                    {
-                        EndDash();
-                    }
+                    //else if (angleOfDeflection <= 80.0f)
+                    //{
+                    //    EndDash();
+                    //}
                 }
             }
         }

@@ -409,7 +409,7 @@ public class FlashFeedback : MonoBehaviour
         float waitTime = GameObject.Find("OverlordController").GetComponent<FadeOut>().GetFadeTime();
         yield return new WaitForSeconds(waitTime);
 
-        SceneManager.LoadScene("MatthewCinematic");
+        SceneManager.LoadScene("HerosWin");
     }
 
     IEnumerator manosWinScene()
@@ -417,7 +417,7 @@ public class FlashFeedback : MonoBehaviour
         float waitTime = GameObject.Find("OverlordController").GetComponent<FadeOut>().GetFadeTime();
         yield return new WaitForSeconds(waitTime);
 
-        SceneManager.LoadScene("ManosWins");
+        SceneManager.LoadScene("ManosCinematic");
 
     }
 
