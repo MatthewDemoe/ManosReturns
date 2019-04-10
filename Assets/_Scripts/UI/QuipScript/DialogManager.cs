@@ -50,12 +50,6 @@ public class DialogManager : MonoBehaviour
         {
             CheckComebackTimer();
         }
-        //Debug.Log(state);
-        /*  if (Input.GetKeyDown(KeyCode.C))
-              Quip(Enums.Player.Player1);
-          if (Input.GetKeyDown(KeyCode.M))
-              Quip(Player.Manos);*/
-
     }
 
     void CheckTimer()

@@ -23,9 +23,14 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField]
     bool invincible;
 
+    [SerializeField]
+    DamageVignette vignetteControl;
+
     FlashFeedback flash;
 
-    string _attachedPlayer; 
+    string _attachedPlayer;
+
+    bool dead = false;
 
     // Use this for initialization
     void Start() {
@@ -39,9 +44,18 @@ public class PlayerHealth : MonoBehaviour
 
     // Update is called once per frame
     void Update() {
-        if(Input.GetKeyDown(KeyCode.D))
+        if (CoolDebug.hacks)
         {
-            TakeDamage(50);
+            if (Input.GetKeyDown(KeyCode.D))
+            {
+                TakeDamage(50);
+                CoolDebug.GetInstance().LogHack("Global damage!");
+            }
+            else if (Input.GetKeyDown(KeyCode.H))
+            {
+                TakeDamage(-1000);
+                CoolDebug.GetInstance().LogHack("Global heal!");
+            }
         }
     }
 
@@ -74,27 +88,30 @@ public class PlayerHealth : MonoBehaviour
             health -= damageDealt;
         }
 
-
-
-        if (health == 0)
-            psm.RegisterPlayerDeath(gameObject);
-
-
-        //if (damageDealt > 1.0f)
+        if ((health == 0) && !dead)
         {
-            float damagePercentage = damageDealt / baseHealth;
-
-            foreach (HPBarUI p in playerUI)
-            {
-                p.DealDamagePercentage(damagePercentage);
-            }
-            //playerUI.SetHitPointPercentage(health / baseHealth);
-
-            if (_anim != null)
-                _anim.SetTrigger("DamageTaken");
-
-            flash.ReactToDamage(0.0f, m);
+            dead = true;
+            psm.RegisterPlayerDeath(gameObject);
         }
+
+        float damagePercentage = damageDealt / baseHealth;
+
+        foreach (HPBarUI p in playerUI)
+        {
+            p.DealDamagePercentage(damagePercentage);
+        }
+
+        if (_anim != null)
+            _anim.SetTrigger("DamageTaken");
+
+        flash.ReactToDamage(0.0f, m);
+
+        //PlayerHealth on everything is making things fucky, eh?
+        if (vignetteControl != null)
+        {
+            vignetteControl.SetVignetteFill(GetHealthPercentage());
+        }
+        
     }
 
     public void TakeDamageComplex(float baseDamage, float baseDamageMultiplier, float variableDamage, float variableDamageMultiplier)

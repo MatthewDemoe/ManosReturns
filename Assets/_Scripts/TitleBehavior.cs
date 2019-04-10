@@ -37,6 +37,9 @@ public class TitleBehavior : MonoBehaviour {
     [SerializeField]
     GameObject loadingText;
 
+    [SerializeField]
+    string nextScene;
+
     // Use this for initialization
     void Start ()
     {
@@ -63,8 +66,9 @@ public class TitleBehavior : MonoBehaviour {
         {
             loadingText.SetActive(true);
 
-            if (dt >= startDelay) {
-                SceneManager.LoadScene("Main");
+            if (dt >= startDelay)
+            {
+                SceneManager.LoadScene(nextScene);
             }
                 
         }
@@ -122,7 +126,7 @@ public class TitleBehavior : MonoBehaviour {
                 //SceneManager.LoadScene("NetworkingVR");
             }
 
-            else
+            else if(!starting)
             {
                 Application.Quit();
             }

@@ -195,6 +195,13 @@ public class AudioManager : MonoBehaviour {
         SetSpatialSound(spatialSound);
 
         // Find the listener if not manually set
+        FindNewListener();
+
+        doneLoading = true;
+    }
+
+    void FindNewListener()
+    {
         if (listener == null)
         {
             listener = Camera.main.GetComponent<AudioListener>();
@@ -204,12 +211,11 @@ public class AudioManager : MonoBehaviour {
                 print("AudioManager Warning: Scene is missing an AudioListener! Mark the listener with the \"Main Camera\" tag!");
             }
         }
-
-        doneLoading = true;
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        FindNewListener();
         StopSoundLoopAll(true);
     }
 

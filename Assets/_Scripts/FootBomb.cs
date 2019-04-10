@@ -50,6 +50,12 @@ public class FootBomb : MonoBehaviour
     {
         GameObject bigG = collision.gameObject;
 
+        print(bigG.name);
+
+        AudioManager.GetInstance().PlaySoundOnce(AudioManager.Sound.ChadBomb, transform, AudioManager.Priority.Low, AudioManager.Pitches.Low);
+        Instantiate(explosionfx, transform.position, transform.rotation);
+        Destroy(gameObject);
+
         if (bigG.tag == "Hittable")
         {
             //Shake the mesh that you hit
@@ -59,7 +65,7 @@ public class FootBomb : MonoBehaviour
             if (bigG.name == "GauntletParent_L")
             {
                 //Returns true if damage was dealt
-                if (collision.transform.root.GetComponent<NoNetManos>().DealDamageToArm(Enums.Hand.Left, damageScale))
+                if (collision.transform.root.GetComponent<Manos>().DealDamageToArm(Enums.Hand.Left, damageScale))
                 {
                     m.enabled = true;
                 }
@@ -67,7 +73,7 @@ public class FootBomb : MonoBehaviour
             else if (bigG.name == "GauntletParent_R")
             {
                 //Returns true if damage was dealt
-                if (collision.transform.root.GetComponent<NoNetManos>().DealDamageToArm(Enums.Hand.Right, damageScale))
+                if (collision.transform.root.GetComponent<Manos>().DealDamageToArm(Enums.Hand.Right, damageScale))
                 {
                     m.enabled = true;
                 }
@@ -112,11 +118,6 @@ public class FootBomb : MonoBehaviour
                 }
             }
         }
-
-        AudioManager.GetInstance().PlaySoundOnce(AudioManager.Sound.ChadBomb, transform, AudioManager.Priority.Low, AudioManager.Pitches.Low);
-        Instantiate(explosionfx, transform.position, transform.rotation);
-        Destroy(gameObject);
-        
     }
 
     private void OnTriggerEnter(Collider other)
@@ -132,7 +133,7 @@ public class FootBomb : MonoBehaviour
             if (other.name == "GauntletParent_L")
             {
                 //Returns true if damage was dealt
-                if (other.transform.root.GetComponent<NoNetManos>().DealDamageToArm(Enums.Hand.Left, damageScale))
+                if (other.transform.root.GetComponent<Manos>().DealDamageToArm(Enums.Hand.Left, damageScale))
                 {
                     m.enabled = true;
                 }
@@ -140,7 +141,7 @@ public class FootBomb : MonoBehaviour
             else if (other.name == "GauntletParent_R")
             {
                 //Returns true if damage was dealt
-                if (other.transform.root.GetComponent<NoNetManos>().DealDamageToArm(Enums.Hand.Right, damageScale))
+                if (other.transform.root.GetComponent<Manos>().DealDamageToArm(Enums.Hand.Right, damageScale))
                 {
                     m.enabled = true;
                 }

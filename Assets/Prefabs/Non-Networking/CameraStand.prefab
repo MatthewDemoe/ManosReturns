@@ -80,24 +80,24 @@ MonoBehaviour:
   fov_default: 60
   lockOn: 0
   followSpeed: 10
-  camSensX: 10
-  camSensY: 8
+  camSensX: 8.5
+  camSensY: 8.5
   _aimSpeedModifier: 1
   target: {fileID: 0}
   lockOnTarget: {fileID: 0}
   refTarget: {fileID: 0}
+  lockOnSprite: {fileID: 0}
   turnSmoothing: 0.1
   minAngle: -80
   maxAngle: 80
-  smoothX: 0
   lookAngle: 0
   tiltAngle: 0
   lookInvertY: 1
   cameraCollisionMask:
     serializedVersion: 2
     m_Bits: 8193
-  linearDecay: 0.1
-  nonLinearDecay: 0.1
+  linearDecay: 0.5
+  nonLinearDecay: 0.75
   tweenTime: 0.1
 --- !u!1 &1870097968967916
 GameObject:
@@ -109,6 +109,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4845367704614240}
   - component: {fileID: 20862752429480140}
+  - component: {fileID: 1714268852}
+  - component: {fileID: 1714268853}
   m_Layer: 12
   m_Name: ChadCamera
   m_TagString: Player
@@ -172,6 +174,59 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &1714268852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1870097968967916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5778e5e62bdc02248ba9cfd83c52e3e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  VignetteFalloff: 1
+  VignetteOuterValue: 1
+  VignetteInnerValue: 0
+  VignetteInnerValueDistance: 0
+  VignetteOuterValueDistance: 0.70000005
+  VignetteMode: 2
+  VignetteCenter: {x: 0.5, y: 0.5}
+  VignetteInnerColor: {r: 0, g: 0, b: 0, a: 0}
+  VignetteOuterColor: {r: 1, g: 0, b: 0, a: 1}
+  VignetteInnerSaturation: 1
+  VignetteOuterSaturation: 0
+  VignetteDebugEnabled: 0
+  IsAnamorphicVignette: 1
+  EnableSaturationVignette: 0
+  IntegrationType: 2
+  IntegrationStage: 0
+  FinalVignetteShader: {fileID: 4800000, guid: d4c4c6a3a749d0f49a5275153224efbf, type: 3}
+  isHDR: 0
+  isSPSR: 0
+  pipelineFoldout: 1
+  aboutFoldout: 0
+--- !u!114 &1714268853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1870097968967916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79386e997a25458448c09e5710768f9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outerValue: 1
+  innerValue: 0
+  outerValueDistance: 4
+  innerValueDistance: 0
+  maxValue: 1
+  healthPercentageAtMax: 0.25
+  vignetteDuration: 1
+  vignetteFadeDelay: 0.15
 --- !u!1 &1978403782012270
 GameObject:
   m_ObjectHideFlags: 0

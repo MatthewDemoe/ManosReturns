@@ -13,6 +13,11 @@ public class MeshShaker : MonoBehaviour
     [SerializeField]
     float shakeAmount = 0.7f;
 
+    public float shakeIntensity { get { return shakeAmount; } set { shakeAmount = value; } }
+
+    public float shakeTime { get { return shakeDuration; } set { shakeDuration = value; } }
+
+
     Vector3 originalPos;
 
     void OnEnable()

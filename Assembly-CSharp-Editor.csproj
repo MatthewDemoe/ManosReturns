@@ -93,8 +93,6 @@
     <Compile Include="Assets\Imported Assets\SteamVR\Input\Editor\SteamVR_Input_LiveWindow.cs" />
     <Compile Include="Assets\Imported Assets\SteamVR\Input\Editor\SteamVR_Input_PostProcessBuild.cs" />
     <Compile Include="Assets\Imported Assets\Viking Crew Tools\UI\SpeechBubbleManager\Editor\SpeechbubbleFitterDrawer.cs" />
-    <Compile Include="Assets\Imported Assets\VRArmIK\Scripts\Utils\Editor\LabelOverrideInspector.cs" />
-    <Compile Include="Assets\Imported Assets\VRArmIK\Scripts\Utils\Editor\ReadOnlyInspector.cs" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>C:/Users/Tom/Desktop/Unity Projects/ManosReturns-FifthPlayable/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>

@@ -12,22 +12,31 @@ public class CameraManager : MonoBehaviour
     [SerializeField]
     float fov_default = 60;
 
-    public bool lockOn;
-    public float followSpeed;
-    public float camSensX, camSensY;
+    [SerializeField]
+    bool lockOn;
+    [SerializeField]
+    float followSpeed;
+    [SerializeField]
+    float camSensX, camSensY;
 
     [SerializeField]
     float _aimSpeedModifier = 1.0f;
 
-    public Transform target;
-    public Transform lockOnTarget;
-    public Transform refTarget;
+    [SerializeField]
+    Transform target;
+    [SerializeField]
+    Transform lockOnTarget;
+    [SerializeField]
+    Transform refTarget;
 
     Vector3 _cameraOffsetDefault;
     float _cameraFollowDistanceDefault;
 
     float _currentFollowDistance;
     float _distanceLerpSpeed = 7.5f;
+
+    [SerializeField]
+    RectTransform lockOnSprite;
 
     //public static CameraManager singleton;
 
@@ -36,18 +45,22 @@ public class CameraManager : MonoBehaviour
     Transform _refTrans;
     [SerializeField]
     float turnSmoothing = 0.1f;
-    public float minAngle = -75;
-    public float maxAngle = 75;
-
     [SerializeField]
+    float minAngle = -75;
+    [SerializeField]
+    float maxAngle = 75;
+
     float smoothX;
     float smoothY;
     float smoothXvelocity = 1;
     float smoothYvelocity;
-    public float lookAngle;
-    public float tiltAngle;
+    [SerializeField]
+    float lookAngle;
+    [SerializeField]
+    float tiltAngle;
 
-    public bool lookInvertY;
+    [SerializeField]
+    bool lookInvertY;
 
     float h;
     float v;
@@ -76,13 +89,10 @@ public class CameraManager : MonoBehaviour
     float _trauma = 0.0f;
     float _flip = 1.0f;
 
-
     private void Start()
     {
-
         if (target != null) Init(target);
         cam = GetComponentInChildren<Camera>();
-
 
         _cameraOffsetDefault = cam.transform.localPosition;
         _cameraFollowDistanceDefault = _cameraOffsetDefault.magnitude;
@@ -91,6 +101,8 @@ public class CameraManager : MonoBehaviour
     public void Init(Transform t)
     {
         target = t;
+        TargetLockOn tLock = target.GetComponentInChildren<TargetLockOn>();
+        if (tLock != null) tLock.SetCameraManager(this);
 
         _camTrans = transform.GetChild(0).GetChild(0);
         _refTrans = transform.GetChild(1);
@@ -98,15 +110,19 @@ public class CameraManager : MonoBehaviour
         _pivot = _camTrans.parent;
     }
 
-
     private void Update()
     {
-
+        if (lockOn)
+        {
+            Vector3 viewPos = cam.WorldToViewportPoint(lockOnTarget.position);
+            lockOnSprite.anchorMin = viewPos;
+            lockOnSprite.anchorMax = viewPos;
+        }
     }
+
     public void SetAimSpeed(float newValue)
     {
         _aimSpeedModifier = newValue;
-
     }
 
     public void ResetAimSpeed()
@@ -116,8 +132,12 @@ public class CameraManager : MonoBehaviour
 
     public float getLookX()
     {
-
         return h;
+    }
+
+    public Camera GetCamera()
+    {
+        return cam;
     }
 
     public void Tick(float delta)
@@ -177,7 +197,23 @@ public class CameraManager : MonoBehaviour
     public void SetLockedTarget(Transform t)
     {
         lockOnTarget = t;
-        lockOn = true;
+        if (lockOnTarget == null) SetLockedOn(false);
+    }
+
+    public Transform GetLockedTarget()
+    {
+        return lockOnTarget;
+    }
+
+    public void SetLockedOn(bool b)
+    {
+        lockOn = b;
+        lockOnSprite.gameObject.SetActive(b);
+    }
+
+    public bool IsLockedOn()
+    {
+        return lockOn;
     }
 
     public void SetReferenceTarget(Transform t)
@@ -187,6 +223,36 @@ public class CameraManager : MonoBehaviour
 
     void HandleRotations(float delta, float v, float h)
     {
+        if (lockOn && lockOnTarget != null)
+        {
+            // Get direction of target
+            Vector3 targetDir = lockOnTarget.position - transform.position;
+            targetDir.Normalize();
+
+            // Create a rotation from the directional vector
+            if (targetDir == Vector3.zero)
+                targetDir = transform.forward;
+            Quaternion targetRot = Quaternion.LookRotation(targetDir);
+
+            // SLerp towards the new rotation
+            Quaternion newRot = Quaternion.Slerp(transform.rotation, targetRot, 0.8f);
+            tiltAngle = Mathf.LerpAngle(tiltAngle, targetRot.eulerAngles.x, 0.5f);
+            lookAngle = Mathf.LerpAngle(lookAngle, targetRot.eulerAngles.y, 0.5f);
+
+            if (float.IsNaN(tiltAngle)) tiltAngle = 0;
+            // Helps to clamp angle once lock on is done
+            if (tiltAngle > 180)
+            {
+                tiltAngle -= 180;
+                tiltAngle = -(180 - tiltAngle);
+            }
+            _pivot.localRotation = Quaternion.Euler(tiltAngle, 0, 0);
+            if (float.IsNaN(lookAngle)) lookAngle = 0;
+            transform.rotation = Quaternion.Euler(0, lookAngle, 0);
+
+            return;
+        }
+
         if (turnSmoothing > 0)
         {
             smoothX = Mathf.SmoothDamp(smoothX, h, ref smoothXvelocity, turnSmoothing);
@@ -197,9 +263,23 @@ public class CameraManager : MonoBehaviour
             smoothX = h;
             smoothY = v;
         }
-
+        
+        // Clamps tiltAngle after locking on
         tiltAngle -= smoothY * camSensY * _aimSpeedModifier;
-        tiltAngle = Mathf.Clamp(tiltAngle, minAngle, maxAngle);
+        if (tiltAngle > 180)
+        {
+            tiltAngle -= 180;
+        }
+        if (tiltAngle < minAngle){
+            tiltAngle = Mathf.LerpAngle(tiltAngle, minAngle, delta * 9);
+        }
+        if (tiltAngle > maxAngle)
+        {
+            tiltAngle = Mathf.LerpAngle(tiltAngle, maxAngle, delta * 9);
+        }
+
+        //tiltAngle = Mathf.Clamp(tiltAngle, minAngle, maxAngle);
+
         if (float.IsNaN(tiltAngle)) tiltAngle = 0;
         _pivot.localRotation = Quaternion.Euler(tiltAngle, 0, 0);
 
@@ -216,24 +296,14 @@ public class CameraManager : MonoBehaviour
         //refTrans.localRotation = Quaternion.Euler(0, refTrans.localRotation.y, refTrans.localRotation.z);
         //refTrans.rotation = Quaternion.Euler(0, refTrans.rotation.y, refTrans.rotation.z);
 
-        if (lockOn && lockOnTarget != null)
-        {
-            Vector3 targetDir = lockOnTarget.position - transform.position;
-            targetDir.Normalize();
-            //targetDir.y = 0;
-
-            if (targetDir == Vector3.zero)
-                targetDir = transform.forward;
-            Quaternion targetRot = Quaternion.LookRotation(targetDir);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, delta * 9);
-            lookAngle = transform.eulerAngles.y;
-
-            return;
-        }
-
         lookAngle += smoothX * camSensX * _aimSpeedModifier;
         if (float.IsNaN(lookAngle)) lookAngle = 0;
         transform.rotation = Quaternion.Euler(0, lookAngle, 0);
+    }
+
+    public void ResetLookOrientation()
+    {
+        tiltAngle = 0;
     }
 
     /// <summary>
@@ -319,33 +389,31 @@ public class CameraManager : MonoBehaviour
         //singleton = this;
     }
 
-    public void DoCameraShake(float tr, float intensity)
+    public void DoCameraShake(float tr)
     {
-        StartCoroutine(StartShake(tr, intensity));
-
+        StopAllCoroutines();
+        StartCoroutine(StartShake(tr));
     }
 
-    IEnumerator StartShake(float tr, float intensity)
+    IEnumerator StartShake(float tr)
     {
         _trauma = tr;
 
         while(_trauma > 0.0f)
-        {
-            
-
+        {           
             _trauma = Mathf.Min(_trauma, 1.0f);
             _trauma -= ((linearDecay * Time.deltaTime) + (nonLinearDecay * _trauma * Time.deltaTime));
             _trauma = Mathf.Max(_trauma, 0.0f);
 
             Vector3 dir = transform.position;
 
-            dir.x += _trauma * intensity * _flip;
+            dir += _trauma * _flip * transform.right;
 
             transform.position = dir;
 
             _flip = -_flip;
 
-            yield return new WaitForSeconds(tweenTime);
+            yield return new WaitForSeconds(tweenTime - (tweenTime * _trauma));
         }
     }
 }

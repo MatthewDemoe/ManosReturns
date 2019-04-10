@@ -18,7 +18,10 @@ public class FadeOut : MonoBehaviour
 
     float alpha = 0.0f;
 
-    Color forFading;    
+    Color forFading;
+
+    [SerializeField]
+    bool fadeInOnStart = false;
 
     // Start is called before the first frame update
     void Start()
@@ -30,13 +33,8 @@ public class FadeOut : MonoBehaviour
         {
             quads[i].color = forFading;
         }
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-        
+        if (fadeInOnStart) BeginFadeIn();
     }
 
     public float GetFadeTime()
@@ -46,6 +44,7 @@ public class FadeOut : MonoBehaviour
 
     public void BeginFadeOut(float delay = 0.0f)
     {
+        fadeTimer = 0.0f;
         StartCoroutine("FadeToBlack", delay);
     }
 
@@ -56,19 +55,25 @@ public class FadeOut : MonoBehaviour
 
     IEnumerator FadeToBlack(float delay = 0.0f)
     {
+        yield return new WaitForSeconds(delay);
+
+
         while (fadeTimer <= fadeTime)
         {
-            yield return new WaitForSeconds(delay);
 
             fadeTimer += Time.deltaTime;
             alpha = UtilMath.Lmap(fadeTimer, 0.0f, fadeTime, 0.0f, 1.0f);
 
             forFading.a = alpha;
+            //Debug.Log(alpha);
+
 
             for (int i = 0; i < quads.Count; i++)
             {
                 quads[i].color = forFading;
             }
+
+            yield return new WaitForEndOfFrame();
         }
         
         fadeTimer = 0.0f;

@@ -1406,6 +1406,7 @@ Transform:
   - {fileID: 1955663985}
   - {fileID: 1557204709}
   - {fileID: 208582752660084649}
+  - {fileID: 1979393458}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1427,6 +1428,7 @@ MonoBehaviour:
   - {fileID: 1153093236046444547}
   - {fileID: 0}
   invincible: 0
+  vignetteControl: {fileID: 0}
 --- !u!143 &1632577412
 CharacterController:
   m_ObjectHideFlags: 0
@@ -1491,43 +1493,52 @@ MonoBehaviour:
   characterSprite: {fileID: 1584682805}
   playerCamera: {fileID: 0}
   cameraStand: {fileID: 0}
-  baseMoveSpeed: 10
-  controlAccelerationMax: 45
-  jumpChargeMoveSpeedMultiplier: 0.5
+  baseMoveSpeed: 12
+  velocityBrakeSpeed: 0.65
+  moveSpeedLerpIntensity: 20
+  controlAccelerationMax: 55
+  jumpChargeMoveSpeedMultiplier: 0.85
   chargeMoveSpeedMultiplier: 0.5
   _velocity: {x: 0, y: 0, z: 0}
   terminalSpeed: 150
   terminalFallSpeed: 100
-  gravity: -9.8
-  gravityModifier: 6
   drag: 0.12
   jumpMin: 25
-  jumpMax: 70
+  jumpMax: 80
   landEaseTime: 0.35
   coyoteTime: 0.25
   _target: {x: 0, y: 0, z: 0}
   knockDecay: 0.8
   rotationSpeed: 600
+  kickables:
+    serializedVersion: 2
+    m_Bits: 238081
   _dashDamage: 10
   _dashVelocity: {x: 0, y: 0, z: 0}
   _dashStateDurationTimer: 0
   dashCooldown: 0.6
   dashDurationMin: 0.3
   dashDurationMax: 0.55
-  dashSpeedMin: 40
-  dashSpeedMax: 80
-  dashDamageMin: 40
-  dashDamageMax: 100
+  dashSpeedMin: 45
+  dashSpeedMax: 85
+  dashDamageMin: 60
+  dashDamageMax: 140
   chargeTime: 2
   kickoffDelay: 0.2
   kickOffSpeedMin: 20
-  kickOffSpeedMax: 25
+  kickOffSpeedMax: 60
+  animeEffect: {fileID: 0}
   invulnTime: 1
   dustTrail: {fileID: 8034566549974654567, guid: 03b6ac61b8dc46c4f951de6db4fec26d,
     type: 3}
   kickOffDust: {fileID: 917293175589333166, guid: 70365d37040252c408717aec4e5c8118,
     type: 3}
+  kickOffHit: {fileID: 198572881580852744, guid: 031f31c98325eb647859b701c1f8f2e6,
+    type: 3}
+  kickoffScaleRange: {x: 0.5, y: 1}
   jumpDust: {fileID: 4510506093781339802, guid: ebb0271c3d41f6c49ab59b5d91c57702,
+    type: 3}
+  groundHitDust: {fileID: 4510506093781339802, guid: 8c9901f44e667694dac42143809b8c86,
     type: 3}
   chargingParticles: {fileID: 6676160055152296305}
   fullyChargedParticles: {fileID: 169873445413502702}
@@ -1535,7 +1546,7 @@ MonoBehaviour:
   maxDabStrength: 55
   minDabStrength: 0
   invStart: 0
-  dabIFrames: 0.05
+  dabIFrames: 0.12
   dabStamCost: 50
   bar: {fileID: 0}
 --- !u!114 &1632577408
@@ -1573,8 +1584,8 @@ MonoBehaviour:
   dashDamage: 2
   _pState: 3
   _cState: 1
-  breakOutPress: 15
-  DOT: 40
+  breakOutPress: 12
+  DOT: 30
   buttonMasher: {fileID: 0}
 --- !u!114 &599778917
 MonoBehaviour:
@@ -1602,6 +1613,7 @@ MonoBehaviour:
   deathOffTime: 0.1
   timeBetweenExplosions: 1
   deathParticles: {fileID: 0}
+  waitOnChadDeath: 5
   flashL: 0
   flashR: 0
 --- !u!114 &528049898
@@ -1634,6 +1646,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputMan: {fileID: 0}
+  rumbleDelay: 0.1
 --- !u!114 &528049890
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1820,6 +1833,7 @@ MonoBehaviour:
   speed: 100
   inputManager: {fileID: 0}
   cam: {fileID: 0}
+  _camMgr: {fileID: 0}
   states: 1
   segmentScale: 1
   numOfVertices: 150
@@ -1827,11 +1841,10 @@ MonoBehaviour:
   targetPrefab: {fileID: 2316370848721078857, guid: 2754f3cf2d4fcfc4bb06402ad9bbf2b3,
     type: 3}
   hitSomething: 0
-  collidedObj: {fileID: 0}
-  launchAngle: {x: 0, y: 0, z: 0}
   startVecpercent: 0.35
   endVecpercent: 0.9
   targetOffset: 0.04
+  _targetPosition: {x: 0, y: 0, z: 0}
   _localtargetrot: 0
   rotSpeed: 70
   minDist: 2.5
@@ -2038,6 +2051,64 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
+--- !u!1 &1979393457
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1979393458}
+  - component: {fileID: 1979393460}
+  - component: {fileID: 1979393459}
+  m_Layer: 18
+  m_Name: TargetLockOn
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1979393458
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1979393457}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 654227375}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &1979393460
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1979393457}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 100
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1979393459
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1979393457}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87aba7c4d656b3c4a964b0ed06d56481, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemies: []
 --- !u!1 &2013336474
 GameObject:
   m_ObjectHideFlags: 0
@@ -7232,7 +7303,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6800905871263620215}
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0.71399975, z: 0}
+  m_LocalPosition: {x: 0, y: 1.177, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 6803537741492887935}
@@ -12414,7 +12485,7 @@ PrefabInstance:
     - target: {fileID: 8028315114481823143, guid: 2f1cd12044250814e820382a9f7c8cd4,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.71399975
+      value: 1.1769991
       objectReference: {fileID: 0}
     - target: {fileID: 8028315114481823143, guid: 2f1cd12044250814e820382a9f7c8cd4,
         type: 3}
@@ -12528,15 +12599,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2f1cd12044250814e820382a9f7c8cd4, type: 3}
---- !u!4 &42289837521195928 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8028315114481823143, guid: 2f1cd12044250814e820382a9f7c8cd4,
-    type: 3}
-  m_PrefabInstance: {fileID: 8069448248355061311}
-  m_PrefabAsset: {fileID: 0}
 --- !u!198 &169873445413502702 stripped
 ParticleSystem:
   m_CorrespondingSourceObject: {fileID: 7901550781101064401, guid: 2f1cd12044250814e820382a9f7c8cd4,
+    type: 3}
+  m_PrefabInstance: {fileID: 8069448248355061311}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &42289837521195928 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8028315114481823143, guid: 2f1cd12044250814e820382a9f7c8cd4,
     type: 3}
   m_PrefabInstance: {fileID: 8069448248355061311}
   m_PrefabAsset: {fileID: 0}

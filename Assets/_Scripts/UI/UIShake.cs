@@ -22,19 +22,7 @@ public class UIShake : MonoBehaviour
 
     // used for text bubble shake
     private float _decayingShakeMagnitude;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+   
     /// <summary>
     /// Shakes the rectTransform for a given period and magnitude override
     /// </summary>

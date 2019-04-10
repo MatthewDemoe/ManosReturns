@@ -5,22 +5,31 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
-    path: Assets/_Scenes/Main.unity
-    guid: a3cd8ef2004e1894da76b8a16a314dae
-  - enabled: 1
-    path: Assets/_Scenes/HerosWin.unity
-    guid: 49cd207fee8f6714989bd08eda26b1e1
-  - enabled: 1
-    path: Assets/_Scenes/ManosWins.unity
-    guid: 0299e3045a745ef4d85c659ecfd25a20
-  - enabled: 1
-    path: Assets/_Scenes/ManosCinematic.unity
-    guid: 2c86d307e1a880f41af35237ffd7ec3e
-  - enabled: 1
+  - enabled: 0
+    path: Assets/_Scenes/Pre_Title.unity
+    guid: bb828ac97b527a24da31c88912150a04
+  - enabled: 0
+    path: Assets/_Scenes/Post_Title.unity
+    guid: 8748a070a4aa51845bd7559b8512fd8c
+  - enabled: 0
     path: Assets/_Scenes/Title.unity
     guid: 8df6e15eae570c84f8abdfa15b829072
   - enabled: 0
-    path: Assets/_Scenes/It'sOverManos.unity
-    guid: 3fc2f447c79023441a452f391d5f1f77
+    path: Assets/_Scenes/Tutorial.unity
+    guid: a3cd8ef2004e1894da76b8a16a314dae
+  - enabled: 0
+    path: Assets/_Scenes/Main.unity
+    guid: 2d0d4dfca03e4124694c8a286dcc4b0e
+  - enabled: 0
+    path: Assets/_Scenes/ChadWins.unity
+    guid: 340c2aecb21f25a44b79dce9da366f90
+  - enabled: 0
+    path: Assets/_Scenes/ManosCinematic.unity
+    guid: 2c86d307e1a880f41af35237ffd7ec3e
+  - enabled: 0
+    path: Assets/_Scenes/JackyCinematic.unity
+    guid: 97140aaeff961214da04f41e5fee4c10
+  - enabled: 1
+    path: Assets/_Scenes/MattCinematic.unity
+    guid: 691fc5c84c9b1464181203a26ecacae4
   m_configObjects: {}
