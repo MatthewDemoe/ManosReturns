@@ -73,6 +73,9 @@ public class MovementManager : MonoBehaviour
     [SerializeField]
     float drag = 0.1f;
 
+    [SerializeField]
+    float elasticity = 0.75f;
+
     [Header("Jump")]
 
     [SerializeField]
@@ -88,6 +91,8 @@ public class MovementManager : MonoBehaviour
     float jumpChargeRate;
 
     float _jumpCharge = 1.0f;
+
+    bool isKinematicsEnabled = true;
 
     [Tooltip("allows the player some time just after walking off an edge to jump as if on land")]
     [SerializeField]
@@ -156,12 +161,15 @@ public class MovementManager : MonoBehaviour
     [SerializeField]
     float chargeTime = 2.0f;
 
+    [SerializeField]
+    float castRadius = 1.0f;
+
     float _dashCooldownTimer = 0.0f;
 
     [Header("Kick-off of dash attack")]
 
     [SerializeField]
-    float slideAngle = 120.0f;
+    float slideAngle = 80.0f;
 
     [SerializeField]
     float kickoffDelay = 0.5f;
@@ -214,6 +222,8 @@ public class MovementManager : MonoBehaviour
     // when landing on the ground
     [SerializeField]
     ParticleSystem groundHitDust;
+    [SerializeField]
+    float fallDustVelThresh = -5.0f;
 
     [SerializeField]
     ParticleSystem chargingParticles;
@@ -283,8 +293,6 @@ public class MovementManager : MonoBehaviour
         _fireEmissionRateMax = _chargeEmitter.rateOverTime.constant;
         EndDashChargeParticles();
 
-
-
         player = gameObject;
         controller = GetComponent<CharacterController>();
         jumpChargeRate = (jumpMax - jumpMin) / chargeTime;
@@ -304,9 +312,9 @@ public class MovementManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_wasGroundedLastFrame != IsGrounded())
+        if ((_wasGroundedLastFrame != IsGrounded()) && (isKinematicsEnabled))
         {
-            if ((pManager.GetEnumChargeState() != Enums.ChargingState.Dashing) && (_movementDisabledDurationTimer <= 0.0f))
+            if (pManager.GetEnumChargeState() != Enums.ChargingState.Dashing)
             {
                 // special behaviour when landing or leaving the ground
                 if (_wasGroundedLastFrame)
@@ -320,7 +328,7 @@ public class MovementManager : MonoBehaviour
                 }
 
                 _wasGroundedLastFrame = IsGrounded();
-            }
+            }            
         }
 
         float val = UtilMath.Lmap(_landTimer, 0.0f, landEaseTime, 0.0f, 1.0f);
@@ -393,12 +401,7 @@ public class MovementManager : MonoBehaviour
 
         _desiredVelocity = new Vector2((_lateralInput.x + _forwardInput.x), (_lateralInput.z + _forwardInput.z)) * baseMoveSpeed;
 
-        bool isKinematicsEnabled = pManager.GetEnumPlayerState() != Enums.PlayerState.Grabbed; //&& !_kicking;
-
-        if (controller.isGrounded)
-        {
-            _velocity.y = Mathf.Max(_velocity.y, -0.1f);
-        }
+        isKinematicsEnabled = ((pManager.GetEnumPlayerState() != Enums.PlayerState.Grabbed) && (_kickoffCoroutine == null));
 
         // Apply movement, velocity and translate etc
         if (isKinematicsEnabled)
@@ -416,7 +419,8 @@ public class MovementManager : MonoBehaviour
             } else if (pManager.GetEnumChargeState() == Enums.ChargingState.Dabbing)
             {
                 UpdateDab();
-            } else
+            }
+            else
             {
                 // ease in movement speed cap changes
                 _moveSpeedMax = Mathf.Lerp(_moveSpeedMax, baseMoveSpeed, Mathf.Min(moveSpeedLerpIntensity * Time.deltaTime, 1.0f));
@@ -499,6 +503,22 @@ public class MovementManager : MonoBehaviour
                 characterSprite.transform.RotateAround(characterSprite.transform.position, characterSprite.transform.up, _spinRotation);
             }
 
+            else
+            {
+                if (controller.isGrounded)
+                {
+                    _velocity.y = Mathf.Max(_velocity.y, -0.1f);
+                }
+
+                else
+                {
+                    if ((_coyoteTimer <= 0.0f))
+                    {
+                        pManager.SetPlayerState(Enums.PlayerState.Falling);
+                    }
+                }
+            }
+
             controller.Move(_velocity * Time.deltaTime);
         }
     }
@@ -508,11 +528,6 @@ public class MovementManager : MonoBehaviour
         transform.forward = playerCamera.transform.forward;
         transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
     }
-
-
-
-
-
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //// Jumping /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -561,7 +576,7 @@ public class MovementManager : MonoBehaviour
             //return;
         }
 
-        if (pManager.IsPlayerControllable() && (_movementDisabledDurationTimer <= 0.0f))
+        if (pManager.IsPlayerControllable() && (_movementDisabledDurationTimer <= 0.0f) && (!pManager.IsInDisabledState()))
         {
             //either grounded, or not grounded and still having coyote time
             bool canJump = !_jumpUsed && (controller.isGrounded || (!controller.isGrounded && _coyoteTimer > 0.0f));
@@ -660,10 +675,9 @@ public class MovementManager : MonoBehaviour
 
 
 
-
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //// Jumping /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -689,15 +703,6 @@ public class MovementManager : MonoBehaviour
         }
     }
 
-
-
-
-
-
-
-
-
-
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //// Dashing /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -714,9 +719,12 @@ public class MovementManager : MonoBehaviour
             //_dashChargingTime = chargeTime;
             OnFullyCharged();
 
+            // automatically timeout dash charging
             if(_dashChargingTime > chargeTime + 2.0f)
             {
                 Cancel();
+                
+                _airDashUsed = true; // comment this line to enable a continuous-charging exploit
             }
 
         }
@@ -817,23 +825,25 @@ public class MovementManager : MonoBehaviour
             _am.PlaySoundOnce(AudioManager.Sound.ChadDash, transform);
         }
         else
+        {
             GetComponent<FlashFeedback>().CooldownReact();
+        }
+            
     }
    
     void CheckAhead()
     {
         //kickables;
         RaycastHit hit;
-        float castRadius = 0.5f;
 
-        if (Physics.SphereCast(transform.position - _dashDir * castRadius, castRadius, _dashDir, out hit, castRadius * 2.0f, kickables))
+        if (Physics.SphereCast((transform.position - _dashDir * castRadius * 0.5f), castRadius, _dashDir, out hit, castRadius * 3.0f, kickables))
         {
-            //Vector3 position = hit.point - (hit.normal * castRadius);
-            transform.position -= _dashDir;
 
             //StopCoroutine(_kickoffCoroutine);
             if (_kickoffCoroutine == null)
             {
+                print(hit.transform.name);
+
                 //if ((hit.distance <= 1.5f))
                 if ((hit.transform.gameObject.tag.Equals("Hittable") && (GetComponent<PlayerManager>().GetEnumChargeState() == Enums.ChargingState.Dashing)))
                 {
@@ -845,7 +855,7 @@ public class MovementManager : MonoBehaviour
                 {
                     float angleOfDeflection = (Vector3.Angle(_dashDir, -hit.normal));
 
-                    //if (angleOfDeflection < slideAngle)
+                    if (angleOfDeflection < slideAngle)
                     {
                         // StartCoroutine(KickOff(hit));
                         _kickoffCoroutine = KickOff(hit, false);
@@ -857,14 +867,23 @@ public class MovementManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Perform KickOff
+    /// </summary>
+    /// <param name="hit"></param>
+    /// <param name="damageManos"></param>
+    /// <returns></returns>
     IEnumerator KickOff(RaycastHit hit, bool damageManos = false)
     {
         if ((pManager.GetEnumChargeState() == Enums.ChargingState.Dashing))
         {
+
+            transform.position = hit.point + (_dashDir * castRadius * 2.0f);
+
             // determine kickoff speed
             float kickOffSpeed = (Mathf.Lerp(kickOffSpeedMin, kickOffSpeedMax, _dashChargeNormalized));
 
-            Vector3 kickoffVelocity = -characterSprite.transform.forward;
+            Vector3 kickoffVelocity = hit.normal;//-characterSprite.transform.forward;
             kickoffVelocity.y += 0.2f;
             kickoffVelocity.Normalize();
             kickoffVelocity *= kickOffSpeed;
@@ -874,7 +893,6 @@ public class MovementManager : MonoBehaviour
             //_kicking = true;
 
             _movementDisabledDurationTimer = kickoffDelay + 0.3f;
-
 
             // if hit, play a special effect
             if(damageManos)
@@ -887,24 +905,44 @@ public class MovementManager : MonoBehaviour
 
             ParticleSystem kickoffParticles;
 
+            if (hit.transform.name == "Target")
+            {
+
+                PlayerHealth targetHP = hit.transform.GetComponent<PlayerHealth>();
+                if (targetHP)
+                {
+                    targetHP.TakeDamage(_dashDamage, Enums.ManosParts.None);
+                }
+            }
+            
+
             if (damageManos)
             {
                 _airDashUsed = false;
 
-
-                ManosHand h = hit.transform.GetComponent<ManosHand>();
-                if (h == null) h = hit.transform.GetComponentInParent<ManosHand>();
+                ManosHand hand = hit.transform.GetComponent<ManosHand>();
+                if (hand == null)
+                {
+                    print("WHELP!");
+                }
 
                 //Shake the mesh that you hit
-                MeshShaker m = hit.transform.GetComponent<MeshShaker>();
-                if (m == null) m = hit.transform.GetComponentInChildren<MeshShaker>();
+                MeshShaker shaker = hit.transform.GetComponent<MeshShaker>();
+                if (shaker == null)
+                {
+                    shaker = hit.transform.GetComponentInChildren<MeshShaker>();
+                }
+                if (shaker == null)
+                {
+                    shaker = hit.transform.parent.GetComponent<MeshShaker>();
+                }
 
                 if (hit.transform.name == "GauntletParent_L")
                 {
                     //Returns true if damage was dealt
                     if (hit.transform.root.GetComponent<Manos>().DealDamageToArm(Enums.Hand.Left, _dashDamage))
                     {
-                        m.enabled = true;
+                        shaker.enabled = true;
                     }
                 }
                 else if (hit.transform.name == "GauntletParent_R")
@@ -912,7 +950,7 @@ public class MovementManager : MonoBehaviour
                     //Returns true if damage was dealt
                     if (hit.transform.root.GetComponent<Manos>().DealDamageToArm(Enums.Hand.Right, _dashDamage))
                     {
-                        m.enabled = true;
+                        shaker.enabled = true;
                     }
                 }
                 else
@@ -935,13 +973,38 @@ public class MovementManager : MonoBehaviour
                     {
                         part = Enums.ManosParts.Head;
                     }
+                    else if (hit.transform.name == "GrabBox")
+                    {
+                        switch (hit.transform.GetComponent<ManosGrab>().GetHand().GetHand())
+                        {
+                            case Enums.Hand.Left:
+                                part = Enums.ManosParts.LeftHand;
+                                break;
+                            case Enums.Hand.Right:
+                                part = Enums.ManosParts.RightHand;
+                                break;
+                        }
+                    }
 
-                    if (h)
+                    //Shake the mesh that you hit
+                    shaker = hit.transform.GetComponent<MeshShaker>();
+                    if (shaker == null)
+                    {
+                        shaker = hit.transform.GetComponentInChildren<MeshShaker>();
+                    }
+                    if (shaker == null)
+                    {
+                        shaker = hit.transform.parent.GetComponent<MeshShaker>();
+                    }
+
+                    if (hand)
                     {
                         // If damage was successfuly dealt
-                        if (h.TakeDamage(_dashDamage))
+                        //if (hand.TakeDamage(_dashDamage))
+                        if (!hand.IsPowered())
                         {
-                            m.enabled = true;
+                            shaker.enabled = true;
+                            hand.TakeDamage(_dashDamage);
                             hit.transform.root.GetComponent<FlashFeedback>().ReactToDamage(0.0f, part);
                         }
                     }
@@ -949,13 +1012,21 @@ public class MovementManager : MonoBehaviour
                     {
                         PlayerHealth hp = hit.transform.root.GetComponent<PlayerHealth>();
                         if (hp)
+                        {
                             hp.TakeDamage(_dashDamage, part);
-                        m.enabled = true;
+                        }
+
+                        if (shaker != null)
+                        {
+                            shaker.enabled = true;
+                        }
+
                     }
                 }
                 kickoffParticles = Instantiate(kickOffHit, transform.position, Quaternion.identity);
                 kickoffParticles.transform.up = -characterSprite.transform.forward;
-            } else
+            }
+            else
             {
                 kickoffParticles = Instantiate(kickOffDust, transform.position, Quaternion.identity);
                 kickoffParticles.transform.up = -characterSprite.transform.forward;
@@ -972,6 +1043,9 @@ public class MovementManager : MonoBehaviour
 
             pManager.SetChargeState(Enums.ChargingState.Flip);
             _anim.SetTrigger("FlipTrigger");
+
+            _am.PlaySoundOnce(AudioManager.Sound.ChadDashImpact, transform);
+
 
             ResetRotation();
 
@@ -994,7 +1068,8 @@ public class MovementManager : MonoBehaviour
         else if (pManager.GetEnumChargeState() == Enums.ChargingState.ChargingJump)
         {
             CancelJumpCharge();
-        } else if (pManager.GetEnumChargeState() == Enums.ChargingState.ChargingDash)
+        }
+        else if (pManager.GetEnumChargeState() == Enums.ChargingState.ChargingDash)
         {
             _am.StopSound(AudioManager.Sound.ChadCharge);
             _dashChargingTime = 0.0f;
@@ -1003,6 +1078,8 @@ public class MovementManager : MonoBehaviour
             _dashCooldownTimer = dashCooldown;
             _dashChargeNormalized = 0.0f;
             _chargingDash = false;
+
+            gravityModifier = 1.0f;
             EndDashChargeParticles();
         }
         // if throwing, then it will be cancelled
@@ -1041,10 +1118,13 @@ public class MovementManager : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Finish")
+        {
             GameObject.Find("OverlordController").GetComponent<LobbyScript>().ReachedWaypoint();
-
+        }
         else if (other.gameObject.tag == "Respawn")
+        {
             GameObject.Find("OverlordController").GetComponent<LobbyScript>().ResetPosition();
+        }            
     }
     
     // Hit response //
@@ -1057,11 +1137,12 @@ public class MovementManager : MonoBehaviour
         float r = UtilMath.Lmap(_knockDir.magnitude, 0.0f, 100.0f, 0.0f, 1.0f);
         _rumble.RumbleForDuration(r, 0.0f, 0.25f);
         camManager.DoCameraShake(r);
-        Debug.Log(r);
 
         controller.enabled = false;
         transform.position += _velocity.normalized;
         controller.enabled = true;
+
+        _wasGroundedLastFrame = false;
 
         if (_knockDir.magnitude >= 40.0f)
         {
@@ -1124,7 +1205,6 @@ public class MovementManager : MonoBehaviour
         {
             pManager.SetPlayerState(Enums.PlayerState.Grounded);
             _anim.SetTrigger("LandTrigger");
-            _am.PlaySoundOnce(AudioManager.Sound.ChadLand, transform);
 
             if (pManager.GetEnumChargeState() == Enums.ChargingState.Dashing)
                 EndDash();
@@ -1138,17 +1218,30 @@ public class MovementManager : MonoBehaviour
         }
 
         _movementDisabledDurationTimer = 0.0f;
-
-        float fallDustThresh = -1.0f;
-        if (_velocity.y < fallDustThresh)
+        
+        if (_velocity.y < fallDustVelThresh)
         {
+            _am.PlaySoundOnce(AudioManager.Sound.ChadLand, transform);
             Instantiate(groundHitDust, transform.position, Quaternion.identity);
         }
 
         _velocity.y = 0.0f;
 
         _doubleJumpUsed = false;
-        _jumpUsed = false;
+        _jumpUsed = false; 
+    }
+
+    public void OnHitEnvironment(Vector3 surfaceNormal)
+    {
+        Cancel();
+        EndDash();
+
+        pManager.SetPlayerState(Enums.PlayerState.Falling);
+        _am.PlaySoundOnce(AudioManager.Sound.ChadLand, transform);
+        _movementDisabledDurationTimer = 0.0f;
+
+        _velocity = Vector3.Reflect(_velocity, surfaceNormal);
+        _velocity *= elasticity;
     }
 
     /// <summary>
@@ -1157,6 +1250,7 @@ public class MovementManager : MonoBehaviour
     private void OnLeaveGround()
     {
         _coyoteTimer = coyoteTime;
+
         //StartCoroutine(CancelJumpTimer());
     }
 
@@ -1178,15 +1272,9 @@ public class MovementManager : MonoBehaviour
     }
 
 
-
-
-
-
-
-
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //// Dabbing /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1207,8 +1295,6 @@ public class MovementManager : MonoBehaviour
                 _am.PlaySoundOnce(AudioManager.Sound.ChadDab, transform);
                 _dab.DabFlash();
                 StartCoroutine("DabFrames");
-
-                //ChadSpeakSpeechBubbles.Instance().OnDab();
             }
         }
     }
@@ -1245,6 +1331,5 @@ public class MovementManager : MonoBehaviour
         controller.enabled = false;
         transform.position += vec;
         controller.enabled = true;
-    }
-
+    }    
 }

@@ -23,7 +23,7 @@ Shader "Custom/Toon Shader" {
 			_RimmColor("Rim Color", Color) = (0.5,0.5,0.5,1)
 			_Shade("Shadow CTRL",Range(0,1))=0.33
 			_UVs("UV Scale", Range(0,2)) = 0.1
-			[Toggle]_Glow("Glow",float) = 0.0
+			_Glow("Glow",float) = 0.0
 		
 	}
 		CGINCLUDE

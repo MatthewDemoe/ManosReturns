@@ -41,6 +41,7 @@ public class ManosHand : MonoBehaviour
     private GameObject objectInHand;
 
     SteamVR_Behaviour_Skeleton skeltal;
+    SteamVR_Behaviour_Skeleton skeltalBig;
 
     [SerializeField]
     ParticleSystem fireHands;
@@ -141,6 +142,15 @@ public class ManosHand : MonoBehaviour
     [SerializeField]
     ManosBullet bulletPrefab;
 
+    [SerializeField]
+    GameObject manosGrabPrefab;
+
+    [SerializeField]
+    GameObject manosGrabSuccessPrefab;
+
+    [SerializeField]
+    ParticleSystem[] armExplodePrefabs;
+
     bool _training = true;
 
     [SerializeField]
@@ -148,6 +158,9 @@ public class ManosHand : MonoBehaviour
 
     [SerializeField]
     List<Collider> troublesomeCol;
+
+    [SerializeField]
+    DamageNumbers damageNumbers;
 
     void Awake()
     {
@@ -157,6 +170,7 @@ public class ManosHand : MonoBehaviour
     private void OnEnable()
     {
         skeltal = GetComponent<SteamVR_Behaviour_Skeleton>();
+        skeltalBig = energyFist.GetComponent<SteamVR_Behaviour_Skeleton>();
 
         fistAction.AddOnChangeListener(OnFistActionChange, skeltal.inputSource);
 
@@ -179,16 +193,30 @@ public class ManosHand : MonoBehaviour
     {
         if (triggerAction.GetStateDown(skeltal.inputSource))
         {
-            foreach(Collider c in troublesomeCol)
+            if (!armDisabled)
             {
-                c.isTrigger = true;
+                foreach (Collider c in troublesomeCol)
+                {
+                    c.isTrigger = true;
+                }
             }
+            if (powerPose == Enums.Poses.Gun && manos.IsFistPowered(thisHand) && !manos.IsFistActioning(thisHand))
+            {
+                //if (manos.IsTriggerActioning(thisHand))
+                //{
+                    FireBullet();
+                //}
+            }
+
         }
         else if (triggerAction.GetStateUp(skeltal.inputSource))
         {
-            foreach (Collider c in troublesomeCol)
+            if (!armDisabled)
             {
-                c.isTrigger = false;
+                foreach (Collider c in troublesomeCol)
+                {
+                    c.isTrigger = false;
+                }
             }
         }
     }
@@ -201,6 +229,8 @@ public class ManosHand : MonoBehaviour
             {
                 if (!am.IsSoundPlaying(AudioManager.Sound.ManosCharging, transform))
                     am.PlaySoundOnce(AudioManager.Sound.ManosCharging, transform);
+                Instantiate(manosGrabPrefab, transform.GetChild(0).position, Quaternion.identity);
+                am.PlaySoundOnce(AudioManager.Sound.ManosGrab);
             }
         }
 
@@ -270,14 +300,20 @@ public class ManosHand : MonoBehaviour
         chadMesh = transform.GetChild(transform.childCount - 1).gameObject;
     }
 
-    private void SetCollidingObject(Collider col)
+    public void SetCollidingObject(Collider col)
     {
-        if (collidingObject || (!col.GetComponent<Rigidbody>() && !col.GetComponent<CharacterController>() && !col.CompareTag("Gem")))
+        try
         {
-            return;
+            if (col == null)
+            {
+                collidingObject = null;
+            }
+            else
+            {
+                collidingObject = col.gameObject;
+            }
         }
-        // Assigns the object as a potential grab target.
-        collidingObject = col.gameObject;
+        catch { }
     }
 
     // Update is called once per frame
@@ -305,7 +341,7 @@ public class ManosHand : MonoBehaviour
         {
             if (objectInHand == null)
                 CheckActions();
-
+           
             CheckGrab();
 
             //Gem is no longer a thing :(
@@ -362,7 +398,10 @@ public class ManosHand : MonoBehaviour
                 power = Mathf.Clamp(manos.GetChargeTimer(thisHand) / manos.GetPoseChargeTime(), 0, 1);
             float frequency = (power >= 1) ? 100 : Mathf.Lerp(0, 50, power);
             float amp = (power >= 1) ? 0.8f : Mathf.Lerp(0, 0.2f, power);
-            haptics.Execute(0, Time.deltaTime, frequency, amp, skeltal.inputSource);
+            try
+            {
+                haptics.Execute(0, Time.deltaTime, frequency, amp, skeltal.inputSource);
+            } catch { }
 
             SetParticlePower(power);
 
@@ -385,14 +424,6 @@ public class ManosHand : MonoBehaviour
         {
             manos.SetPosedOnce(thisHand, false);
             CancelCharge();
-        }
-
-        if (powerPose == Enums.Poses.Gun && manos.IsFistPowered(thisHand) && !manos.IsFistActioning(thisHand))
-        {
-            if (manos.IsTriggerActioning(thisHand))
-            {
-                FireBullet();
-            }
         }
 
         //if ((
@@ -424,7 +455,7 @@ public class ManosHand : MonoBehaviour
             {
                 if (!collidingObject.CompareTag("Gem"))
                 {
-                    if (collidingObject.CompareTag("Player") && fistAction.GetStateDown(skeltal.inputSource) && manos.CanGrab())
+                    if (collidingObject.CompareTag("Player") && fistAction.GetStateDown(skeltal.inputSource) && manos.CanGrab() && !manos.PlayerGrabbed())
                     {
                         GrabPlayer();
                     }
@@ -493,8 +524,8 @@ public class ManosHand : MonoBehaviour
                     var main = fireHands.main;
                     emission = fireHands.emission;
 
-                    main.startLifetime = Mathf.Lerp(0, 1.5f, p);
-                    emission.rateOverTime = Mathf.Lerp(0, 30, p);
+                    main.startLifetime = Mathf.Lerp(0, 2.5f, p);
+                    emission.rateOverTime = Mathf.Lerp(0, 90, p);
                     interp.SetShakeFactor(0);
 
                     break;
@@ -599,13 +630,20 @@ public class ManosHand : MonoBehaviour
 
     public void FireBullet()
     {
-        haptics.Execute(0, Time.deltaTime, 1, 1, skeltal.inputSource);
+        try
+        {
+            haptics.Execute(0, Time.deltaTime, 1, 1, skeltal.inputSource);
+        }
+        catch{}
         gunBarrel.SetActive(false);
         am.StopSoundLoop(AudioManager.Sound.ManosGunActive, true, transform);
         am.PlaySoundOnce(AudioManager.Sound.ManosBullet, transform);
         bullet.FireBullet();
         CancelCharge();
-        rapidFire = true; //This overwrites the rapidFire = false in CancelCharge
+        if (manos.IsGunActioning(thisHand))
+        {
+            rapidFire = true; //This overwrites the rapidFire = false in CancelCharge
+        }
     }
 
     /// <summary>
@@ -683,7 +721,12 @@ public class ManosHand : MonoBehaviour
 
     private void GrabPlayer()
     {
-        print("GRABBED!");
+        objectInHand = collidingObject;
+
+        if (!objectInHand.GetComponent<PlayerHealth>().CanTakeDamage())
+        {
+            return;
+        }
 
         //Clear power settings
         manos.GetFlasher().ManosChargeDeactivate(thisHand, handHealth / handHealthMax);
@@ -700,8 +743,6 @@ public class ManosHand : MonoBehaviour
         //// Add a new joint that connects the controller to the object using the AddFixedJoint() method below.
         //var joint = AddFixedJoint();
         //joint.connectedBody = objectInHand.GetComponent<Rigidbody>();
-
-        objectInHand = collidingObject;
         //objectInHand.GetComponent<PlayerHealth>().TakeDamage(15);
 
         //if (!_training)
@@ -715,7 +756,13 @@ public class ManosHand : MonoBehaviour
         objectInHand.transform.localPosition = grabOffset;
         objectInHand.transform.localRotation = Quaternion.identity;
 
+        Instantiate(manosGrabPrefab, transform.GetChild(0).position, Quaternion.identity);
+
         am.StopSound(AudioManager.Sound.ManosCharging, transform);
+
+        am.PlaySoundOnce(AudioManager.Sound.ManosGrabSuccess, transform);
+
+        manos.SetPlayerGrabbed(true);
 
         StartCoroutine("GrabPlayerCountdown");
     }
@@ -742,12 +789,19 @@ public class ManosHand : MonoBehaviour
         objectInHand.GetComponent<MovementManager>().ResetVelocity();
         objectInHand.GetComponent<PlayerManager>().SetGrabbed(false, this);
         objectInHand.transform.parent = null;
+
         if (throwPlayer)
+        {
             objectInHand.GetComponent<MovementManager>().Knockback(velocity);
+        }
 
         objectInHand = null;
         //grabCooldown = manos.GetGripCooldown();
         chadMesh.SetActive(false);
+
+        manos.SetPlayerGrabbed(false);
+
+        collidingObject = null;
     }
 
     IEnumerator GrabPlayerCountdown()
@@ -765,9 +819,15 @@ public class ManosHand : MonoBehaviour
     {
         if (!armDisabled && !manos.IsFistPowered(thisHand))
         {
+            damageNumbers.ShowDamage(damage);
+            Debug.Log("Arm took Damage");
+
             ModifyArmHealth(-Mathf.Abs(damage));
             // Rumble for 2 seconds
-            haptics.Execute(0, 1.5f, 90, 0.9f, skeltal.inputSource);
+            try
+            {
+                haptics.Execute(0, 1f, 80, 0.5f, skeltal.inputSource);
+            } catch { }
         }
         bool b = !armDisabled;
         return b;
@@ -778,7 +838,8 @@ public class ManosHand : MonoBehaviour
         handHealth += h;
         if (handHealth <= 0)
         {
-            DisableArm();
+            StartCoroutine(DestroyArm());
+            StartCoroutine(ExplodeArms());
         }
         handHealth = Mathf.Clamp(handHealth, 0, handHealthMax);
         float healthPercent = handHealth / handHealthMax;
@@ -792,6 +853,7 @@ public class ManosHand : MonoBehaviour
 
     public void DisableArm()
     {
+        StopCoroutine(ExplodeArms());
         armDisabled = true;
         rapidFire = false;
         CancelCharge();
@@ -802,6 +864,9 @@ public class ManosHand : MonoBehaviour
         vMat.SetFloat("_Glow", -0.9f);
         bullet.gameObject.SetActive(false);
         skeltal.enabled = false;
+        skeltalBig.enabled = false;
+
+        haptics.Execute(0, manos.GetArmRepairTime(), 100, 0.5f, skeltal.inputSource);
 
         EnableGravity();
     }
@@ -822,6 +887,11 @@ public class ManosHand : MonoBehaviour
         EnableGravity();
     }
 
+    public bool IsPowered()
+    {
+        return manos.IsFistPowered(thisHand);
+    }
+
     void EnableGravity()
     {
         interp.enabled = false;
@@ -840,6 +910,41 @@ public class ManosHand : MonoBehaviour
 
         gauntlet.enabled = true;
         Destroy(gauntlet.GetComponent<Rigidbody>());
+    }
+
+    IEnumerator DestroyArm()
+    {
+        armExplodePrefabs[Random.Range(0, armExplodePrefabs.Length)].Play();
+        haptics.Execute(0, 0.5f, 40, 0.75f, skeltal.inputSource);
+
+        yield return new WaitForSeconds(1);
+
+        armExplodePrefabs[Random.Range(0, armExplodePrefabs.Length)].Play();
+        haptics.Execute(0, 0.5f, 40, 0.75f, skeltal.inputSource);
+
+        yield return new WaitForSeconds(0.75f);
+
+        armExplodePrefabs[Random.Range(0, armExplodePrefabs.Length)].Play();
+        haptics.Execute(0, 0.5f, 40, 0.75f, skeltal.inputSource);
+
+        yield return new WaitForSeconds(1.0f);
+
+        armExplodePrefabs[Random.Range(0, armExplodePrefabs.Length)].Play();
+        haptics.Execute(0, 0.5f, 40, 0.75f, skeltal.inputSource);
+
+        yield return new WaitForSeconds(1.5f);
+        armExplodePrefabs[Random.Range(0, armExplodePrefabs.Length)].Play();
+
+        DisableArm();
+    }
+
+    IEnumerator ExplodeArms()
+    {
+        while (!armDisabled)
+        {
+            armExplodePrefabs[Random.Range(0, armExplodePrefabs.Length)].Play();
+            yield return new WaitForSeconds(0.25f);
+        }
     }
 
     IEnumerator RepairArm()
@@ -871,58 +976,66 @@ public class ManosHand : MonoBehaviour
     /// </summary>
     public void HitImpulse()
     {
-        haptics.Execute(0, 1f, 120, 0.9f, skeltal.inputSource);
+        try
+        {
+            haptics.Execute(0, 1f, 120, 0.9f, skeltal.inputSource);
+        } catch { }
     }
 
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Ground"))
-        {
-            if (vInterp.enabled == false && !armDisabled)
-            {
-                //interp.enabled = false;
-                //vInterp.enabled = true;
-                //vInterp.SetDirection(velocity);
-                //skeltal.enabled = false;
-                //haptics.Execute(0, 0.5f, 120, 0.9f, skeltal.inputSource);
-                //haptics.Execute(0, Time.deltaTime, 120, 0.9f, skeltal.inputSource);
-                //trueHand.SetActive(true);
-                if (objectInHand) ReleasePlayer();
-            }
-        }
-        else
-        {
-            if (other.CompareTag("Player"))
-            {
-                SetCollidingObject(other);
-            }
-        }
-    }
+    //void OnTriggerEnter(Collider other)
+    //{
+    //    if (other.CompareTag("Ground"))
+    //    {
+    //        if (vInterp.enabled == false && !armDisabled)
+    //        {
+    //            //interp.enabled = false;
+    //            //vInterp.enabled = true;
+    //            //vInterp.SetDirection(velocity);
+    //            //skeltal.enabled = false;
+    //            //haptics.Execute(0, 0.5f, 120, 0.9f, skeltal.inputSource);
+    //            //haptics.Execute(0, Time.deltaTime, 120, 0.9f, skeltal.inputSource);
+    //            //trueHand.SetActive(true);
+    //            //if (objectInHand) ReleasePlayer();
+    //        }
+    //    }
+    //    else
+    //    {
+    //        if (other.CompareTag("Player"))
+    //        {
+    //            SetCollidingObject(other);
+    //        }
+    //    }
+    //}
 
-    void OnTriggerStay(Collider other)
-    {
-        if (other.CompareTag("Ground"))
-        {
-            if (vInterp.enabled == false && !armDisabled)
-            {
-                //haptics.Execute(0, Time.deltaTime, 120, 0.9f, skeltal.inputSource);
-            }
-        }
-        else if (other.CompareTag("Player"))
-        {
-            SetCollidingObject(other);
-        }
-    }
+    //void OnTriggerStay(Collider other)
+    //{
+    //    if (other.CompareTag("Ground"))
+    //    {
+    //        if (vInterp.enabled == false && !armDisabled)
+    //        {
+    //            //haptics.Execute(0, Time.deltaTime, 120, 0.9f, skeltal.inputSource);
+    //        }
+    //    }
+    //    else if (other.CompareTag("Player"))
+    //    {
+    //        SetCollidingObject(other);
+    //    }
+    //}
 
-    void OnTriggerExit(Collider other)
-    {
-        if (!collidingObject)
-        {
-            return;
-        }
-        //collidingObject.transform.parent = null;
+    //void OnTriggerExit(Collider other)
+    //{
+    //    if (!collidingObject)
+    //    {
+    //        return;
+    //    }
+    //    collidingObject.transform.parent = null;
+    //
+    //    collidingObject = null;
+    //}
 
-        collidingObject = null;
+    public GameObject GetCollidingObject()
+    {
+        return collidingObject;
     }
 
     public Vector3 GetForward()

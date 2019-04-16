@@ -40,17 +40,13 @@ class InputManager : MonoBehaviour
 
     public void GetInput()
     {
-        if (GetTriggerL() >= 0.25f)
-            Last_L_Trig = true;
+        /* should be like this */
 
-        else
-            Last_L_Trig = false;
+        Last_L_Trig = (GetTriggerL() >= 0.25f) ? true : false;
 
-        if (GetTriggerR() >= 0.25f)
-            Last_R_Trig = true;
+        Last_R_Trig = (GetTriggerR() >= 0.25f) ? true : false;
 
-        else
-            Last_R_Trig = false;
+        /* ALL OF THIS SHIT BELOW MUST GO */
 
         //Store the previous state of the buttons to check up/down
         if (state.Buttons.A == ButtonState.Pressed)
@@ -101,7 +97,7 @@ class InputManager : MonoBehaviour
         else
             Last_Start = false;
         // DPadUp, DPadDown, DPadLeft, DPadRight
-        if (state.DPad.Up== ButtonState.Pressed)
+        if (state.DPad.Up == ButtonState.Pressed)
             Last_DPadUp = true;
 
         else
@@ -138,10 +134,16 @@ class InputManager : MonoBehaviour
             Last_StickRight = false;
 
         if (leftStickFlicked)
+        {
             leftStickFlicked = false;
+        }
+            
 
         if (rightStickFlicked)
+        {
             rightStickFlicked = false;
+        }
+            
 
         //Check new states
         state = GamePad.GetState(PlayerIndex.One);

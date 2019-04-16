@@ -10,6 +10,9 @@ public class PlayerStateManager : MonoBehaviour
     [SerializeField]
     GameObject playerUI;
 
+    [SerializeField]
+    GameObject bullseyeDeathParticles;
+
     GameObject _chad;
     GameObject _manos;
 
@@ -46,7 +49,13 @@ public class PlayerStateManager : MonoBehaviour
 
         }
 
-        else
+        else if(player.name.Equals("Target"))
+        {
+            Instantiate(bullseyeDeathParticles, player.transform.position, Quaternion.identity);
+            Destroy(player);
+        }
+
+        else if(player.name.Equals("Manos 2.3"))
         {
             _manos.GetComponent<FlashFeedback>().ManosDeath();
             GameObject.Find("OverlordController").GetComponent<FadeOut>().BeginFadeOut(0.0f);

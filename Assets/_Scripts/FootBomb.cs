@@ -59,15 +59,22 @@ public class FootBomb : MonoBehaviour
         if (bigG.tag == "Hittable")
         {
             //Shake the mesh that you hit
-            MeshShaker m = collision.gameObject.GetComponent<MeshShaker>();
-            if (m == null) m = collision.gameObject.GetComponentInChildren<MeshShaker>();
+            MeshShaker shaker = collision.gameObject.GetComponent<MeshShaker>();
+            if (shaker == null)
+            {
+                shaker = collision.gameObject.GetComponentInChildren<MeshShaker>();
+            }
+            if (shaker == null)
+            {
+                shaker = collision.transform.parent.GetComponent<MeshShaker>();
+            }
 
             if (bigG.name == "GauntletParent_L")
             {
                 //Returns true if damage was dealt
                 if (collision.transform.root.GetComponent<Manos>().DealDamageToArm(Enums.Hand.Left, damageScale))
                 {
-                    m.enabled = true;
+                    shaker.enabled = true;
                 }
             }
             else if (bigG.name == "GauntletParent_R")
@@ -75,12 +82,20 @@ public class FootBomb : MonoBehaviour
                 //Returns true if damage was dealt
                 if (collision.transform.root.GetComponent<Manos>().DealDamageToArm(Enums.Hand.Right, damageScale))
                 {
-                    m.enabled = true;
+                    shaker.enabled = true;
+                }
+            }
+            else if (bigG.name == "Target")
+            {
+                PlayerHealth targetHP = collision.transform.GetComponent<PlayerHealth>();
+                if (targetHP)
+                {
+                    targetHP.TakeDamage(damageScale, Enums.ManosParts.None);
                 }
             }
             else
             {
-                ManosHand h = bigG.GetComponent<ManosHand>();
+                ManosHand hand = bigG.GetComponent<ManosHand>();
 
                 Enums.ManosParts part = Enums.ManosParts.None;
 
@@ -100,12 +115,24 @@ public class FootBomb : MonoBehaviour
                 {
                     part = Enums.ManosParts.Head;
                 }
-
-                if (h)
+                else if (bigG.name == "GrabBox")
                 {
-                    if (h.TakeDamage(damageScale))
+                    switch (bigG.GetComponent<ManosGrab>().GetHand().GetHand())
                     {
-                        m.enabled = true;
+                        case Enums.Hand.Left:
+                            part = Enums.ManosParts.LeftHand;
+                            break;
+                        case Enums.Hand.Right:
+                            part = Enums.ManosParts.RightHand;
+                            break;
+                    }
+                }
+
+                if (hand)
+                {
+                    if (hand.TakeDamage(damageScale))
+                    {
+                        shaker.enabled = true;
                         collision.transform.root.GetComponent<FlashFeedback>().ReactToDamage(0.0f, part);
                     }
                 }
@@ -113,8 +140,11 @@ public class FootBomb : MonoBehaviour
                 {
                     PlayerHealth hp = collision.transform.root.GetComponent<PlayerHealth>();
                     if (hp)
+                    {
                         hp.TakeDamage(damageScale, part);
-                    m.enabled = true;
+                    }
+                        
+                    shaker.enabled = true;
                 }
             }
         }
@@ -122,20 +152,27 @@ public class FootBomb : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        print(other.name);
 
         if (other.tag == "Hittable")
         {
             //Shake the mesh that you hit
-            MeshShaker m = other.GetComponent<MeshShaker>();
-            if (m == null) m = other.GetComponentInChildren<MeshShaker>();
-            if (m == null) m = other.GetComponentInParent<MeshShaker>();
+            MeshShaker shaker = other.GetComponent<MeshShaker>();
+            if (shaker == null)
+            {
+                shaker = other.GetComponentInChildren<MeshShaker>();
+            }
+            if (shaker == null)
+            {
+                shaker = other.GetComponentInParent<MeshShaker>();
+            }
 
             if (other.name == "GauntletParent_L")
             {
                 //Returns true if damage was dealt
                 if (other.transform.root.GetComponent<Manos>().DealDamageToArm(Enums.Hand.Left, damageScale))
                 {
-                    m.enabled = true;
+                    shaker.enabled = true;
                 }
             }
             else if (other.name == "GauntletParent_R")
@@ -143,13 +180,17 @@ public class FootBomb : MonoBehaviour
                 //Returns true if damage was dealt
                 if (other.transform.root.GetComponent<Manos>().DealDamageToArm(Enums.Hand.Right, damageScale))
                 {
-                    m.enabled = true;
+                    shaker.enabled = true;
                 }
             }
             else
             {
-                ManosHand h = other.GetComponent<ManosHand>();
-                if (h == null) h = other.GetComponentInParent<ManosHand>();
+                ManosHand hand = other.GetComponent<ManosHand>();
+                if (hand == null)
+                {
+                    hand = other.GetComponentInParent<ManosHand>();
+                }
+                    
 
                 Enums.ManosParts part = Enums.ManosParts.None;
 
@@ -169,13 +210,25 @@ public class FootBomb : MonoBehaviour
                 {
                     part = Enums.ManosParts.Head;
                 }
-
-                if (h)
+                else if (other.name == "GrabBox")
                 {
-                    if (h.TakeDamage(damageScale))
+                    switch (other.GetComponent<ManosGrab>().GetHand().GetHand())
+                    {
+                        case Enums.Hand.Left:
+                            part = Enums.ManosParts.LeftHand;
+                            break;
+                        case Enums.Hand.Right:
+                            part = Enums.ManosParts.RightHand;
+                            break;
+                    }
+                }
+
+                if (hand)
+                {
+                    if (hand.TakeDamage(damageScale))
                     {
                         print("POW!");
-                        m.enabled = true;
+                        shaker.enabled = true;
                         other.transform.root.GetComponent<FlashFeedback>().ReactToDamage(0.0f, part);
                     }
                 }
@@ -183,8 +236,11 @@ public class FootBomb : MonoBehaviour
                 {
                     PlayerHealth hp = other.transform.root.GetComponent<PlayerHealth>();
                     if (hp)
+                    {
                         hp.TakeDamage(damageScale, part);
-                    m.enabled = true;
+                    }
+                        
+                    shaker.enabled = true;
                 }
             }
         }

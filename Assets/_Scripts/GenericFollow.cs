@@ -10,6 +10,9 @@ public class GenericFollow : MonoBehaviour
     [SerializeField]
     Vector3 followOffset;
 
+    [SerializeField]
+    bool followRotation;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,6 +23,11 @@ public class GenericFollow : MonoBehaviour
     void Update()
     {
         transform.position = target.position + followOffset;
+
+        if (followRotation)
+        {
+            transform.rotation = target.rotation;
+        }
     }
 
 }

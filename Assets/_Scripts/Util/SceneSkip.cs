@@ -40,6 +40,12 @@ public class SceneSkip : MonoBehaviour
     {
 
         StopAllCoroutines();
+
+        if (nextScene.Equals("Main"))
+        {
+            AudioManager.GetInstance().PlayMusic(AudioManager.Music.Skeletons);
+        }
+
         SceneManager.LoadScene(nextScene);
     }
 

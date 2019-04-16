@@ -22,7 +22,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>Temp\bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_2_OR_NEWER;UNITY_2018_3_OR_NEWER;UNITY_2018_3_9;UNITY_2018_3;UNITY_2018;PLATFORM_ARCH_64;UNITY_64;UNITY_INCLUDE_TESTS;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_SPRITES;ENABLE_GRID;ENABLE_TILEMAP;ENABLE_TERRAIN;ENABLE_TEXTURE_STREAMING;ENABLE_DIRECTOR;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_COLLAB_SOFTLOCKS;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_TIMELINE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;ENABLE_MANAGED_ANIMATION_JOBS;INCLUDE_DYNAMIC_GI;INCLUDE_GI;ENABLE_MONO_BDWGC;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;INCLUDE_PUBNUB;ENABLE_VIDEO;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_LOCALIZATION;PLATFORM_STANDALONE_WIN;PLATFORM_STANDALONE;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_SUBSTANCE;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_OUT_OF_PROCESS_CRASH_HANDLER;ENABLE_EVENT_QUEUE;ENABLE_CLUSTER_SYNC;ENABLE_CLUSTERINPUT;ENABLE_VR;ENABLE_AR;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_STANDARD_2_0;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_UNITY_COLLECTIONS_CHECKS;ENABLE_BURST_AOT;UNITY_TEAM_LICENSE;ENABLE_VSTU;CROSS_PLATFORM_INPUT;CSHARP_7_OR_LATER;CSHARP_7_3_OR_NEWER</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_2_OR_NEWER;UNITY_2018_3_OR_NEWER;UNITY_2018_3_12;UNITY_2018_3;UNITY_2018;PLATFORM_ARCH_64;UNITY_64;UNITY_INCLUDE_TESTS;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_SPRITES;ENABLE_GRID;ENABLE_TILEMAP;ENABLE_TERRAIN;ENABLE_TEXTURE_STREAMING;ENABLE_DIRECTOR;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_COLLAB_SOFTLOCKS;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_TIMELINE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;ENABLE_MANAGED_ANIMATION_JOBS;INCLUDE_DYNAMIC_GI;INCLUDE_GI;ENABLE_MONO_BDWGC;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;INCLUDE_PUBNUB;ENABLE_VIDEO;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_LOCALIZATION;PLATFORM_STANDALONE_WIN;PLATFORM_STANDALONE;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_SUBSTANCE;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_OUT_OF_PROCESS_CRASH_HANDLER;ENABLE_EVENT_QUEUE;ENABLE_CLUSTER_SYNC;ENABLE_CLUSTERINPUT;ENABLE_VR;ENABLE_AR;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_STANDARD_2_0;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_UNITY_COLLECTIONS_CHECKS;ENABLE_BURST_AOT;UNITY_TEAM_LICENSE;ENABLE_VSTU;CROSS_PLATFORM_INPUT;CSHARP_7_OR_LATER;CSHARP_7_3_OR_NEWER</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
@@ -49,7 +49,7 @@
     <UnityProjectGenerator>Unity/VSTU</UnityProjectGenerator>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
-    <UnityVersion>2018.3.9f1</UnityVersion>
+    <UnityVersion>2018.3.12f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -76,16 +76,23 @@
     <Compile Include="Assets\_Scripts\FootballFactory.cs" />
     <Compile Include="Assets\_Scripts\FootballPickup.cs" />
     <Compile Include="Assets\_Scripts\FootBomb.cs" />
+    <Compile Include="Assets\_Scripts\GameTimer.cs" />
     <Compile Include="Assets\_Scripts\GemBehaviour.cs" />
     <Compile Include="Assets\_Scripts\GenericFollow.cs" />
+    <Compile Include="Assets\_Scripts\HealthScript.cs" />
+    <Compile Include="Assets\_Scripts\InitialDamageOnEntry.cs" />
     <Compile Include="Assets\_Scripts\LobbyScript.cs" />
+    <Compile Include="Assets\_Scripts\ManosTargets.cs" />
     <Compile Include="Assets\_Scripts\ManosViewPlayerHealth.cs" />
     <Compile Include="Assets\_Scripts\MeshShaker.cs" />
     <Compile Include="Assets\_Scripts\MouseCharacterController.cs" />
+    <Compile Include="Assets\_Scripts\ObjectHitResponse.cs" />
     <Compile Include="Assets\_Scripts\Player\AnimationManager.cs" />
     <Compile Include="Assets\_Scripts\Player\GamePad.cs" />
     <Compile Include="Assets\_Scripts\Player\InputManager.cs" />
+    <Compile Include="Assets\_Scripts\Player\LineOfSight.cs" />
     <Compile Include="Assets\_Scripts\Player\MovementManager.cs" />
+    <Compile Include="Assets\_Scripts\Player\PlayerAreaBounds.cs" />
     <Compile Include="Assets\_Scripts\Player\PlayerCamera.cs" />
     <Compile Include="Assets\_Scripts\Player\PlayerManager.cs" />
     <Compile Include="Assets\_Scripts\Player\PlayerStamina.cs" />
@@ -97,6 +104,7 @@
     <Compile Include="Assets\_Scripts\PlayerHealth.cs" />
     <Compile Include="Assets\_Scripts\PlayerStateManager.cs" />
     <Compile Include="Assets\_Scripts\PlayerUserInterface.cs" />
+    <Compile Include="Assets\_Scripts\PlaySoundJustOnce.cs" />
     <Compile Include="Assets\_Scripts\PressStart.cs" />
     <Compile Include="Assets\_Scripts\RumbleController.cs" />
     <Compile Include="Assets\_Scripts\SpawnObject.cs" />
@@ -112,12 +120,14 @@
     <Compile Include="Assets\_Scripts\UI\ChadSpeakSpeechBubbles.cs" />
     <Compile Include="Assets\_Scripts\UI\ChadVFXManager.cs" />
     <Compile Include="Assets\_Scripts\UI\Crosshair.cs" />
+    <Compile Include="Assets\_Scripts\UI\DamageNumbers.cs" />
     <Compile Include="Assets\_Scripts\UI\DamageVignette.cs" />
     <Compile Include="Assets\_Scripts\UI\DashTrailScript.cs" />
     <Compile Include="Assets\_Scripts\UI\FadeOut.cs" />
     <Compile Include="Assets\_Scripts\UI\FlashDab.cs" />
     <Compile Include="Assets\_Scripts\UI\GenericBillboard.cs" />
     <Compile Include="Assets\_Scripts\UI\HPBarUI.cs" />
+    <Compile Include="Assets\_Scripts\UI\ManosSpeechBubbleManager.cs" />
     <Compile Include="Assets\_Scripts\UI\ManosTutorializer.cs" />
     <Compile Include="Assets\_Scripts\UI\ManosUI.cs" />
     <Compile Include="Assets\_Scripts\UI\QuipBattleContext.cs" />
@@ -131,6 +141,7 @@
     <Compile Include="Assets\_Scripts\UI\Statbar.cs" />
     <Compile Include="Assets\_Scripts\UI\StatusBarController.cs" />
     <Compile Include="Assets\_Scripts\UI\TextPlacement.cs" />
+    <Compile Include="Assets\_Scripts\UI\TextPrompt.cs" />
     <Compile Include="Assets\_Scripts\UI\UIShake.cs" />
     <Compile Include="Assets\_Scripts\Util\ManosWinScript.cs" />
     <Compile Include="Assets\_Scripts\Util\SceneSkip.cs" />
@@ -147,7 +158,9 @@
     <Compile Include="Assets\_Scripts\VR\ManosBody.cs" />
     <Compile Include="Assets\_Scripts\VR\ManosBullet.cs" />
     <Compile Include="Assets\_Scripts\VR\ManosEnergyFist.cs" />
+    <Compile Include="Assets\_Scripts\VR\ManosGrab.cs" />
     <Compile Include="Assets\_Scripts\VR\ManosHand.cs" />
+    <Compile Include="Assets\_Scripts\VR\ManosTutorialButtons.cs" />
     <Compile Include="Assets\_Scripts\VR\SlowGeneralInterp.cs" />
     <Compile Include="Assets\_Scripts\VR\SlowGenericInterp.cs" />
     <Compile Include="Assets\_Scripts\VR\SlowLimbInterp.cs" />
@@ -207,6 +220,13 @@
     <Compile Include="Assets\Imported Assets\RiftFX Barriers\Scripts\FaceMainCameraScript.cs" />
     <Compile Include="Assets\Imported Assets\RiftFX Barriers\Scripts\ScalePulseScript.cs" />
     <Compile Include="Assets\Imported Assets\RiftFX Barriers\Scripts\SimpleCameraFlyScript.cs" />
+    <Compile Include="Assets\Imported Assets\Selected Effect --- Outline\Script\AutoRotate.cs" />
+    <Compile Include="Assets\Imported Assets\Selected Effect --- Outline\Script\FreeCamera.cs" />
+    <Compile Include="Assets\Imported Assets\Selected Effect --- Outline\Script\Outline.cs" />
+    <Compile Include="Assets\Imported Assets\Selected Effect --- Outline\Script\Outline2D.cs" />
+    <Compile Include="Assets\Imported Assets\Selected Effect --- Outline\Script\OutlineFilter.cs" />
+    <Compile Include="Assets\Imported Assets\Selected Effect --- Outline\Script\OutlineMgr.cs" />
+    <Compile Include="Assets\Imported Assets\Selected Effect --- Outline\Script\OutlineTransparent.cs" />
     <Compile Include="Assets\Imported Assets\Standard Assets\CrossPlatformInput\Scripts\AxisTouchButton.cs" />
     <Compile Include="Assets\Imported Assets\Standard Assets\CrossPlatformInput\Scripts\ButtonHandler.cs" />
     <Compile Include="Assets\Imported Assets\Standard Assets\CrossPlatformInput\Scripts\CrossPlatformInputManager.cs" />
@@ -401,59 +421,125 @@
     <Compile Include="Assets\SteamVR_Input\ActionObjects\SteamVR_Input_ActionSet_platformer_In.cs" />
     <Compile Include="Assets\SteamVR_Input\SteamVR_Input_Actions.cs" />
     <Compile Include="Assets\SteamVR_Input\SteamVR_Input_ActionSets.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01_UGUI.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark02.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark03.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark04.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\CameraController.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ChatController.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\EnvMapAnimator.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ObjectSpin.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ShaderPropAnimator.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\SimpleScript.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\SkewTextExample.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TeleType.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextConsoleSimulator.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshProFloatingText.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshSpawner.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_DigitValidator.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_ExampleScript_01.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_FrameRateCounter.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_PhoneNumberValidator.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventCheck.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventHandler.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextInfoDebugTool.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_A.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_B.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_UiFrameRateCounter.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMPro_InstructionOverlay.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexColorCycler.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexJitter.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexShakeA.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexShakeB.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexZoom.cs" />
+    <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\WarpTextExample.cs" />
     <None Include="Assets\Imported Assets\Mirza Beig\_DOCS\README - Inferno VFX.txt" />
     <None Include="Assets\Imported Assets\Particle Attractor by Moonflower Carnivore\Shaders\Particles Additive Intensify.shader" />
     <None Include="Assets\Imported Assets\VolumetricLines\Shaders\_StripShader.cginc" />
     <None Include="Assets\Imported Assets\JMO Assets\Cartoon FX\Shaders\CFX3 Multiply Color.shader" />
+    <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface-Mobile.shader" />
+    <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
     <None Include="Assets\Imported Assets\SteamVR\Resources\SteamVR_Fade.shader" />
     <None Include="Assets\Imported Assets\JMO Assets\Cartoon FX\Shaders\CFXM_MobileParticleAdd_Alpha8.shader" />
+    <None Include="Assets\Imported Assets\Selected Effect --- Outline\Shader\Normal Expansion\Outline Only.shader" />
     <None Include="Assets\Imported Assets\SteamVR\Resources\SteamVR_ClearAll.shader" />
     <None Include="Assets\Imported Assets\JMO Assets\Cartoon FX\CartoonFX Free.txt" />
     <None Include="Assets\Imported Assets\SteamVR\InteractionSystem\Hints\Shaders\ControllerButtonHints.shader" />
     <None Include="Assets\Imported Assets\Cartoon ConvertibleCar C01\Standard Assets\divers\DepthOfFieldScatter.shader" />
     <None Include="Assets\Imported Assets\SteamVR\InteractionSystem\Samples\BuggyBuddy\Materials\LightCone.shader" />
     <None Include="Assets\Imported Assets\FinalVignette\Assets\Shaders\FinalVignette.shader" />
+    <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro_Properties.cginc" />
     <None Include="Assets\Imported Assets\Cartoon ConvertibleCar C01\Standard Assets\divers\DepthOfFieldDX11.shader" />
+    <None Include="Assets\Imported Assets\Selected Effect --- Outline\ReadMe.txt" />
     <None Include="Assets\Imported Assets\VolumetricLines\Shaders\Additive.shader" />
     <None Include="Assets\Imported Assets\VolumetricLines\Shaders\AlphaBlended.shader" />
+    <None Include="Assets\Imported Assets\Selected Effect --- Outline\Shader\Normal Expansion\Outline.cginc" />
+    <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap-Custom-Atlas.shader" />
     <None Include="Assets\Imported Assets\SteamVR\InteractionSystem\Teleport\Shaders\Highlight.shader" />
+    <None Include="Assets\Imported Assets\Selected Effect --- Outline\Shader\Sprite\Sprite Sdf.shader" />
     <None Include="Assets\Imported Assets\RiftFX Barriers\Shaders\FragmentShaders.cginc" />
     <None Include="Assets\Imported Assets\FinalVignette\Documentation\ReadMe.txt" />
     <None Include="Assets\Imported Assets\RiftFX Barriers\Shaders\VertexDefinitions.cginc" />
     <None Include="Assets\Imported Assets\Particlecollection_Free samples\Plugins\Effect\Shader\effect_distortion_mask.shader" />
+    <None Include="Assets\Imported Assets\Selected Effect --- Outline\Shader\Post Process\GlowFlatColor.shader" />
     <None Include="Assets\Imported Assets\JMO Assets\Cartoon FX Easy Editor\CartoonFX Easy Editor Readme.txt" />
     <None Include="Assets\Imported Assets\Particlecollection_Free samples\Plugins\Effect\Shader\ParticleAddSoftEffect.shader" />
     <None Include="Assets\Imported Assets\RiftFX Barriers\Shaders\BarrierShader.shader" />
+    <None Include="Assets\TextMesh Pro\Examples &amp; Extras\Fonts\Oswald-Bold - OFL.txt" />
     <None Include="Assets\Imported Assets\VolumetricLines\Shaders\Strip-Additive.shader" />
+    <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
+    <None Include="Assets\Imported Assets\Selected Effect --- Outline\Shader\Post Process\GlowHalo.shader" />
     <None Include="Assets\Fonts\OpenSans\FontLicense.txt" />
+    <None Include="Assets\TextMesh Pro\Sprites\EmojiOne Attribution.txt" />
     <None Include="Assets\Imported Assets\Cartoon ConvertibleCar C01\Standard Assets\divers\ChromaticAberrationShader.shader" />
+    <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Masking.shader" />
     <None Include="Assets\Imported Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
+    <None Include="Assets\TextMesh Pro\Examples &amp; Extras\Fonts\Anton OFL.txt" />
     <None Include="Assets\Imported Assets\RiftFX Barriers\Shaders\CylinderBarrierShader.shader" />
+    <None Include="Assets\Imported Assets\Selected Effect --- Outline\Shader\Normal Expansion\Diffuse Bump.shader" />
     <None Include="Assets\Imported Assets\Particlecollection_Free samples\Plugins\Effect\Shader\Toon Blended Premmultiply.shader" />
     <None Include="Assets\Imported Assets\Particlecollection_Free samples\Plugins\Effect\Shader\ParticlePremultiplyBlend.shader" />
+    <None Include="Assets\TextMesh Pro\Examples &amp; Extras\Fonts\Bangers - OFL.txt" />
+    <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap-Mobile.shader" />
     <None Include="Assets\Imported Assets\Particlecollection_Free samples\READ ME.txt" />
     <None Include="Assets\Imported Assets\SteamVR\InteractionSystem\Teleport\Shaders\HighlighGlobal.shader" />
     <None Include="Assets\Imported Assets\SimpleFX\Materials\UnlitVertexColour_Alpha.shader" />
+    <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF Overlay.shader" />
+    <None Include="Assets\TextMesh Pro\Examples &amp; Extras\Fonts\LiberationSans - OFL.txt" />
     <None Include="Assets\Imported Assets\Cartoon ConvertibleCar C01\Standard Assets\divers\SeparableBlur.shader" />
+    <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro_Surface.cginc" />
+    <None Include="Assets\Imported Assets\Selected Effect --- Outline\Shader\Sprite\Sprite.shader" />
+    <None Include="Assets\Imported Assets\Selected Effect --- Outline\Shader\Normal Expansion\Diffuse.shader" />
+    <None Include="Assets\Imported Assets\Selected Effect --- Outline\Shader\Post Process\GlowDepthOnly.shader" />
     <None Include="Assets\Imported Assets\RiftFX Barriers\Shaders\BarrierWallShader.shader" />
     <None Include="Assets\Imported Assets\VolumetricLines\Shaders\Fast-AlphaBlended.shader" />
+    <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Overlay.shader" />
     <None Include="Assets\Imported Assets\VolumetricLines\Shaders\Strip-AlphaBlended.shader" />
     <None Include="Assets\Imported Assets\Cartoon ConvertibleCar C01\Standard Assets\divers\VignettingShader.shader" />
     <None Include="Assets\Imported Assets\SteamVR\Resources\SteamVR_SphericalProjection.shader" />
     <None Include="Assets\Imported Assets\SteamVR\Resources\SteamVR_AlphaOut.shader" />
+    <None Include="Assets\Imported Assets\Selected Effect --- Outline\Shader\Post Process\GlowBlur.shader" />
     <None Include="Assets\Imported Assets\RiftFX Barriers\Shaders\VertexShaders.cginc" />
     <None Include="Assets\Imported Assets\VolumetricLines\Shaders\Fast-Additive.shader" />
     <None Include="Assets\Imported Assets\Particlecollection_Free samples\Plugins\Effect\Shader\ParticleAddEffect.shader" />
+    <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap.shader" />
+    <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
     <None Include="Assets\Imported Assets\SteamVR\readme.txt" />
+    <None Include="Assets\Imported Assets\Selected Effect --- Outline\Shader\Normal Expansion\Diffuse Transparent.shader" />
     <None Include="Assets\Imported Assets\SteamVR\InteractionSystem\Core\Shaders\Silhouette.shader" />
     <None Include="Assets\Shaders\Toon Shader.shader" />
+    <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF.shader" />
     <None Include="Assets\Imported Assets\SteamVR\Resources\SteamVR_ColorOut.shader" />
     <None Include="Assets\Imported Assets\SteamVR\InteractionSystem\Core\Shaders\SeeThru.shader" />
     <None Include="Assets\Imported Assets\VolumetricLines\Shaders\_SimpleShader.cginc" />
     <None Include="Assets\Imported Assets\RiftFX Barriers\Readme.txt" />
     <None Include="Assets\Imported Assets\Particlecollection_Free samples\Plugins\Effect\Shader\Toon Additive.shader" />
+    <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile.shader" />
     <None Include="Assets\Imported Assets\Particle Attractor by Moonflower Carnivore\Particle Attractor documentation.txt" />
+    <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Sprite.shader" />
     <None Include="Assets\Imported Assets\Particlecollection_Free samples\Plugins\Effect\Shader\ParticleBlendEffect.shader" />
+    <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface.shader" />
     <None Include="Assets\Imported Assets\SteamVR\InteractionSystem\Readme_InteractionSystem.txt" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>C:/Users/Tom/Desktop/Unity Projects/ManosReturns-FifthPlayable/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>

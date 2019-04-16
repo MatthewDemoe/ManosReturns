@@ -55,6 +55,62 @@ public class CollisionDamage : MonoBehaviour
         
     }
 
+    //private void OnCollisionEnter(Collision collision)
+    //{
+    //    print(collision.gameObject.name);
+    //    if (collision.gameObject.CompareTag("Player"))
+    //    {
+    //        PlayerHealth ph = collision.gameObject.GetComponent<PlayerHealth>();
+    //        MovementManager player = collision.transform.GetComponent<MovementManager>();
+    //        if (ph != null)
+    //        {
+    //            if (ph.CanTakeDamage())
+    //            {
+    //                //Calculate damage
+    //                velocity = hand.GetVelocity();
+    //                //float damage = velocity * multiplier;
+    //
+    //                Vector3 contactPt = collision.gameObject.GetComponent<Collider>().ClosestPointOnBounds(transform.position);
+    //
+    //                //Damage only happens here
+    //
+    //                if (velocity.magnitude > minimumSpeed && velocity.magnitude <= lightHitThresh)
+    //                {
+    //                    GameObject p = Instantiate(lightPrefab, contactPt, Quaternion.identity);
+    //                    ph.TakeDamage(lightDamage);
+    //                    Destroy(p, 2f);
+    //                    AudioManager.GetInstance().PlaySoundOnce(AudioManager.Sound.ManosPunchLight, transform, AudioManager.Priority.Default, AudioManager.Pitches.Low);
+    //                }
+    //                else if (velocity.magnitude > lightHitThresh && velocity.magnitude <= medHitThresh)
+    //                {
+    //                    GameObject p = Instantiate(medPrefab, contactPt, Quaternion.identity);
+    //                    ph.TakeDamage(medDamage);
+    //                    Destroy(p, 2f);
+    //                    AudioManager.GetInstance().PlaySoundOnce(AudioManager.Sound.ManosPunchMedium, transform, AudioManager.Priority.Default, AudioManager.Pitches.Low);
+    //                }
+    //                else if (velocity.magnitude > medHitThresh)
+    //                {
+    //                    GameObject p = Instantiate(heavyPrefab, contactPt, Quaternion.identity);
+    //                    ph.TakeDamage(heavyDamage);
+    //                    Destroy(p, 2f);
+    //                    AudioManager.GetInstance().PlaySoundOnce(AudioManager.Sound.ManosPunchHeavy, transform, AudioManager.Priority.Default, AudioManager.Pitches.Low);
+    //                }
+    //
+    //                if (velocity.magnitude > minimumSpeed)
+    //                {
+    //                    player.Knockback(new Vector3(
+    //                    velocity.x * knockBackMultiplier.x,
+    //                    velocity.y * knockBackMultiplier.y,
+    //                    velocity.z * knockBackMultiplier.z
+    //                    ));
+    //
+    //                    hand.HitImpulse();
+    //                }
+    //            }
+    //        }
+    //    }
+    //}
+
     void OnTriggerEnter(Collider col)
     {
         if (col.gameObject.CompareTag("Player"))
@@ -68,11 +124,11 @@ public class CollisionDamage : MonoBehaviour
                     //Calculate damage
                     velocity = hand.GetVelocity();
                     //float damage = velocity * multiplier;
-
+    
                     Vector3 contactPt = col.gameObject.GetComponent<Collider>().ClosestPointOnBounds(transform.position);
-
+    
                     //Damage only happens here
-
+    
                     if (velocity.magnitude > minimumSpeed && velocity.magnitude <= lightHitThresh)
                     {
                         GameObject p = Instantiate(lightPrefab, contactPt, Quaternion.identity);
@@ -94,7 +150,7 @@ public class CollisionDamage : MonoBehaviour
                         Destroy(p, 2f);
                         AudioManager.GetInstance().PlaySoundOnce(AudioManager.Sound.ManosPunchHeavy, transform, AudioManager.Priority.Default, AudioManager.Pitches.Low);
                     }
-
+    
                     if (velocity.magnitude > minimumSpeed)
                     {
                         player.Knockback(new Vector3(
@@ -102,7 +158,7 @@ public class CollisionDamage : MonoBehaviour
                         velocity.y * knockBackMultiplier.y,
                         velocity.z * knockBackMultiplier.z
                         ));
-
+    
                         hand.HitImpulse();
                     }
                 }

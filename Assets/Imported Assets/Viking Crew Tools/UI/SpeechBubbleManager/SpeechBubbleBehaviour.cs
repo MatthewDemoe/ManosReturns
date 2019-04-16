@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine.Serialization;
+using System.Runtime.InteropServices;
 
 namespace VikingCrewTools.UI {
 	public class SpeechBubbleBehaviour : MonoBehaviour {
@@ -15,6 +17,8 @@ namespace VikingCrewTools.UI {
         [FormerlySerializedAs("image")]
         [SerializeField]
         private Image _image;
+
+
         private int _iteration;
         private Camera _cam;
         /// <summary>
@@ -51,6 +55,7 @@ namespace VikingCrewTools.UI {
                 _image.color = new Color(this._image.color.r, this._image.color.g, this._image.color.b, _timeToLive);
                 _text.color = new Color(this._text.color.r, this._text.color.g, this._text.color.b, _timeToLive);
             }
+
             if (_timeToLive <= 0)
             {
                 Clear();
@@ -61,7 +66,8 @@ namespace VikingCrewTools.UI {
             if (_objectToFollow != null)
                 transform.position = _objectToFollow.position + _offset;
             
-            transform.rotation = _cam.transform.rotation;
+            if(_cam)
+                transform.rotation = _cam.transform.rotation;
         }
 
         /// <summary>
@@ -124,10 +130,8 @@ namespace VikingCrewTools.UI {
             transform.position = objectToFollow.position + offset;
             transform.rotation = _cam.transform.rotation;
 
-            _offset = offset;
-            
+            _offset = offset;          
            
-
             if (timeToLive > 0)
                 gameObject.SetActive(true);
         }

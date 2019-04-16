@@ -7288,6 +7288,8 @@ MonoBehaviour:
   playerUI: []
   invincible: 0
   vignetteControl: {fileID: 0}
+  damageNumbers: {fileID: 0}
+  flash: {fileID: 0}
 --- !u!114 &114778131748533740
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7317,6 +7319,7 @@ MonoBehaviour:
   bulletSpeed: 300
   bulletDamage: 0
   armRepairTime: 0
+  playerGrabbed: 0
   selfCamera: {fileID: 1965781412571856}
   manosUI: {fileID: 8873278565026790216}
   canGrab: 0
@@ -12371,8 +12374,10 @@ MonoBehaviour:
   grabOffset: {x: 0, y: 0, z: 0}
   velocity: {x: 0, y: 0, z: 0}
   bulletPrefab: {fileID: 0}
+  manosGrabPrefab: {fileID: 0}
   flashing: 0
   troublesomeCol: []
+  damageNumbers: {fileID: 0}
 --- !u!114 &114514984590150292
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13274,8 +13279,10 @@ MonoBehaviour:
   grabOffset: {x: 0, y: 0, z: 0}
   velocity: {x: 0, y: 0, z: 0}
   bulletPrefab: {fileID: 0}
+  manosGrabPrefab: {fileID: 0}
   flashing: 0
   troublesomeCol: []
+  damageNumbers: {fileID: 0}
 --- !u!114 &114908589923835702
 MonoBehaviour:
   m_ObjectHideFlags: 0

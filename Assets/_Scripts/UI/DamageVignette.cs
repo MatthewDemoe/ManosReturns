@@ -34,18 +34,32 @@ public class DamageVignette : MonoBehaviour
 
     float _vignetteTimer = 0.0f;
 
+    [SerializeField]
+    Color damageColor;
+
+    [SerializeField]
+    Color healColor;
+
+    //private void Update()
+    //{
+    //    if(Input.GetKeyDown(KeyCode.H))
+    //    {
+    //        SetVignetteHeal(0.5f);
+    //    }
+    //}
+
     // Start is called before the first frame update
     void Start()
     {
         vig = GetComponent<Wilberforce.FinalVignette.FinalVignetteCommandBuffer>();
 
-        vig.VignetteOuterValueDistance = outerValueDistance;
+        //vig.VignetteOuterValueDistance = outerValueDistance;
         vig.VignetteInnerValueDistance = innerValueDistance;
         vig.VignetteOuterValue = outerValue;
         vig.VignetteInnerValue = innerValue;
     }
 
-    public void SetVignetteFill(float amount)
+    void SetVignetteFill(float amount)
     {
         if (amount >= healthPercentageAtMax)
         {
@@ -53,14 +67,28 @@ public class DamageVignette : MonoBehaviour
 
             StopCoroutine("FlashVignette");
             StartCoroutine("FlashVignette");
-        }
-
-        else
+        } else
         {
             StopCoroutine("FlashVignette");
 
             vig.VignetteOuterValueDistance = maxValue;
         }
+    }
+
+    public void SetVignetteDamage(float amount)
+    {
+        vig.VignetteOuterColor = damageColor;
+        SetVignetteFill(amount);
+    }
+
+    public void SetVignetteHeal(float amount)
+    {
+        vig.VignetteOuterColor = healColor;
+
+        _vignetteTimer = vignetteDuration;
+
+        StopCoroutine("FlashVignette");
+        StartCoroutine("FlashVignette");
     }
 
     IEnumerator FlashVignette()

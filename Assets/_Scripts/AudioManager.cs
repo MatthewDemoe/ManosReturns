@@ -31,6 +31,9 @@ public class AudioManager : MonoBehaviour {
         ManosPunchHeavy,
         ChadJumpCharge,
         ChadChargedJump,
+        ChadDashImpact,
+        ManosGrab,
+        ManosGrabSuccess,
         Count
     }
 

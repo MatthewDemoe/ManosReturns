@@ -124,6 +124,9 @@ public class Manos : MonoBehaviour
     [Tooltip("Time it takes arms to reactivate in seconds")]
     float armRepairTime;
 
+    [SerializeField]
+    bool playerGrabbed;
+
     [Header("Object References")]
     [SerializeField]
     public GameObject selfCamera;
@@ -170,6 +173,7 @@ public class Manos : MonoBehaviour
 
     [SerializeField]
     ManosHand leftHand;
+
     [SerializeField]
     ManosHand rightHand;
 
@@ -533,6 +537,16 @@ public class Manos : MonoBehaviour
         return canGrab;
     }
 
+    public void SetPlayerGrabbed(bool b)
+    {
+        playerGrabbed = b;
+    }
+
+    public bool PlayerGrabbed()
+    {
+        return playerGrabbed;
+    }
+
     public void CooldownGrip()
     {
         canGrab = false;
@@ -638,7 +652,11 @@ public class Manos : MonoBehaviour
                 break;
         }
 
-        if (damageDealt) flash.ReactToDamage(0.0f, m);
+        if (damageDealt)
+        {
+            flash.ReactToDamage(0.0f, m);
+        }
+
         return damageDealt;
     }
 

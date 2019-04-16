@@ -76,6 +76,18 @@ public class HPBarUI : MonoBehaviour
 
     }
 
+    public void HealPercentage(float hp)
+    {
+        _hpPercentage += hp;
+        _hpPercentage = Mathf.Min(_hpPercentage,  1.0f);
+
+       /* _damagePercentageTimer = damageTimePause;
+        if (shake)
+        {
+            barShake.Shake(barShake.duration, 1.0f + hp * barShake.magnitude);
+        }*/
+    }
+
     /// <summary>
     /// HP bar reacts to taking damage
     /// </summary>

@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using VikingCrewTools.UI;
 
 public class FadeOut : MonoBehaviour
 {
     [SerializeField]
-    List<Image> quads = new List<Image>();
+    List<Wilberforce.FinalVignette.FinalVignetteCommandBuffer> vignettes;
 
     [SerializeField]
     float fadeTime = 1.0f;
@@ -26,12 +27,10 @@ public class FadeOut : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        forFading = quads[0].color;
-        forFading.a = 0.0f;
-
-        for (int i = 0; i < quads.Count; i++)
+        for (int i = 0; i < vignettes.Count; i++)
         {
-            quads[i].color = forFading;
+            vignettes[i].VignetteOuterColor = new Color(0.0f, 0.0f, 0.0f, 1.0f);
+            vignettes[i].VignetteOuterValueDistance = 0.0f;
         }
 
         if (fadeInOnStart) BeginFadeIn();
@@ -44,56 +43,50 @@ public class FadeOut : MonoBehaviour
 
     public void BeginFadeOut(float delay = 0.0f)
     {
-        fadeTimer = 0.0f;
-        StartCoroutine("FadeToBlack", delay);
+        StartCoroutine("FadeToBlack");
     }
 
-    public void BeginFadeIn(float delay = 0.0f)
+    public void BeginFadeIn()
     {
         StartCoroutine("FadeIn", delay);
     }
 
-    IEnumerator FadeToBlack(float delay = 0.0f)
+    IEnumerator FadeToBlack()
     {
-        yield return new WaitForSeconds(delay);
+        fadeTimer = 0.0f;
 
+        yield return new WaitForSeconds(delay);
 
         while (fadeTimer <= fadeTime)
         {
-
             fadeTimer += Time.deltaTime;
-            alpha = UtilMath.Lmap(fadeTimer, 0.0f, fadeTime, 0.0f, 1.0f);
+            alpha = UtilMath.Lmap(fadeTimer, 0.0f, fadeTime, 1.0f, 0.0f);
+            alpha = Mathf.Clamp(alpha, 0.0f, 1.0f);
 
-            forFading.a = alpha;
-            //Debug.Log(alpha);
-
-
-            for (int i = 0; i < quads.Count; i++)
+            for (int i = 0; i < vignettes.Count; i++)
             {
-                quads[i].color = forFading;
+                vignettes[i].VignetteOuterColor = new Color(0.0f, 0.0f, 0.0f, 1.0f);
+                vignettes[i].VignetteOuterValueDistance = alpha;
             }
 
             yield return new WaitForEndOfFrame();
         }
-        
-        fadeTimer = 0.0f;
     }
 
-    IEnumerator FadeIn(float delay = 0.0f)
+    IEnumerator FadeIn()
     {
         while (fadeTimer <= fadeTime)
         {
-            yield return new WaitForSeconds(delay);
 
             fadeTimer += Time.deltaTime;
-            alpha = UtilMath.Lmap(fadeTimer, 0.0f, fadeTime, 1.0f, 0.0f);
+            alpha = UtilMath.Lmap(fadeTimer, 0.0f, fadeTime, 0.0f, 1.5f);
 
-            forFading.a = alpha;
-
-            for (int i = 0; i < quads.Count; i++)
+            for (int i = 0; i < vignettes.Count; i++)
             {
-                quads[i].color = forFading;
+                vignettes[i].VignetteOuterValueDistance = alpha;
             }
+
+            yield return new WaitForEndOfFrame();
         }
     }
 }

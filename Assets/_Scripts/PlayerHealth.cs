@@ -26,15 +26,24 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField]
     DamageVignette vignetteControl;
 
+    [SerializeField]
+    DamageNumbers damageNumbers;
+
+    [SerializeField]
     FlashFeedback flash;
 
     string _attachedPlayer;
 
     bool dead = false;
 
-    // Use this for initialization
-    void Start() {
+    private void Awake()
+    {
         health = baseHealth;
+    }
+
+    // Use this for initialization
+    void Start()
+    {
         psm = GameObject.Find("OverlordController").GetComponent<PlayerStateManager>();
         _anim = GetComponent<Animator>();
         flash = GetComponent<FlashFeedback>();
@@ -53,7 +62,7 @@ public class PlayerHealth : MonoBehaviour
             }
             else if (Input.GetKeyDown(KeyCode.H))
             {
-                TakeDamage(-1000);
+                Heal(1000);
                 CoolDebug.GetInstance().LogHack("Global heal!");
             }
         }
@@ -74,10 +83,20 @@ public class PlayerHealth : MonoBehaviour
         health = h;
     }
 
-    public void TakeDamage(float damage, Enums.ManosParts m = Enums.ManosParts.None) {
+    public void TakeDamage(float damage, Enums.ManosParts bodyPart = Enums.ManosParts.None) {
 
-        if (invincible) return;
+
+        if (invincible)
+        {
+            return;
+        }
+            
         float damageDealt = damage * globalDamageMultiplier;
+
+        if (damageNumbers != null)
+        {
+            damageNumbers.ShowDamage(damageDealt);
+        }   
 
         if ((health - damageDealt) < 0)
         {
@@ -96,22 +115,23 @@ public class PlayerHealth : MonoBehaviour
 
         float damagePercentage = damageDealt / baseHealth;
 
-        foreach (HPBarUI p in playerUI)
+        foreach (HPBarUI hpBar in playerUI)
         {
-            p.DealDamagePercentage(damagePercentage);
+            hpBar.DealDamagePercentage(damagePercentage);
         }
 
         if (_anim != null)
+        {
             _anim.SetTrigger("DamageTaken");
+        }
 
-        flash.ReactToDamage(0.0f, m);
+        flash.ReactToDamage(0.0f, bodyPart);
 
         //PlayerHealth on everything is making things fucky, eh?
         if (vignetteControl != null)
         {
-            vignetteControl.SetVignetteFill(GetHealthPercentage());
-        }
-        
+            vignetteControl.SetVignetteDamage(GetHealthPercentage());
+        }        
     }
 
     public void TakeDamageComplex(float baseDamage, float baseDamageMultiplier, float variableDamage, float variableDamageMultiplier)
@@ -121,6 +141,42 @@ public class PlayerHealth : MonoBehaviour
 
     public float GetHealthPercentage() {
         return health / baseHealth;
+    }
+
+    /// <summary>
+    /// Method checks if health is full and returns appropriate boolean value
+    /// </summary>
+    /// <returns></returns>
+    public bool IsFullHealth()
+    {
+        return (health >= baseHealth) ? true : false;
+        
+    }
+
+    public void Heal(float healAmount)
+    {
+        if (health + healAmount > baseHealth)
+        {
+            health = baseHealth;
+        }
+             
+        else
+        {
+            health += healAmount;
+        }
+            
+
+        float healPercentage = healAmount / baseHealth;
+
+        foreach (HPBarUI hpBar in playerUI)
+        {
+            hpBar.HealPercentage(healPercentage);
+        }
+
+        if (vignetteControl != null)
+        {
+            vignetteControl.SetVignetteHeal(GetHealthPercentage());
+        }
     }
 
     public float GetHealth()

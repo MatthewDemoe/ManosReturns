@@ -12,6 +12,8 @@ namespace VikingCrewTools.UI {
             SERIOUS,
             ANGRY,
             THINKING,
+            DAMAGE,
+            DAMAGE_CHAD
         }
         [System.Serializable]
         public class SpeechbubblePrefab
@@ -167,9 +169,30 @@ namespace VikingCrewTools.UI {
 
             for(int i = 0; i < _cams.Length; i++)
             {
-                Camera cam = _cams[i];
+                Camera currentCam = _cams[i];
                 SpeechBubbleBehaviour bubbleBehaviour = GetBubble(type);
-                bubbleBehaviour.Setup(objectToFollow, offset, text, timeToLive, color, Cam);
+                bubbleBehaviour.Setup(objectToFollow, offset, text, timeToLive, color, currentCam);
+
+                if (currentCam.gameObject.name.Equals("ChadCamera"))
+                {
+                    bubbleBehaviour.gameObject.layer = 9;
+
+                    foreach (Transform child in bubbleBehaviour.transform)
+                    {
+                        child.gameObject.layer = 9;
+                    }
+                }
+
+                else
+                {
+                    bubbleBehaviour.gameObject.layer = 10;
+
+                    foreach (Transform child in bubbleBehaviour.transform)
+                    {
+                        child.gameObject.layer = 10;
+                    }
+                }
+
                 _speechBubbleQueueDict[type].Enqueue(bubbleBehaviour);
                 retArr[i] = bubbleBehaviour;
             }

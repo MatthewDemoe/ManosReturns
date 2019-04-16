@@ -19,6 +19,7 @@ TagManager:
   - Rock
   - Football
   - FootballNet
+  - ManosTarget
   layers:
   - Default
   - TransparentFX
@@ -39,8 +40,8 @@ TagManager:
   - FootBombIgnore
   - Manos
   - LockOn
-  - 
-  - 
+  - AreaTrigger
+  - GrabBox
   - 
   - 
   - 

@@ -488,7 +488,11 @@ namespace Valve.VR
 
         private bool HasBeenModified()
         {
-            SteamVR_Input.actionFile.SaveHelperLists();
+
+                SteamVR_Input.actionFile.SaveHelperLists();
+
+
+            
             return SteamVR_Input.HasFileInMemoryBeenModified();
         }
 

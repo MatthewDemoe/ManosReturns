@@ -51,11 +51,6 @@ public class SpeechBubble2D : MonoBehaviour
         StartCoroutine(Crt_UIState());
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-    }
-
     void PromptedBehaviour()
     {
         if (chargeBar)

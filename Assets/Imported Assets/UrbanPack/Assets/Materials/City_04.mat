@@ -108,7 +108,7 @@ Material:
     - _RIMM: 0.262
     - _Redo: 33.7
     - _Scale: 0
-    - _Shade: 0.05
+    - _Shade: 0.124
     - _ShaderOne: 0
     - _ShaderThree: 0
     - _ShaderTwo: 1
@@ -118,7 +118,7 @@ Material:
     - _Test: -10.84
     - _Threshold: 1
     - _UVSec: 0
-    - _UVs: 0.36
+    - _UVs: 0.3
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}

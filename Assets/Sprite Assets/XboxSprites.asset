@@ -1,0 +1,292 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84a92b25f83d49b9bc132d206b370281, type: 3}
+  m_Name: XboxSprites
+  m_EditorClassIdentifier: 
+  hashCode: 785841239
+  material: {fileID: 21318961814748832}
+  materialHashCode: 0
+  spriteSheet: {fileID: 2800000, guid: 5dd90ca5cbf42a04a93f76996e417aca, type: 3}
+  spriteInfoList:
+  - id: 0
+    x: 0
+    y: 400
+    width: 100
+    height: 100
+    xOffset: 0
+    yOffset: 69.36
+    xAdvance: 100
+    scale: 2.79
+    name: A_Button
+    hashCode: -582091480
+    unicode: 0
+    pivot: {x: -50, y: 50}
+    sprite: {fileID: 21300000, guid: fab1ac92eea583446ab62419f7f0e9e2, type: 3}
+  - id: 1
+    x: 100
+    y: 400
+    width: 100
+    height: 100
+    xOffset: 0
+    yOffset: 69.36
+    xAdvance: 100
+    scale: 2.79
+    name: B_Button
+    hashCode: -1162372213
+    unicode: 0
+    pivot: {x: -50, y: 50}
+    sprite: {fileID: 21300000, guid: fab1ac92eea583446ab62419f7f0e9e2, type: 3}
+  - id: 2
+    x: 200
+    y: 400
+    width: 100
+    height: 100
+    xOffset: 0
+    yOffset: 69.36
+    xAdvance: 100
+    scale: 2.79
+    name: X_Button
+    hashCode: 1074667729
+    unicode: 0
+    pivot: {x: -50, y: 50}
+    sprite: {fileID: 21300000, guid: fab1ac92eea583446ab62419f7f0e9e2, type: 3}
+  - id: 3
+    x: 300
+    y: 400
+    width: 100
+    height: 100
+    xOffset: 0
+    yOffset: 69.36
+    xAdvance: 100
+    scale: 2.79
+    name: Y_Button
+    hashCode: -1765762000
+    unicode: 0
+    pivot: {x: -50, y: 50}
+    sprite: {fileID: 21300000, guid: fab1ac92eea583446ab62419f7f0e9e2, type: 3}
+  - id: 4
+    x: 400
+    y: 400
+    width: 100
+    height: 100
+    xOffset: 0
+    yOffset: 69.36
+    xAdvance: 100
+    scale: 2.79
+    name: LB_Button
+    hashCode: -1678321721
+    unicode: 0
+    pivot: {x: -50, y: 50}
+    sprite: {fileID: 21300000, guid: fab1ac92eea583446ab62419f7f0e9e2, type: 3}
+  - id: 5
+    x: 0
+    y: 300
+    width: 100
+    height: 100
+    xOffset: 0
+    yOffset: 69.36
+    xAdvance: 100
+    scale: 2.79
+    name: RB_Button
+    hashCode: 1625194073
+    unicode: 0
+    pivot: {x: -50, y: 50}
+    sprite: {fileID: 21300000, guid: fab1ac92eea583446ab62419f7f0e9e2, type: 3}
+  - id: 6
+    x: 100
+    y: 300
+    width: 100
+    height: 100
+    xOffset: 0
+    yOffset: 69.36
+    xAdvance: 100
+    scale: 2.79
+    name: LT_Button
+    hashCode: 1366954641
+    unicode: 0
+    pivot: {x: -50, y: 50}
+    sprite: {fileID: 21300000, guid: fab1ac92eea583446ab62419f7f0e9e2, type: 3}
+  - id: 7
+    x: 200
+    y: 300
+    width: 100
+    height: 100
+    xOffset: 0
+    yOffset: 69.36
+    xAdvance: 100
+    scale: 2.79
+    name: RT_Button
+    hashCode: -1212889713
+    unicode: 0
+    pivot: {x: -50, y: 50}
+    sprite: {fileID: 21300000, guid: fab1ac92eea583446ab62419f7f0e9e2, type: 3}
+  - id: 8
+    x: 300
+    y: 300
+    width: 100
+    height: 100
+    xOffset: 0
+    yOffset: 69.36
+    xAdvance: 100
+    scale: 2.79
+    name: Start_Button
+    hashCode: -307088119
+    unicode: 0
+    pivot: {x: -50, y: 50}
+    sprite: {fileID: 21300000, guid: fab1ac92eea583446ab62419f7f0e9e2, type: 3}
+  - id: 9
+    x: 400
+    y: 300
+    width: 100
+    height: 100
+    xOffset: 0
+    yOffset: 69.36
+    xAdvance: 100
+    scale: 2.79
+    name: Select_Button
+    hashCode: 2006065121
+    unicode: 0
+    pivot: {x: -50, y: 50}
+    sprite: {fileID: 21300000, guid: fab1ac92eea583446ab62419f7f0e9e2, type: 3}
+  - id: 10
+    x: 0
+    y: 200
+    width: 100
+    height: 100
+    xOffset: 0
+    yOffset: 69.36
+    xAdvance: 100
+    scale: 2.79
+    name: Left_Stick
+    hashCode: -67760286
+    unicode: 0
+    pivot: {x: -50, y: 50}
+    sprite: {fileID: 21300000, guid: fab1ac92eea583446ab62419f7f0e9e2, type: 3}
+  - id: 11
+    x: 100
+    y: 200
+    width: 100
+    height: 100
+    xOffset: 0
+    yOffset: 69.36
+    xAdvance: 100
+    scale: 2.79
+    name: Right_Stick
+    hashCode: -1606210183
+    unicode: 0
+    pivot: {x: -50, y: 50}
+    sprite: {fileID: 21300000, guid: fab1ac92eea583446ab62419f7f0e9e2, type: 3}
+  - id: 12
+    x: 200
+    y: 200
+    width: 100
+    height: 100
+    xOffset: 0
+    yOffset: 69.36
+    xAdvance: 100
+    scale: 2.79
+    name: DPad
+    hashCode: 2394737
+    unicode: 0
+    pivot: {x: -50, y: 50}
+    sprite: {fileID: 21300000, guid: fab1ac92eea583446ab62419f7f0e9e2, type: 3}
+  - id: 13
+    x: 300
+    y: 200
+    width: 100
+    height: 100
+    xOffset: 0
+    yOffset: 69.36
+    xAdvance: 100
+    scale: 2.79
+    name: Down_DPad
+    hashCode: -585904900
+    unicode: 0
+    pivot: {x: -50, y: 50}
+    sprite: {fileID: 21300000, guid: fab1ac92eea583446ab62419f7f0e9e2, type: 3}
+  - id: 14
+    x: 400
+    y: 200
+    width: 100
+    height: 100
+    xOffset: 0
+    yOffset: 69.36
+    xAdvance: 100
+    scale: 2.79
+    name: Left_DPad
+    hashCode: 1819164021
+    unicode: 0
+    pivot: {x: -50, y: 50}
+    sprite: {fileID: 21300000, guid: fab1ac92eea583446ab62419f7f0e9e2, type: 3}
+  - id: 15
+    x: 0
+    y: 100
+    width: 100
+    height: 100
+    xOffset: 0
+    yOffset: 69.36
+    xAdvance: 100
+    scale: 2.79
+    name: Right_DPad
+    hashCode: 992872014
+    unicode: 0
+    pivot: {x: -50, y: 50}
+    sprite: {fileID: 21300000, guid: fab1ac92eea583446ab62419f7f0e9e2, type: 3}
+  - id: 16
+    x: 100
+    y: 100
+    width: 100
+    height: 100
+    xOffset: 0
+    yOffset: 69.36
+    xAdvance: 100
+    scale: 2.79
+    name: Up_DPad
+    hashCode: -1879268661
+    unicode: 0
+    pivot: {x: -50, y: 50}
+    sprite: {fileID: 21300000, guid: fab1ac92eea583446ab62419f7f0e9e2, type: 3}
+  fallbackSpriteAssets: []
+--- !u!21 &21318961814748832
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: TextMeshPro/Sprite
+  m_Shader: {fileID: 4800000, guid: cf81c85f95fe47e1a27f6ae460cf182c, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 5dd90ca5cbf42a04a93f76996e417aca, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _ColorMask: 15
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
+    - _UseUIAlphaClip: 0
+    m_Colors:
+    - _ClipRect: {r: -32767, g: -32767, b: 32767, a: 32767}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}

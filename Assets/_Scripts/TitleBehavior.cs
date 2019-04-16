@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class TitleBehavior : MonoBehaviour {
 
@@ -23,16 +24,16 @@ public class TitleBehavior : MonoBehaviour {
     float dt = 0.0f;
 
     [SerializeField]
-    GameObject playButtonEnabled;
+    Text playText;
 
     [SerializeField]
-    GameObject playButtonDisabled;
+    Text exitText;
 
     [SerializeField]
-    GameObject exitButtonEnabled;
+    int selectedSize = 150;
 
     [SerializeField]
-    GameObject exitButtonDisabled;
+    bool playSelected = true;
 
     [SerializeField]
     GameObject loadingText;
@@ -51,10 +52,13 @@ public class TitleBehavior : MonoBehaviour {
     {
         dt += Time.deltaTime;
 
-        if (dt >= animationLength) {
-        playing = false;
-        }
-           
+        if (dt >= animationLength)
+        {
+            if (playing)
+            {
+                playing = false;
+            }
+        }           
 
         if (!playing)
         {
@@ -64,26 +68,24 @@ public class TitleBehavior : MonoBehaviour {
 
         if (starting)
         {
-            loadingText.SetActive(true);
-
             if (dt >= startDelay)
             {
+                loadingText.gameObject.SetActive(true);
+
                 SceneManager.LoadScene(nextScene);
             }
                 
         }
-
-        getInput();
 	}
 
     void enableButtons()
     {
         if (!buttonsEnabled)
         {
-            playButtonEnabled.SetActive(true);
-
-            exitButtonDisabled.SetActive(true);
-
+            playText.gameObject.SetActive(true);
+        
+            exitText.gameObject.SetActive(true);
+        
             buttonsEnabled = true;
         }
     }
@@ -92,44 +94,66 @@ public class TitleBehavior : MonoBehaviour {
     {
         if (input.GetButtonDown(InputManager.Buttons.DPadUp) || input.GetButtonDown(InputManager.Buttons.DPadRight))
         {
-            playButtonEnabled.SetActive(true);
-            playButtonDisabled.SetActive(false);
+            //playButtonEnabled.SetActive(true);
+            //playButtonDisabled.SetActive(false);
+            //
+            //exitButtonEnabled.SetActive(false);
+            //exitButtonDisabled.SetActive(true);
 
-            exitButtonEnabled.SetActive(false);
-            exitButtonDisabled.SetActive(true);
+            playSelected = !playSelected;
+
+            SwitchButtons();
         }
 
-        if (input.GetButtonDown(InputManager.Buttons.DPadDown) || input.GetButtonDown(InputManager.Buttons.DPadLeft))
+        else if (input.GetButtonDown(InputManager.Buttons.DPadDown) || input.GetButtonDown(InputManager.Buttons.DPadLeft))
         {
-            playButtonEnabled.SetActive(false);
-            playButtonDisabled.SetActive(true);
+            //playButtonEnabled.SetActive(false);
+            //playButtonDisabled.SetActive(true);
+            //
+            //exitButtonEnabled.SetActive(true);
+            //exitButtonDisabled.SetActive(false);
+            playSelected = !playSelected;
 
-            exitButtonEnabled.SetActive(true);
-            exitButtonDisabled.SetActive(false);
+            SwitchButtons();
         }
 
         if (input.GetButtonDown(InputManager.Buttons.A))
         {
-            if (playButtonEnabled.activeInHierarchy)
+
+            if (playSelected)
             {
                 anim.SetTrigger("PressedPlay");
 
-                playButtonEnabled.SetActive(false);
-                playButtonDisabled.SetActive(false);
-                exitButtonEnabled.SetActive(false);
-                exitButtonDisabled.SetActive(false);
+                playText.gameObject.SetActive(false);
+                exitText.gameObject.SetActive(false);
 
                 playing = true;
                 starting = true;
-
+            
                 dt = 0.0f;
-                //SceneManager.LoadScene("NetworkingVR");
             }
 
-            else if(!starting)
+            else if (!starting)
             {
                 Application.Quit();
             }
+        }
+
+
+    }
+
+    void SwitchButtons()
+    {
+        if (playSelected)
+        {
+            playText.fontSize = selectedSize;
+            exitText.fontSize = selectedSize / 2;
+        }
+
+        else
+        {
+            exitText.fontSize = selectedSize;
+            playText.fontSize = selectedSize / 2;
         }
     }
 }

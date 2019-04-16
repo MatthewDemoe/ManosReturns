@@ -78,7 +78,7 @@ public class PlayerManager : MonoBehaviour
     PlayerHealth _health;
 
     [SerializeField]
-    float DOT = 100;
+    float DOT = 50;
 
     ManosHand _cHand;
 
@@ -89,6 +89,13 @@ public class PlayerManager : MonoBehaviour
     Animator _anim;
 
     TargetLockOn targetLocker;
+
+    bool tick = false;
+
+    [SerializeField]
+    float tickTime=0.5f;
+
+    float _timeTillTick = 0.0f;
 
     bool _alive = true;
 
@@ -190,7 +197,17 @@ public class PlayerManager : MonoBehaviour
         }
 
         buttonMasher.ButtonMashPrompt();
-        _health.TakeDamage(DOT * Time.deltaTime);
+        if (_timeTillTick < tickTime)
+        {
+            _timeTillTick += Time.deltaTime;
+        }
+         
+
+        if (_timeTillTick>=tickTime)
+        {
+            _health.TakeDamage(DOT);
+            _timeTillTick = 0.0f;
+        }
 
         if(_timesPressed== breakOutPress)
         {
@@ -199,8 +216,15 @@ public class PlayerManager : MonoBehaviour
             buttonMasher.Reset();
             // SetGrabbed(false);
 
-            Debug.Log("memes");
+         //   Debug.Log("memes");
         }
+    }
+
+    IEnumerator CountTick()
+    {
+
+        yield return new WaitForSeconds(tickTime);
+        tick = true;
     }
 
     void ManageInputs()
@@ -220,7 +244,7 @@ public class PlayerManager : MonoBehaviour
             {
                 if (targetLocker.GetEnemyCount() > 0)
                 {
-                    camManager.SetLockedTarget(targetLocker.GetClosestTarget());
+                    camManager.SetLockedTarget(targetLocker.GetInitialTarget());
                     camManager.SetLockedOn(true);
                 }
                 else
@@ -339,7 +363,7 @@ public class PlayerManager : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.B))
             {
-                move.Knockback(new Vector3(0.0f, 50.0f, 50.0f));
+                move.Knockback(new Vector3(0.0f, -50.0f, -50.0f));
                 CoolDebug.GetInstance().LogHack("Test Chad Knockback!");
             }
 
@@ -369,8 +393,9 @@ public class PlayerManager : MonoBehaviour
                 return;
             }
 
-            if (controller.velocity.y < 0.0f)
+            if (move.GetVelocity().y < 0.0f)
             {
+
                 if (_pState != Enums.PlayerState.Grounded)
                 {
                     _pState = Enums.PlayerState.Falling;
@@ -452,38 +477,43 @@ public class PlayerManager : MonoBehaviour
     {
         if (g)
         {
+            move.Cancel();
+
             _pState = Enums.PlayerState.Grabbed;
             controller.enabled = false;
-            GetComponent<Animator>().SetTrigger("Grabbed");
+            _anim.SetTrigger("Grabbed");
             meshes[0].enabled = false;
             meshes[1].enabled = false;
         }
 
         else
         {
-            _pState = Enums.PlayerState.Falling;
+            _pState = Enums.PlayerState.Grounded;
             controller.enabled = true;
             meshes[0].enabled = true;
             meshes[1].enabled = true;
             buttonMasher.Reset();
         }
     }
+
     public void SetGrabbed(bool g, ManosHand hand)
     {
         _cHand = hand;
 
         if (g)
         {
+            move.Cancel();
+
             _pState = Enums.PlayerState.Grabbed;
             //controller.enabled = false;
-            GetComponent<Animator>().SetTrigger("Grabbed");
+            _anim.SetTrigger("Grabbed");
             meshes[0].enabled = false;
             meshes[1].enabled = false;
         }
 
         else
         {
-            _pState = Enums.PlayerState.Falling;
+            _pState = Enums.PlayerState.Grounded;
             //controller.enabled = true;
             meshes[0].enabled = true;
             meshes[1].enabled = true;
@@ -507,5 +537,16 @@ public class PlayerManager : MonoBehaviour
     public void SetAlive(bool a)
     {
         _alive = a;
+    }
+
+    void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (_pState == Enums.PlayerState.Knocked)
+        {
+            if (hit.transform.CompareTag("Ground"))
+            {               
+                move.OnHitEnvironment(hit.normal);
+            }
+        }
     }
 }

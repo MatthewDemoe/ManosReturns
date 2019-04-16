@@ -9,9 +9,34 @@ public class TargetLockOn : MonoBehaviour
 
     CameraManager cam;
 
+    Vector2 _CAMERA_VIEW_CENTER = new Vector2(0.5f, 0.5f);
+
     public void SetCameraManager(CameraManager c)
     {
         cam = c;
+    }
+
+    public Transform GetInitialTarget()
+    {
+        // find target closest to center of view
+        Camera c = cam.GetCamera();
+        int closest;
+        int n = enemies.Count;
+        closest = 0;
+
+        float closestDist = Vector2.Distance(_CAMERA_VIEW_CENTER, c.WorldToViewportPoint(enemies[closest].position));
+        
+        for (int i = 1; i < n - 1; i++)
+        {
+            float compareDist = Vector2.Distance(_CAMERA_VIEW_CENTER, c.WorldToViewportPoint(enemies[i].position));
+            if (compareDist < closestDist)
+                {
+                    closest = i;
+                    closestDist = compareDist;
+                }
+        }
+
+        return enemies[closest];
     }
 
     public Transform GetClosestTarget()
@@ -32,6 +57,11 @@ public class TargetLockOn : MonoBehaviour
             return enemies[0];
 
         return enemies[closest];
+    }
+
+    public void GetVisible()
+    {
+        
     }
 
     public void SortEnemies()

@@ -79,26 +79,38 @@ MonoBehaviour:
   camNum: 1
   fov_default: 60
   lockOn: 0
-  followSpeed: 10
+  followSpeed: 12
   camSensX: 8.5
   camSensY: 8.5
   _aimSpeedModifier: 1
   target: {fileID: 0}
   lockOnTarget: {fileID: 0}
   refTarget: {fileID: 0}
-  lockOnSprite: {fileID: 0}
   turnSmoothing: 0.1
   minAngle: -80
   maxAngle: 80
-  lookAngle: 0
+  lookAngle: 180
   tiltAngle: 0
   lookInvertY: 1
   cameraCollisionMask:
     serializedVersion: 2
     m_Bits: 8193
-  linearDecay: 0.5
-  nonLinearDecay: 0.75
+  radius: 0.45
+  capsuleCastWidth: 0.6
+  rayCastPaddingDistance: 1.5
+  _distanceLerpSpeed: 10
+  _pivotCollisionLerpSpeed: 10
+  _collisionRecoverySpeed: 2.5
+  linearDecay: 2
+  nonLinearDecay: 3
   tweenTime: 0.1
+  cameraOccluderMask:
+    serializedVersion: 2
+    m_Bits: 8193
+  targetLockLOSLostTime: 3
+  lockOnSprite: {fileID: 0}
+  targetLOSLostFlashFreq: 20
+  targetLOSLostColor: {r: 1, g: 0.82483697, b: 0.10849059, a: 0.40392157}
 --- !u!1 &1870097968967916
 GameObject:
   m_ObjectHideFlags: 0
@@ -162,7 +174,7 @@ Camera:
   m_Depth: 1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 195383
+    m_Bits: 719671
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -190,11 +202,11 @@ MonoBehaviour:
   VignetteOuterValue: 1
   VignetteInnerValue: 0
   VignetteInnerValueDistance: 0
-  VignetteOuterValueDistance: 0.70000005
+  VignetteOuterValueDistance: 0.35034704
   VignetteMode: 2
   VignetteCenter: {x: 0.5, y: 0.5}
   VignetteInnerColor: {r: 0, g: 0, b: 0, a: 0}
-  VignetteOuterColor: {r: 1, g: 0, b: 0, a: 1}
+  VignetteOuterColor: {r: 0.754717, g: 0, b: 0, a: 0.6509804}
   VignetteInnerSaturation: 1
   VignetteOuterSaturation: 0
   VignetteDebugEnabled: 0
@@ -227,6 +239,8 @@ MonoBehaviour:
   healthPercentageAtMax: 0.25
   vignetteDuration: 1
   vignetteFadeDelay: 0.15
+  damageColor: {r: 0.9528302, g: 0.16629584, b: 0.16629584, a: 0.44705883}
+  healColor: {r: 0.48671517, g: 0.8773585, b: 0.10346207, a: 0.45490196}
 --- !u!1 &1978403782012270
 GameObject:
   m_ObjectHideFlags: 0

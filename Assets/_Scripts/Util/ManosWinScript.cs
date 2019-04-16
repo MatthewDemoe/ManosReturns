@@ -39,9 +39,6 @@ public class ManosWinScript : MonoBehaviour
         Color txColor = txt.color;
         txColor.a = 0.0f;
 
-        Color mqColor = manosQuad.color;
-        mqColor.a = 0.0f;
-
         float val;
 
         while (timer > 0.0f)
@@ -59,23 +56,6 @@ public class ManosWinScript : MonoBehaviour
         yield return new WaitForSeconds(displayTextFor);
 
         timer = textLerpTime;
-
-        while (timer > 0.0f)
-        {
-            val = UtilMath.Lmap(timer, textLerpTime, 0.0f, 1.0f, 0.0f);
-
-            txColor.a = val;
-            txt.color = txColor;
-
-            val = UtilMath.Lmap(timer, textLerpTime, 0.0f, 0.0f, 1.0f);
-
-            mqColor.a = val;
-            manosQuad.color = mqColor;
-
-            timer -= Time.deltaTime;
-
-            yield return new WaitForEndOfFrame();
-        }
 
         yield return new WaitForSeconds(1.0f);
 

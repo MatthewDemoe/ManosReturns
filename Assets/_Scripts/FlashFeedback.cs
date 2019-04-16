@@ -73,14 +73,21 @@ public class FlashFeedback : MonoBehaviour
     }
 
     // Update is called once per frame
+    /*
     void Update()
     {
 
     }
+    */
 
-    public void ReactToDamage(float warmup, Enums.ManosParts m)
+    /// <summary>
+    /// This method enables the damageFlash effect if a body part is hit
+    /// </summary>
+    /// <param name="warmup"></param>
+    /// <param name="bodyPart"></param>
+    public void ReactToDamage(float warmup, Enums.ManosParts bodyPart)
     {
-        switch (m)
+        switch (bodyPart)
         {
             case Enums.ManosParts.None:
                 StartCoroutine(damageFlash(warmup));
@@ -91,7 +98,7 @@ public class FlashFeedback : MonoBehaviour
             case Enums.ManosParts.LeftVambrace:
             case Enums.ManosParts.RightVambrace:
             case Enums.ManosParts.Chest:
-                StartCoroutine(damageFlash(warmup, m));
+                StartCoroutine(damageFlash(warmup, bodyPart));
                 break;
         }
     }
@@ -155,7 +162,9 @@ public class FlashFeedback : MonoBehaviour
     public void ChargingFeedback()
     {
         if (!_charging)
+        {
             StartCoroutine("chargingFlash");
+        }
     }
 
     public void ManosDeath()
@@ -192,8 +201,16 @@ public class FlashFeedback : MonoBehaviour
         }
         ManosStopDeath();
     }
+
+
+    /// <summary>
+    /// This method allows a non-Manos part or object to flash when taking damage
+    /// </summary>
+    /// <param name="warmup"></param>
+    /// <returns></returns>
     IEnumerator damageFlash(float warmup)
     {
+
         StopCoroutine("chargingFlash");
 
         yield return new WaitForSeconds(warmup);
@@ -219,14 +236,17 @@ public class FlashFeedback : MonoBehaviour
         }
 
         if (_charging)
+        {
             StartCoroutine("chargingFlash");
+        }
+            
 
         _cdFlashCounter = 0;
     }
 
-    IEnumerator damageFlash(float warmup, Enums.ManosParts m)
+    IEnumerator damageFlash(float warmup, Enums.ManosParts bodyPart)
     {
-        float ogValue = bodyParts[(int)m].material.GetFloat("_Glow");
+        float ogValue = bodyParts[(int)bodyPart].material.GetFloat("_Glow");
 
         yield return new WaitForSeconds(warmup);
 
@@ -234,7 +254,7 @@ public class FlashFeedback : MonoBehaviour
         {
             _damageFlashCounter++;
 
-            switch (m)
+            switch (bodyPart)
             {
                 case Enums.ManosParts.LeftArm:
                     bodyParts[(int)Enums.ManosParts.LeftHand].material.SetFloat("_Glow", 0.75f);
@@ -250,13 +270,13 @@ public class FlashFeedback : MonoBehaviour
                 case Enums.ManosParts.LeftVambrace:
                 case Enums.ManosParts.RightVambrace:
                 case Enums.ManosParts.Chest:
-                    bodyParts[(int)m].material.SetFloat("_Glow", 0.75f);
+                    bodyParts[(int)bodyPart].material.SetFloat("_Glow", 0.75f);
                     break;
             }
 
             yield return new WaitForSeconds(timeOn);
 
-            switch (m)
+            switch (bodyPart)
             {
                 case Enums.ManosParts.LeftArm:
                     bodyParts[(int)Enums.ManosParts.LeftHand].material.SetFloat("_Glow", 0.0f);
@@ -272,7 +292,7 @@ public class FlashFeedback : MonoBehaviour
                 case Enums.ManosParts.LeftVambrace:
                 case Enums.ManosParts.RightVambrace:
                 case Enums.ManosParts.Chest:
-                    bodyParts[(int)m].material.SetFloat("_Glow", 0.0f);
+                    bodyParts[(int)bodyPart].material.SetFloat("_Glow", 0.0f);
                     break;
             }
 
@@ -280,7 +300,7 @@ public class FlashFeedback : MonoBehaviour
 
         }
 
-        switch (m)
+        switch (bodyPart)
         {
             case Enums.ManosParts.LeftArm:
                 bodyParts[(int)Enums.ManosParts.LeftHand].material.SetFloat("_Glow", ogValue);
@@ -296,7 +316,7 @@ public class FlashFeedback : MonoBehaviour
             case Enums.ManosParts.LeftVambrace:
             case Enums.ManosParts.RightVambrace:
             case Enums.ManosParts.Chest:
-                bodyParts[(int)m].material.SetFloat("_Glow", ogValue);
+                bodyParts[(int)bodyPart].material.SetFloat("_Glow", ogValue);
                 break;
         }
 
@@ -424,7 +444,6 @@ public class FlashFeedback : MonoBehaviour
         {
             yield return new WaitForSeconds(timeBetweenExplosions);
 
-
             Vector3 pos = Random.insideUnitSphere * 3.0f;
             Instantiate(deathParticles, GameObject.Find("NeckBase").transform.position + pos, Quaternion.identity);
         }
@@ -435,6 +454,8 @@ public class FlashFeedback : MonoBehaviour
         //float waitTime = GameObject.Find("OverlordController").GetComponent<FadeOut>().GetFadeTime();
         yield return new WaitForSeconds(waitOnManosDeath);
 
+        AudioManager.GetInstance().StopMusic();
+
         SceneManager.LoadScene("ChadWins");
     }
 
@@ -443,9 +464,8 @@ public class FlashFeedback : MonoBehaviour
         //float waitTime = GameObject.Find("OverlordController").GetComponent<FadeOut>().GetFadeTime();
         yield return new WaitForSeconds(waitOnChadDeath);
 
+        AudioManager.GetInstance().StopMusic();
+        
         SceneManager.LoadScene("ManosCinematic");
-
     }
-
-
 }

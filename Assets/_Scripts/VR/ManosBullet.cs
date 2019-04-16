@@ -172,7 +172,7 @@ public class ManosBullet : MonoBehaviour
         {
             if (enableLaser)
             {
-                laser.SetPosition(0, spawn.position);
+                laser.SetPosition(0, spawn.position + 0.9f * spawn.up);
                 laser.SetPosition(1, spawn.position + 300 * spawn.up);
             }
         }
@@ -180,31 +180,36 @@ public class ManosBullet : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        //if (other.CompareTag("Hittable"))
-        //{
-        PlayerHealth ph = other.GetComponent<PlayerHealth>();
-        if (ph != null)
+        if (other.CompareTag("ManosTarget"))
         {
-            // Apply Knockback to player
-            MovementManager player = other.GetComponent<MovementManager>();
-            if (player)
+            other.GetComponent<ManosTargets>().Impulse();
+            print("PEW");
+        }
+        else
+        {
+            PlayerHealth ph = other.GetComponent<PlayerHealth>();
+            if (ph != null)
             {
-                if (ph.CanTakeDamage())
+                // Apply Knockback to player
+                MovementManager player = other.GetComponent<MovementManager>();
+                if (player)
                 {
-                    //print(other);
-                    other.GetComponent<PlayerHealth>().TakeDamage(manos.GetBulletDamage());
-
-                    if (other.GetComponent<PlayerManager>().GetEnumPlayerState() != Enums.PlayerState.Grabbed)
+                    if (ph.CanTakeDamage())
                     {
-                        player.Knockback(new Vector3(
-                        -transform.forward.x * knockBack.x,
-                        -transform.forward.y * knockBack.y,
-                        -transform.forward.z * knockBack.z
-                        ));
+                        //print(other);
+                        other.GetComponent<PlayerHealth>().TakeDamage(manos.GetBulletDamage());
+
+                        if (other.GetComponent<PlayerManager>().GetEnumPlayerState() != Enums.PlayerState.Grabbed)
+                        {
+                            player.Knockback(new Vector3(
+                            -transform.forward.x * knockBack.x,
+                            -transform.forward.y * knockBack.y,
+                            -transform.forward.z * knockBack.z
+                            ));
+                        }
                     }
                 }
             }
         }
-        //}
     }
 }
