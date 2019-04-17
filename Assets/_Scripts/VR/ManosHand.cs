@@ -50,6 +50,9 @@ public class ManosHand : MonoBehaviour
     ParticleSystem charging;
 
     [SerializeField]
+    ParticleSystem gunCharging;
+
+    [SerializeField]
     Transform wristTransform;
 
     [SerializeField]
@@ -186,6 +189,16 @@ public class ManosHand : MonoBehaviour
         if (fistAction != null)
         {
             fistAction.RemoveOnChangeListener(OnFistActionChange, skeltal.inputSource);
+        }
+
+        if (gunAction != null)
+        {
+            gunAction.RemoveOnChangeListener(OnGunActionChange, skeltal.inputSource);
+        }
+
+        if (triggerAction != null)
+        {
+            triggerAction.RemoveOnChangeListener(OnTriggerActionChange, skeltal.inputSource);
         }
     }
 
@@ -383,6 +396,13 @@ public class ManosHand : MonoBehaviour
     {
         if ((currentPose != Enums.Poses.None && !manos.IsFistPowered(thisHand)) && !manos.PosedOnce(thisHand))
         {
+            if (manos.IsTriggerActioning(thisHand) && currentPose == Enums.Poses.Gun && manos.IsGunActioning(thisHand))
+            {
+                bool r = rapidFire; //Keep rapid fire state past the cancel
+                CancelCharge();
+                rapidFire = r;
+                return;
+            }
             if (!flashing)
             {
                 manos.GetFlasher().ManosChargeActivate(thisHand);
@@ -519,7 +539,8 @@ public class ManosHand : MonoBehaviour
         if (p >= 1)
         {
             ParticleSystem.EmissionModule emission;
-            switch (currentPose) {
+            switch (currentPose)
+            {
                 case Enums.Poses.Punch:
                     var main = fireHands.main;
                     emission = fireHands.emission;
@@ -527,6 +548,8 @@ public class ManosHand : MonoBehaviour
                     main.startLifetime = Mathf.Lerp(0, 2.5f, p);
                     emission.rateOverTime = Mathf.Lerp(0, 90, p);
                     interp.SetShakeFactor(0);
+
+                    fireHands.Play();
 
                     break;
             }
@@ -542,13 +565,20 @@ public class ManosHand : MonoBehaviour
         }
         else
         {
-            var main = charging.main;
-            var emission = charging.emission;
-
-            emission.rateOverTime = Mathf.Lerp(25, 100, p);
+            switch (currentPose)
+            {
+                case Enums.Poses.Punch:
+                    var main = charging.main;
+                    var emission = charging.emission;
+                    emission.rateOverTime = Mathf.Lerp(25, 100, p);
+                    gunCharging.gameObject.SetActive(false);
+                    break;
+                case Enums.Poses.Gun:
+                    gunCharging.gameObject.SetActive(true);
+                    break;
+            }
 
             interp.SetShakeFactor(Mathf.Lerp(0, manos.GetShakeFactor(), p));
-
         }
 
         if (p == 0)
@@ -561,6 +591,8 @@ public class ManosHand : MonoBehaviour
 
             emission = charging.emission;
             emission.rateOverTime = 0;
+
+            gunCharging.gameObject.SetActive(false);
         }
     }
 
@@ -866,7 +898,11 @@ public class ManosHand : MonoBehaviour
         skeltal.enabled = false;
         skeltalBig.enabled = false;
 
-        haptics.Execute(0, manos.GetArmRepairTime(), 100, 0.5f, skeltal.inputSource);
+        try
+        {
+            haptics.Execute(0, manos.GetArmRepairTime(), 100, 0.5f, skeltal.inputSource);
+        }
+        catch { }
 
         EnableGravity();
     }
@@ -915,22 +951,32 @@ public class ManosHand : MonoBehaviour
     IEnumerator DestroyArm()
     {
         armExplodePrefabs[Random.Range(0, armExplodePrefabs.Length)].Play();
-        haptics.Execute(0, 0.5f, 40, 0.75f, skeltal.inputSource);
-
+        try {
+            haptics.Execute(0, 0.5f, 40, 0.75f, skeltal.inputSource);
+        } catch { }
+        
         yield return new WaitForSeconds(1);
 
         armExplodePrefabs[Random.Range(0, armExplodePrefabs.Length)].Play();
-        haptics.Execute(0, 0.5f, 40, 0.75f, skeltal.inputSource);
+        try { 
+            haptics.Execute(0, 0.5f, 40, 0.75f, skeltal.inputSource);
+        } catch { }
 
         yield return new WaitForSeconds(0.75f);
 
         armExplodePrefabs[Random.Range(0, armExplodePrefabs.Length)].Play();
-        haptics.Execute(0, 0.5f, 40, 0.75f, skeltal.inputSource);
+        try
+        {
+            haptics.Execute(0, 0.5f, 40, 0.75f, skeltal.inputSource);
+        } catch { }
 
         yield return new WaitForSeconds(1.0f);
 
         armExplodePrefabs[Random.Range(0, armExplodePrefabs.Length)].Play();
-        haptics.Execute(0, 0.5f, 40, 0.75f, skeltal.inputSource);
+        try
+        {
+            haptics.Execute(0, 0.5f, 40, 0.75f, skeltal.inputSource);
+        } catch { }
 
         yield return new WaitForSeconds(1.5f);
         armExplodePrefabs[Random.Range(0, armExplodePrefabs.Length)].Play();
@@ -943,6 +989,9 @@ public class ManosHand : MonoBehaviour
         while (!armDisabled)
         {
             armExplodePrefabs[Random.Range(0, armExplodePrefabs.Length)].Play();
+
+            am.PlaySoundOnce(AudioManager.Sound.ManosExplodeArm + Random.Range(0, 4), transform);
+
             yield return new WaitForSeconds(0.25f);
         }
     }

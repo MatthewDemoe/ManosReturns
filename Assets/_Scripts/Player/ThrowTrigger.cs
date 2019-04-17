@@ -503,6 +503,7 @@ public class ThrowTrigger : MonoBehaviour
             footballText.text = "<color=red>" + currentFootballs + "</color>";
         else
         footballText.text = "" + currentFootballs;
+        footballText.text += "/" + maxFootballs;
     }
 }
 

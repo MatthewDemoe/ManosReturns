@@ -58,6 +58,9 @@ public class ManosTutorialButtons : MonoBehaviour
     Material activeMat;
 
     [SerializeField]
+    SteamVR_Action_Boolean readyAction;
+
+    [SerializeField]
     SteamVR_Action_Boolean fistAction;
 
     [SerializeField]
@@ -83,7 +86,7 @@ public class ManosTutorialButtons : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(fistAction != null)
+        if (fistAction != null)
         {
             if (fistAction.GetStateDown(SteamVR_Input_Sources.LeftHand))
             {
@@ -91,8 +94,15 @@ public class ManosTutorialButtons : MonoBehaviour
             }
         }
         
+        if (readyAction != null)
+        {
+            if (readyAction.GetStateDown(SteamVR_Input_Sources.LeftHand) || readyAction.GetStateDown(SteamVR_Input_Sources.RightHand))
+            {
 
-        if(leftControllerModel.GetComponentsInChildren<MeshRenderer>().Length != 0)
+            }
+        }
+
+        if (leftControllerModel.GetComponentsInChildren<MeshRenderer>().Length != 0)
         {
             if(!grip[(int)Hand.Left])
             {
@@ -127,9 +137,15 @@ public class ManosTutorialButtons : MonoBehaviour
     /// <summary>
     /// Incomplete sample method
     /// </summary>
-    void ToggleRangeOfMotion()
+    void RangeOfMotionWith()
     {
         leftSkelly.rangeOfMotion = EVRSkeletalMotionRange.WithController;
         rightSkelly.rangeOfMotion = EVRSkeletalMotionRange.WithController;
+    }
+
+    void RangeOfMotionWithout()
+    {
+        leftSkelly.rangeOfMotion = EVRSkeletalMotionRange.WithoutController;
+        rightSkelly.rangeOfMotion = EVRSkeletalMotionRange.WithoutController;
     }
 }

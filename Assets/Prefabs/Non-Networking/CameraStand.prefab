@@ -198,6 +198,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5778e5e62bdc02248ba9cfd83c52e3e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isInterruptable: 1
   VignetteFalloff: 1
   VignetteOuterValue: 1
   VignetteInnerValue: 0
@@ -235,12 +236,14 @@ MonoBehaviour:
   innerValue: 0
   outerValueDistance: 4
   innerValueDistance: 0
-  maxValue: 1
+  vignetteScaleRange: {x: 0.4, y: 0.7}
+  damageRange: {x: 20, y: 60}
   healthPercentageAtMax: 0.25
-  vignetteDuration: 1
-  vignetteFadeDelay: 0.15
-  damageColor: {r: 0.9528302, g: 0.16629584, b: 0.16629584, a: 0.44705883}
-  healColor: {r: 0.48671517, g: 0.8773585, b: 0.10346207, a: 0.45490196}
+  vignetteDuration: 0.5
+  vignetteFadeDelay: 0.01
+  damageColor: {r: 1, g: 0, b: 0, a: 1}
+  healColor: {r: 0.48671517, g: 0.8773585, b: 0.10346207, a: 1}
+  currentOuterColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &1978403782012270
 GameObject:
   m_ObjectHideFlags: 0

@@ -52,12 +52,8 @@ public class Death : MonoBehaviour
     [SerializeField]
     GameObject fakeBody;
 
-
-
     [SerializeField]
     GameObject fakeRight;
-
-
 
     [SerializeField]
     GameObject fakeLeft;
@@ -65,18 +61,8 @@ public class Death : MonoBehaviour
     [SerializeField]
     GameObject fakeRightVambrace;
 
-
-
     [SerializeField]
     GameObject fakeLeftVambrace;
-
-    [SerializeField]
-    GameObject fakeRightArmor;
-
-
-
-    [SerializeField]
-    GameObject fakeLeftArmor;
 
     [SerializeField]
     GameObject explosionPrefab;
@@ -84,20 +70,20 @@ public class Death : MonoBehaviour
     [SerializeField]
     GameObject gaunletL;
 
-
-
     [SerializeField]
     GameObject gaunletR;
 
+    [SerializeField]
+    List<GameObject> canvases;
 
     [SerializeField]
     float scalar = 20.0f;
 
     [SerializeField]
+    float torqueScalar = 50.0f;
+
+    [SerializeField]
     float boomtime=0.5f;
-
-
-
 
     // Start is called before the first frame update
     void Start()
@@ -107,8 +93,6 @@ public class Death : MonoBehaviour
 
         _handLeft = manosLeftHand.GetComponent<ManosHand>();
         _handRight = manosRightHand.GetComponent<ManosHand>();
-
-
     }
 
     // Update is called once per frame
@@ -130,7 +114,6 @@ public class Death : MonoBehaviour
 
     IEnumerator ShakeHands()
     {
-
         _shakeLeft.shakeIntensity = shake;
         _shakeRight.shakeIntensity = shake;
         _shakeLeft.shakeTime = shaketime;
@@ -144,10 +127,21 @@ public class Death : MonoBehaviour
         //    StartCoroutine("KillHands");
         Instantiate(explosionPrefab, manosBody.transform.position, transform.rotation);
         yield return new WaitForSeconds(boomtime);
-        Detonate();
+        //Detonate();
     }
-    void Detonate()
+    public void Detonate(float delay)
     {
+        StartCoroutine("SendPartsFlying", delay);
+    }
+
+    IEnumerator SendPartsFlying(float delay)
+    {
+        yield return new WaitForSeconds(delay - 1.0f);
+
+        AudioManager.GetInstance().PlaySoundOnce(AudioManager.Sound.ManosExplosionBig);
+
+        yield return new WaitForSeconds(2.0f);
+
         //   Debug.Log("Memes");
         fakeBody.SetActive(true);
         fakeBody.transform.SetPositionAndRotation(manosBody.transform.position, manosBody.transform.rotation);
@@ -160,14 +154,19 @@ public class Death : MonoBehaviour
         gaunletL.SetActive(false);
         gaunletR.SetActive(false);
 
+        for (int i = 0; i < canvases.Count; i++)
+        {
+            canvases[i].SetActive(false);
+        }
+
         fakeRight.SetActive(true);
         fakeRight.transform.SetPositionAndRotation(manosRightHand.transform.position, manosRightHand.transform.rotation);
 
         fakeRightVambrace.SetActive(true);
         fakeRightVambrace.transform.SetPositionAndRotation(manosRightHand.transform.position, manosRightHand.transform.rotation);
 
-        fakeRightArmor.SetActive(true);
-        fakeRightArmor.transform.SetPositionAndRotation(manosRightHand.transform.position, manosRightHand.transform.rotation);
+        //fakeRightArmor.SetActive(true);
+        //fakeRightArmor.transform.SetPositionAndRotation(manosRightHand.transform.position, manosRightHand.transform.rotation);
 
         fakeLeft.SetActive(true);
         fakeLeft.transform.SetPositionAndRotation(manosLeftHand.transform.position, manosLeftHand.transform.rotation);
@@ -175,25 +174,32 @@ public class Death : MonoBehaviour
         fakeLeftVambrace.SetActive(true);
         fakeLeftVambrace.transform.SetPositionAndRotation(manosLeftHand.transform.position, manosLeftHand.transform.rotation);
 
-        fakeLeftArmor.SetActive(true);
-        fakeLeftArmor.transform.SetPositionAndRotation(manosLeftHand.transform.position, manosLeftHand.transform.rotation);
+        //fakeLeftArmor.SetActive(true);
+        //fakeLeftArmor.transform.SetPositionAndRotation(manosLeftHand.transform.position, manosLeftHand.transform.rotation);
 
         fakeBody.GetComponent<Rigidbody>().velocity = Random.insideUnitSphere * scalar;
+        fakeBody.GetComponent<Rigidbody>().AddTorque(Random.insideUnitSphere * torqueScalar);
+
         fakeHead.GetComponent<Rigidbody>().velocity = Random.insideUnitSphere * scalar;
+        fakeHead.GetComponent<Rigidbody>().AddTorque(Random.insideUnitSphere * torqueScalar); 
+
         fakeRight.GetComponent<Rigidbody>().velocity = Random.insideUnitSphere * scalar;
+        fakeRight.GetComponent<Rigidbody>().AddTorque(Random.insideUnitSphere * torqueScalar);
+
         fakeRightVambrace.GetComponent<Rigidbody>().velocity = Random.insideUnitSphere * scalar;
-        fakeRightArmor.GetComponent<Rigidbody>().velocity = Random.insideUnitSphere * scalar;
+        fakeRightVambrace.GetComponent<Rigidbody>().AddTorque(Random.insideUnitSphere * torqueScalar);
+
         fakeLeft.GetComponent<Rigidbody>().velocity = Random.insideUnitSphere * scalar;
+        fakeLeft.GetComponent<Rigidbody>().AddTorque(Random.insideUnitSphere * torqueScalar);
+
         fakeLeftVambrace.GetComponent<Rigidbody>().velocity = Random.insideUnitSphere * scalar;
-        fakeLeftArmor.GetComponent<Rigidbody>().velocity = Random.insideUnitSphere * scalar;
-
-
+        fakeLeftVambrace.GetComponent<Rigidbody>().AddTorque(Random.insideUnitSphere * torqueScalar);
 
 
     }
+
     IEnumerator KillHands()
     {
-
         _handLeft.KillArm();
         yield return new WaitForSeconds(handtime);
         _handRight.KillArm();
@@ -203,7 +209,6 @@ public class Death : MonoBehaviour
 
     IEnumerator KillChest()
     {
-
         fakeBody.SetActive(true);
         fakeBody.transform.SetPositionAndRotation(manosBody.transform.position, manosBody.transform.rotation);
         manosBody.SetActive(false);

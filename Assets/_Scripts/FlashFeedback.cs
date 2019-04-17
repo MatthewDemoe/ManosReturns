@@ -39,21 +39,22 @@ public class FlashFeedback : MonoBehaviour
 
     [Header("Death Feedback Properties")]
     [SerializeField]
-    int numDeathFlashes = 10;
-
-    int _deathFlashCounter = 0;
-
-    [SerializeField]
     float deathOnTime = 0.2f;
 
     [SerializeField]
     float deathOffTime = 0.2f;
 
     [SerializeField]
-    float timeBetweenExplosions = 1.0f;
+    float timeBetweenExplosions = 0.33f;
+
+    [SerializeField]
+    float deathDuration = 2.0f;
 
     [SerializeField]
     GameObject deathParticles;
+
+    [SerializeField]
+    GameObject bigDeathParticles;
 
     [SerializeField]
     float waitOnChadDeath = 5.0f;
@@ -171,7 +172,6 @@ public class FlashFeedback : MonoBehaviour
     {
         StartCoroutine("manosDeathFlashes");
         StartCoroutine("manosDeathExplosions");
-        StartCoroutine("chadWinScene");
 
     }
     public void ManosPlayDeath()
@@ -416,7 +416,9 @@ public class FlashFeedback : MonoBehaviour
 
     IEnumerator manosDeathFlashes()
     {
-        while (true)
+        float deathTimer = deathDuration;
+
+        while (deathTimer > 0.0f)
         {
             for (int i = 0; i < bodyParts.Count; i++)
             {
@@ -432,23 +434,29 @@ public class FlashFeedback : MonoBehaviour
 
             yield return new WaitForSeconds(deathOffTime);
 
-            _deathFlashCounter++;
+            deathTimer -= (deathOnTime + deathOffTime);
         }
-
-
     }
 
     IEnumerator manosDeathExplosions()
     {
-        while (true)
+        float deathTimer = deathDuration;
+
+
+        while (deathTimer > 0.0f)
         {
             yield return new WaitForSeconds(timeBetweenExplosions);
 
             Vector3 pos = Random.insideUnitSphere * 3.0f;
             Instantiate(deathParticles, GameObject.Find("NeckBase").transform.position + pos, Quaternion.identity);
-        }
-    }
 
+            deathTimer -= timeBetweenExplosions;
+            AudioManager.GetInstance().PlaySoundOnce(AudioManager.Sound.ChadBomb, transform, AudioManager.Priority.Default, AudioManager.Pitches.Low);
+        }
+
+        Instantiate(bigDeathParticles, GameObject.Find("NeckBase").transform.position, Quaternion.identity);
+    }
+        
     IEnumerator chadWinScene()
     {
         //float waitTime = GameObject.Find("OverlordController").GetComponent<FadeOut>().GetFadeTime();
@@ -467,5 +475,10 @@ public class FlashFeedback : MonoBehaviour
         AudioManager.GetInstance().StopMusic();
         
         SceneManager.LoadScene("ManosCinematic");
+    }
+
+    public float GetDeathDuration()
+    {
+        return deathDuration;
     }
 }

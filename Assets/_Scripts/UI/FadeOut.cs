@@ -24,6 +24,9 @@ public class FadeOut : MonoBehaviour
     [SerializeField]
     bool fadeInOnStart = false;
 
+    //used to flag when Fadeout is already working
+    IEnumerator _currentFade = null;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -41,21 +44,31 @@ public class FadeOut : MonoBehaviour
         return fadeTime;
     }
 
-    public void BeginFadeOut(float delay = 0.0f)
+    public void BeginFadeOut(float _delay = 0.0f, float duration = 20.0f)
     {
-        StartCoroutine("FadeToBlack");
+        if(_currentFade == null)
+        {
+            _currentFade = FadeToBlack(_delay, duration);
+            StartCoroutine(_currentFade);
+        }
     }
 
     public void BeginFadeIn()
     {
-        StartCoroutine("FadeIn", delay);
+        if (_currentFade == null)
+        {
+            _currentFade = FadeIn();
+            StartCoroutine(_currentFade);
+        }
     }
 
-    IEnumerator FadeToBlack()
+    IEnumerator FadeToBlack(float _delay = 0.0f, float holdTime = 10.0f)
     {
-        fadeTimer = 0.0f;
+        SetVignetteInterruptable(false);
 
-        yield return new WaitForSeconds(delay);
+        yield return new WaitForSeconds(_delay);
+
+        fadeTimer = 0.0f;
 
         while (fadeTimer <= fadeTime)
         {
@@ -71,10 +84,17 @@ public class FadeOut : MonoBehaviour
 
             yield return new WaitForEndOfFrame();
         }
+
+        yield return new WaitForSeconds(holdTime);
+
+        SetVignetteInterruptable(true);
+        _currentFade = null;
     }
 
     IEnumerator FadeIn()
     {
+        SetVignetteInterruptable(false);
+
         while (fadeTimer <= fadeTime)
         {
 
@@ -83,10 +103,21 @@ public class FadeOut : MonoBehaviour
 
             for (int i = 0; i < vignettes.Count; i++)
             {
-                vignettes[i].VignetteOuterValueDistance = alpha;
+               vignettes[i].VignetteOuterValueDistance = alpha;
             }
 
             yield return new WaitForEndOfFrame();
+        }
+
+        SetVignetteInterruptable(true);
+        _currentFade = null;
+    }
+
+    void SetVignetteInterruptable(bool what)
+    {
+        for (int i = 0; i < vignettes.Count; i++)
+        {
+            vignettes[i].isInterruptable = what;
         }
     }
 }

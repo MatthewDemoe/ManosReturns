@@ -7,6 +7,6 @@ public class AutoRotate : MonoBehaviour
 	void Update ()
 	{
 		float angle = Time.deltaTime * m_Speed;
-		transform.Rotate (angle, angle, 0f);
+		transform.Rotate (0.0f, angle, 0f);
 	}
 }

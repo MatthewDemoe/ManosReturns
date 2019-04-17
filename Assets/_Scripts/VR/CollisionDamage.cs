@@ -41,6 +41,9 @@ public class CollisionDamage : MonoBehaviour
     float medDamage;
     [SerializeField]
     float heavyDamage;
+
+    [SerializeField]
+    GameObject chadBlaze;
     
     // Use this for initialization
     void Start()
@@ -121,6 +124,12 @@ public class CollisionDamage : MonoBehaviour
             {
                 if (ph.CanTakeDamage())
                 {
+                    float damage = 0;
+                    if (hand.IsPowered())
+                    {
+                        damage += 20;
+                    }
+
                     //Calculate damage
                     velocity = hand.GetVelocity();
                     //float damage = velocity * multiplier;
@@ -128,35 +137,48 @@ public class CollisionDamage : MonoBehaviour
                     Vector3 contactPt = col.gameObject.GetComponent<Collider>().ClosestPointOnBounds(transform.position);
     
                     //Damage only happens here
+
+                    if (hand.IsPowered())
+                    {
+                        Destroy(Instantiate(chadBlaze, col.transform), 3f);
+                    }
     
                     if (velocity.magnitude > minimumSpeed && velocity.magnitude <= lightHitThresh)
                     {
                         GameObject p = Instantiate(lightPrefab, contactPt, Quaternion.identity);
-                        ph.TakeDamage(lightDamage);
+                        damage += lightDamage;
+                        ph.TakeDamage(damage);
                         Destroy(p, 2f);
                         AudioManager.GetInstance().PlaySoundOnce(AudioManager.Sound.ManosPunchLight, transform, AudioManager.Priority.Default, AudioManager.Pitches.Low);
                     }
                     else if (velocity.magnitude > lightHitThresh && velocity.magnitude <= medHitThresh)
                     {
                         GameObject p = Instantiate(medPrefab, contactPt, Quaternion.identity);
-                        ph.TakeDamage(medDamage);
+                        damage += medDamage;
+                        ph.TakeDamage(damage);
                         Destroy(p, 2f);
                         AudioManager.GetInstance().PlaySoundOnce(AudioManager.Sound.ManosPunchMedium, transform, AudioManager.Priority.Default, AudioManager.Pitches.Low);
                     }
                     else if (velocity.magnitude > medHitThresh)
                     {
                         GameObject p = Instantiate(heavyPrefab, contactPt, Quaternion.identity);
-                        ph.TakeDamage(heavyDamage);
+                        damage += heavyDamage;
+                        ph.TakeDamage(damage);
                         Destroy(p, 2f);
                         AudioManager.GetInstance().PlaySoundOnce(AudioManager.Sound.ManosPunchHeavy, transform, AudioManager.Priority.Default, AudioManager.Pitches.Low);
                     }
-    
+
+                    Vector3 knockBack = knockBackMultiplier;
+                    if (hand.IsPowered())
+                    {
+                        knockBack = new Vector3(knockBack.x * 1.25f, knockBack.y * 1.25f, knockBack.z * 1.25f);
+                    }
                     if (velocity.magnitude > minimumSpeed)
                     {
                         player.Knockback(new Vector3(
-                        velocity.x * knockBackMultiplier.x,
-                        velocity.y * knockBackMultiplier.y,
-                        velocity.z * knockBackMultiplier.z
+                        velocity.x * knockBack.x,
+                        velocity.y * knockBack.y,
+                        velocity.z * knockBack.z
                         ));
     
                         hand.HitImpulse();

@@ -12354,6 +12354,7 @@ MonoBehaviour:
   objectInHand: {fileID: 0}
   fireHands: {fileID: 198898733598264240}
   charging: {fileID: 198451210802575260}
+  gunCharging: {fileID: 0}
   wristTransform: {fileID: 4022484715526652}
   energyFist: {fileID: 0}
   hpText: {fileID: 0}
@@ -12375,6 +12376,8 @@ MonoBehaviour:
   velocity: {x: 0, y: 0, z: 0}
   bulletPrefab: {fileID: 0}
   manosGrabPrefab: {fileID: 0}
+  manosGrabSuccessPrefab: {fileID: 0}
+  armExplodePrefabs: []
   flashing: 0
   troublesomeCol: []
   damageNumbers: {fileID: 0}
@@ -13259,6 +13262,7 @@ MonoBehaviour:
   objectInHand: {fileID: 0}
   fireHands: {fileID: 1991177454354343437}
   charging: {fileID: 1990655409487623245}
+  gunCharging: {fileID: 0}
   wristTransform: {fileID: 1833301255107954369}
   energyFist: {fileID: 0}
   hpText: {fileID: 0}
@@ -13280,6 +13284,8 @@ MonoBehaviour:
   velocity: {x: 0, y: 0, z: 0}
   bulletPrefab: {fileID: 0}
   manosGrabPrefab: {fileID: 0}
+  manosGrabSuccessPrefab: {fileID: 0}
+  armExplodePrefabs: []
   flashing: 0
   troublesomeCol: []
   damageNumbers: {fileID: 0}
@@ -32394,6 +32400,7 @@ MonoBehaviour:
   trailSpeedMultiplier: 0.1
   collisionParticles: {fileID: 0}
   collisionParticlesReverse: {fileID: 0}
+  playerHitParticles: {fileID: 0}
 --- !u!120 &7290546671337467041
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -32612,6 +32619,7 @@ MonoBehaviour:
   trailSpeedMultiplier: 0.1
   collisionParticles: {fileID: 0}
   collisionParticlesReverse: {fileID: 0}
+  playerHitParticles: {fileID: 0}
 --- !u!120 &6420093134616599930
 LineRenderer:
   m_ObjectHideFlags: 0

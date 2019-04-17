@@ -26,7 +26,6 @@ public class ManosGrab : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             manosHand.SetCollidingObject(other);
-            print(other.name);
         }
     }
 
@@ -35,7 +34,6 @@ public class ManosGrab : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             manosHand.SetCollidingObject(other);
-            print(other.name);
         }
     }
 

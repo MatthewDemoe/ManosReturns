@@ -34,6 +34,11 @@ public class AudioManager : MonoBehaviour {
         ChadDashImpact,
         ManosGrab,
         ManosGrabSuccess,
+        ManosExplodeArm,
+        ManosExplodeArm2,
+        ManosExplodeArm3,
+        ManosExplodeArm4,
+        ManosExplosionBig,
         Count
     }
 
@@ -61,6 +66,7 @@ public class AudioManager : MonoBehaviour {
     public class Pitches
     {
         public static float None = 0;
+        public static float VeryLow = 0.1f;
         public static float Low = 0.25f;
         public static float Medium = 0.5f;
         public static float High = 0.75f;
@@ -69,6 +75,7 @@ public class AudioManager : MonoBehaviour {
     public enum PitchShift
     {
         None,
+        VeryLow,
         Low,
         Medium,
         High
@@ -309,30 +316,34 @@ public class AudioManager : MonoBehaviour {
     public void PlaySoundOnce(Sound s, Transform trans = null, Priority p = Priority.Default, float pitchShift = 0)
     {
         AudioSource a = GetAvailableSource();
-        if (trans != null)
-        {
-            sourcePositions[Array.IndexOf(sources, a)] = trans;
-        }
 
-        else
+        if(a != null)
         {
-            a.transform.position = listener.transform.position;
-        }
-        
-        //This is the base unchanged pitch
-        if (pitchShift > Pitches.None)
-        {
-            a.pitch = 1 + UnityEngine.Random.Range(-pitchShift, pitchShift);
-        }
-        else
-        {
-            a.pitch = 1;
-        }
+            if (trans != null)
+            {
+                sourcePositions[Array.IndexOf(sources, a)] = trans;
+            }
 
-        a.clip = clips[(int)s];
-        a.priority = (int)p;
-        a.Play();
-        //a.PlayOneShot(clips[(int)s]);
+            else
+            {
+                a.transform.position = listener.transform.position;
+            }
+
+            //This is the base unchanged pitch
+            if (pitchShift > Pitches.None)
+            {
+                a.pitch = 1 + UnityEngine.Random.Range(-pitchShift, pitchShift);
+            }
+            else
+            {
+                a.pitch = 1;
+            }
+
+            a.clip = clips[(int)s];
+            a.priority = (int)p;
+            a.Play();
+            //a.PlayOneShot(clips[(int)s]);
+        }
     }
 
 
@@ -421,12 +432,16 @@ public class AudioManager : MonoBehaviour {
     /// </param>
     public void StopSoundLoopAll(bool stopPlaying = false)
     {
-        foreach (AudioSource a in loopingSources)
+        if (loopingSources.Count > 0)
         {
-            if (stopPlaying) a.Stop();
-            a.loop = false;
-            loopingSources.Remove(a);
+            foreach (AudioSource a in loopingSources)
+            {
+                if (stopPlaying) a.Stop();
+                a.loop = false;
+                loopingSources.Remove(a);
+            }
         }
+        
         if (sourcePositions != null)
             sourcePositions = new Transform[numSources];
     }

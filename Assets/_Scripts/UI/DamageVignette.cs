@@ -19,8 +19,13 @@ public class DamageVignette : MonoBehaviour
     [SerializeField]
     float innerValueDistance = 0.0f;
 
+    [Tooltip("minimum and maximums for vignette intensity based on damage")]
     [SerializeField]
-    float maxValue = 0.75f;
+    Vector2 vignetteScaleRange = new Vector2(0.1f, 1.0f);
+
+    [Tooltip("values of damage dealt that will produce the minimum and maximum vignette intensities")]
+    [SerializeField]
+    Vector2 damageRange = new Vector2(20.0f, 80.0f);
 
     [Tooltip("The health percentage at which the vignette will be at its max value")]
     [SerializeField]
@@ -35,25 +40,19 @@ public class DamageVignette : MonoBehaviour
     float _vignetteTimer = 0.0f;
 
     [SerializeField]
-    Color damageColor;
+    Color damageColor = Color.white;
 
     [SerializeField]
-    Color healColor;
+    Color healColor = Color.white;
 
-    //private void Update()
-    //{
-    //    if(Input.GetKeyDown(KeyCode.H))
-    //    {
-    //        SetVignetteHeal(0.5f);
-    //    }
-    //}
+    [SerializeField]
+    Color currentOuterColor = Color.red;
 
     // Start is called before the first frame update
     void Start()
     {
         vig = GetComponent<Wilberforce.FinalVignette.FinalVignetteCommandBuffer>();
 
-        //vig.VignetteOuterValueDistance = outerValueDistance;
         vig.VignetteInnerValueDistance = innerValueDistance;
         vig.VignetteOuterValue = outerValue;
         vig.VignetteInnerValue = innerValue;
@@ -66,48 +65,79 @@ public class DamageVignette : MonoBehaviour
             _vignetteTimer = vignetteDuration;
 
             StopCoroutine("FlashVignette");
-            StartCoroutine("FlashVignette");
-        } else
+            StartCoroutine(FlashVignette(vignetteScaleRange.y));
+        }
+        else
         {
             StopCoroutine("FlashVignette");
 
-            vig.VignetteOuterValueDistance = maxValue;
+            vig.VignetteOuterValueDistance = vignetteScaleRange.y;
         }
     }
 
     public void SetVignetteDamage(float amount)
     {
-        vig.VignetteOuterColor = damageColor;
-        SetVignetteFill(amount);
+        //SetVignetteFill(amount);
+        DamagePulse(amount);
     }
 
-    public void SetVignetteHeal(float amount)
+    public void SetVignetteHeal(float healedDamage)
     {
-        vig.VignetteOuterColor = healColor;
+        if (vig.isInterruptable)
+        {
+            float val = UtilMath.Lmap(healedDamage, damageRange.x, damageRange.y, vignetteScaleRange.x, vignetteScaleRange.y);
+            val = Mathf.Clamp(val, vignetteScaleRange.x, vignetteScaleRange.y);
 
+            currentOuterColor = healColor;
+
+            _vignetteTimer = vignetteDuration;
+
+
+            StopCoroutine("FlashVignette");
+            StartCoroutine(FlashVignette(val));
+        }
+    }
+
+    IEnumerator FlashVignette(float value)
+    {
         _vignetteTimer = vignetteDuration;
-
-        StopCoroutine("FlashVignette");
-        StartCoroutine("FlashVignette");
-    }
-
-    IEnumerator FlashVignette()
-    {
-        float val = UtilMath.Lmap(_vignetteTimer, vignetteDuration, 0.0f, maxValue, outerValueDistance);
-
-        vig.VignetteOuterValueDistance = val;
+        UpdateVignetteCol(value);
 
         yield return new WaitForSeconds(vignetteFadeDelay);
 
         while (_vignetteTimer > 0.0f)
         {
-            val = UtilMath.Lmap(_vignetteTimer, vignetteDuration, 0.0f, maxValue, outerValueDistance);
-
-            vig.VignetteOuterValueDistance = val;
+            UpdateVignetteCol(value);
             _vignetteTimer -= Time.deltaTime;
 
             yield return new WaitForEndOfFrame();
         }
     }
 
+    public void DamagePulse(float damageDealt = 10.0f)
+    {
+        if (vig.isInterruptable)
+        {
+            currentOuterColor = damageColor;
+
+            float val = UtilMath.Lmap(damageDealt, damageRange.x, damageRange.y, vignetteScaleRange.x, vignetteScaleRange.y);
+            val = Mathf.Clamp(val, vignetteScaleRange.x, vignetteScaleRange.y);
+
+            StopCoroutine("FlashVignette");
+            StartCoroutine(FlashVignette(val));
+        }
+    }
+
+    void UpdateVignetteCol(float value)
+    {
+        float val = UtilMath.Lmap(_vignetteTimer, vignetteDuration, 0.0f, value, 0.0f);
+        //vig.VignetteOuterValue = val;
+        Color newCol = Color.Lerp(new Color(0.0f, 0.0f, 0.0f, 0.0f), currentOuterColor, val);
+
+        vig.VignetteOuterValueDistance = 1.0f - val;
+
+        //vig.VignetteOuterColor;
+        //newCol.a = val;
+        vig.VignetteOuterColor = newCol;
+    }
 }

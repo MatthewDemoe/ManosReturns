@@ -125,6 +125,8 @@ MonoBehaviour:
     type: 3}
   collisionParticlesReverse: {fileID: 6134766594545612037, guid: 952a48afcccb0e54a938a34d39279cd7,
     type: 3}
+  playerHitParticles: {fileID: 7903591451379960756, guid: 6e816f590fa14a048a44a166b3627e67,
+    type: 3}
 --- !u!120 &933
 LineRenderer:
   m_ObjectHideFlags: 0

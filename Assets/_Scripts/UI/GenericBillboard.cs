@@ -5,7 +5,7 @@ using UnityEngine;
 public class GenericBillboard : MonoBehaviour {
 
     [SerializeField]
-    Enums.Player theTarget;
+    Enums.Player theTarget = Enums.Player.None;
 
     [SerializeField]
     Transform target;
@@ -18,7 +18,10 @@ public class GenericBillboard : MonoBehaviour {
                 target = ManosBody.GetInstance().GetEye().transform;
                 break;
             case Enums.Player.Player1:
-                target = GameObject.Find("CameraStand").transform.GetChild(0).GetChild(0);
+                if (GameObject.Find("CameraStand") != null)
+                {
+                    target = GameObject.Find("CameraStand").transform.GetChild(0).GetChild(0);
+                }
                 break;
         }
     }

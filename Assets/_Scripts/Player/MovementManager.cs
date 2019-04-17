@@ -51,6 +51,9 @@ public class MovementManager : MonoBehaviour
     float chargeMoveSpeedMultiplier = 0.5f;
 
     [SerializeField]
+    float dashChargeTimeoutTime = 2.0f;
+
+    [SerializeField]
     Vector3 _velocity = new Vector3(0.0f, 0.0f, 0.0f);
     Vector2 _desiredVelocity = new Vector2(0.0f, 0.0f);
 
@@ -610,7 +613,7 @@ public class MovementManager : MonoBehaviour
     {
         _jumpUsed = true;
 
-        _am.PlaySoundOnce(AudioManager.Sound.ChadJump, transform, AudioManager.Priority.Default, 0);
+        _am.PlaySoundOnce(AudioManager.Sound.ChadJump, transform, AudioManager.Priority.Default, AudioManager.Pitches.VeryLow);
         _anim.SetTrigger("JumpTrigger");
 
         _velocity.y = Mathf.Max(0.0f, _velocity.y);
@@ -625,7 +628,7 @@ public class MovementManager : MonoBehaviour
     {
         _jumpUsed = true;
 
-        _am.PlaySoundOnce(AudioManager.Sound.ChadChargedJump, transform);
+        _am.PlaySoundOnce(AudioManager.Sound.ChadChargedJump, transform, AudioManager.Priority.Default, AudioManager.Pitches.VeryLow);
         _anim.SetTrigger("JumpTrigger");
 
         _velocity.y = Mathf.Max(0.0f, _velocity.y);
@@ -720,13 +723,15 @@ public class MovementManager : MonoBehaviour
             OnFullyCharged();
 
             // automatically timeout dash charging
-            if(_dashChargingTime > chargeTime + 2.0f)
+            if(_dashChargingTime > chargeTime + dashChargeTimeoutTime)
             {
                 Cancel();
                 
-                _airDashUsed = true; // comment this line to enable a continuous-charging exploit
+                if(!controller.isGrounded)
+                {
+                    _airDashUsed = true; // comment this line to enable a continuous-charging exploit
+                }
             }
-
         }
 
         _dashChargeNormalized = UtilMath.Lmap(_dashChargingTime, 0.0f, chargeTime, 0.0f, 1.0f);
@@ -851,7 +856,8 @@ public class MovementManager : MonoBehaviour
                     _kickoffCoroutine = KickOff(hit, true);
                     StartCoroutine(_kickoffCoroutine);
                 }
-                else
+
+                else if (!hit.transform.gameObject.tag.Equals("Untagged"))
                 {
                     float angleOfDeflection = (Vector3.Angle(_dashDir, -hit.normal));
 

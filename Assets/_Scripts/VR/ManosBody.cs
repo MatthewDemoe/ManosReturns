@@ -37,6 +37,23 @@ public class ManosBody : MonoBehaviour
             Destroy(this);
     }
 
+    private void Update()
+    {
+        if (CoolDebug.hacks)
+        {
+            if (Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                manos.transform.position = new Vector3(manos.transform.position.x, manos.transform.position.y + 1, manos.transform.position.z);
+                CoolDebug.GetInstance().LogHack("Moved Manos Up!");
+            }
+            else if (Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                manos.transform.position = new Vector3(manos.transform.position.x, manos.transform.position.y - 1, manos.transform.position.z);
+                CoolDebug.GetInstance().LogHack("Moved Manos Down!");
+            }
+        }
+    }
+
     public static ManosBody GetInstance()
     {
         return Singleton;

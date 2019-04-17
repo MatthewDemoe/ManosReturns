@@ -149,7 +149,7 @@ public class LobbyScript : MonoBehaviour
             GameObject.Find("Manos 2.3").GetComponentInChildren<ManosHand>().SetTraining(false);
         }
         
-        portal.SetActive(chadReady || manosReady);
+        portal.SetActive(manosReady);
 
         if (chadReady && manosReady)
         {
@@ -199,7 +199,7 @@ public class LobbyScript : MonoBehaviour
     public IEnumerator JonWaalerTeleportMP3()
     {
 
-        yield return new WaitForSeconds(fadeTime);
+        yield return new WaitForEndOfFrame();
 
         if (GameObject.Find("ManosControls") != null)
         {
@@ -302,11 +302,12 @@ public class LobbyScript : MonoBehaviour
 
                 case 6:
                     tt.text = "";
-                    skipText.text = (chadReady) ? "Ready... Waiting for <color=red>Manos</color>" : "You have nothing more to learn. Hop into the  <color=purple>portal</color> when you are ready!.";
-                 //   FootballButton.SetActive(false);
-                    chadReady = true;
+                    skipText.text =  "You have nothing more to learn. Hop into the  <color=purple>portal</color> when you are ready!.";
+                    //   FootballButton.SetActive(false);
+                    //  chadReady = true;
+                   // manosReady = true;
 
-                    if (chadReady)
+                  /*  if (chadReady)
                     {
                         SkipButtonOne.SetActive(false);
                         SkipButtonTwo.SetActive(false);
@@ -315,7 +316,7 @@ public class LobbyScript : MonoBehaviour
                     {
                         SkipButtonOne.SetActive(false);
                         SkipButtonTwo.SetActive(true);
-                    }
+                    }*/
                     break;
             }
 

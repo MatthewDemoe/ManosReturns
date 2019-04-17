@@ -25,7 +25,7 @@ namespace Valve.VR
             {
                 if (_instance == null)
                 {
-                    Initialize();
+                  Initialize();
                 }
 
                 return _instance;
@@ -34,10 +34,10 @@ namespace Valve.VR
 
         public bool initializeSteamVROnAwake = true;
 
-        [HideInInspector]
+        //[HideInInspector]
         public bool forcingInitialization = false;
 
-        [HideInInspector]
+        //[HideInInspector]
         public SteamVR_Render steamvr_render;
 
 

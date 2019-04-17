@@ -43,7 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 233f46ad73108a343b1292b6f6e675b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numSources: 16
+  numSources: 64
   clips:
   - {fileID: 8300000, guid: 5b39b45d342ca204b82ceb68aac8c926, type: 3}
   - {fileID: 8300000, guid: 62bc419e232d43b40b3a4173990fecf5, type: 3}
@@ -70,6 +70,11 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 2ac09bee02638a7449a67c3045b1e6af, type: 3}
   - {fileID: 8300000, guid: f15b3d07f5f449f468d0d33afc868d65, type: 3}
   - {fileID: 8300000, guid: 6a2f990a271960a4796381b2affedc21, type: 3}
+  - {fileID: 8300000, guid: b1334c32f2976c246b043c23b31172a3, type: 3}
+  - {fileID: 8300000, guid: 6d4d7252db9cb5d48bf365e5b3840f45, type: 3}
+  - {fileID: 8300000, guid: 10c0bc105d9b0034b8ad444e1fa6e741, type: 3}
+  - {fileID: 8300000, guid: c5631fe5120fc8242b9b216e2312a66a, type: 3}
+  - {fileID: 8300000, guid: 9cf2dfc02e5b35b46a0bd43b5da0cc6b, type: 3}
   tracks:
   - {fileID: 8300000, guid: 6f7ff6bd048ec42a0baff733a4384c04, type: 3}
   trackIntros: []
@@ -77,7 +82,7 @@ MonoBehaviour:
   sourcePositions: []
   exclusiveList: 
   soundVolume: 1
-  musicVolume: 0.1
+  musicVolume: 1
   spatialSound: 1
   currentTrack: 0
   listener: {fileID: 0}

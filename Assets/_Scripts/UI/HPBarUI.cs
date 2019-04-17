@@ -92,15 +92,15 @@ public class HPBarUI : MonoBehaviour
     /// HP bar reacts to taking damage
     /// </summary>
     /// <param name="damagePercent"></param>
-    public void DealDamagePercentage(float hp)
+    public void DealDamagePercentage(float damageDealt)
     {
-        _hpPercentage -= hp;
+        _hpPercentage -= damageDealt;
         _hpPercentage = Mathf.Max(_hpPercentage, 0.0f);
 
         _damagePercentageTimer = damageTimePause;
         if (shake)
         {
-            barShake.Shake(barShake.duration, 1.0f + hp * barShake.magnitude);
+            barShake.Shake(barShake.duration, 1.0f + damageDealt * barShake.magnitude);
         }
     }
 

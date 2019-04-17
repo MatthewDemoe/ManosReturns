@@ -17,6 +17,9 @@ namespace Wilberforce.FinalVignette
     [HelpURL("https://projectwilberforce.github.io/finalvignette/manual/")]
     public class FinalVignetteCommandBuffer : MonoBehaviour
     {
+        // added for extra logic used by damageVignette
+        public bool isInterruptable = true;
+
 
         #region Effect Parameters
 

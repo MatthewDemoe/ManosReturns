@@ -75,6 +75,9 @@ public class ManosBullet : MonoBehaviour
     [SerializeField]
     GameObject collisionParticlesReverse;
 
+    [SerializeField]
+    GameObject playerHitParticles;
+
     public void Init(Transform _spawn, Manos m)
     {
         manos = m;
@@ -183,7 +186,7 @@ public class ManosBullet : MonoBehaviour
         if (other.CompareTag("ManosTarget"))
         {
             other.GetComponent<ManosTargets>().Impulse();
-            print("PEW");
+            Destroy(Instantiate(playerHitParticles, other.transform.position, Quaternion.identity), 2f);
         }
         else
         {
@@ -207,6 +210,8 @@ public class ManosBullet : MonoBehaviour
                             -transform.forward.z * knockBack.z
                             ));
                         }
+
+                        Destroy(Instantiate(playerHitParticles, other.transform.position, Quaternion.identity), 2f);
                     }
                 }
             }

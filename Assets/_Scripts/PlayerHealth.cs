@@ -12,7 +12,7 @@ public class PlayerHealth : MonoBehaviour
 
     [SerializeField]
     float baseHealth;
-
+    
     [SerializeField]
     HPBarUI[] playerUI;
 
@@ -35,6 +35,17 @@ public class PlayerHealth : MonoBehaviour
     string _attachedPlayer;
 
     bool dead = false;
+
+
+
+    IEnumerator _lowHealthReaction = null;
+
+    [SerializeField]
+    float lowHealthPercentage = 0.35f;
+
+    [SerializeField]
+    float lowHealthPulseIntervalTime = 0.5f;
+
 
     private void Awake()
     {
@@ -83,9 +94,8 @@ public class PlayerHealth : MonoBehaviour
         health = h;
     }
 
-    public void TakeDamage(float damage, Enums.ManosParts bodyPart = Enums.ManosParts.None) {
-
-
+    public void TakeDamage(float damage, Enums.ManosParts bodyPart = Enums.ManosParts.None)
+    {
         if (invincible)
         {
             return;
@@ -118,6 +128,7 @@ public class PlayerHealth : MonoBehaviour
         foreach (HPBarUI hpBar in playerUI)
         {
             hpBar.DealDamagePercentage(damagePercentage);
+            hpBar.SetHitPointPercentage(GetHealthPercentage());
         }
 
         if (_anim != null)
@@ -128,16 +139,22 @@ public class PlayerHealth : MonoBehaviour
         flash.ReactToDamage(0.0f, bodyPart);
 
         //PlayerHealth on everything is making things fucky, eh?
-        if (vignetteControl != null)
+        if (vignetteControl != null && _lowHealthReaction == null)
         {
-            vignetteControl.SetVignetteDamage(GetHealthPercentage());
+            vignetteControl.SetVignetteDamage(damageDealt);
+
+           if(GetHealthPercentage() < lowHealthPercentage)
+            {
+                _lowHealthReaction = LowHealthBehaviour();
+                StartCoroutine(_lowHealthReaction);
+            }
         }        
     }
 
-    public void TakeDamageComplex(float baseDamage, float baseDamageMultiplier, float variableDamage, float variableDamageMultiplier)
-    {
-        float damageDealt = ((baseDamage * baseDamageMultiplier) + (variableDamage * variableDamageMultiplier)) * globalDamageMultiplier;
-    }
+    //public void TakeDamageComplex(float baseDamage, float baseDamageMultiplier, float variableDamage, float variableDamageMultiplier)
+    //{
+    //    float damageDealt = ((baseDamage * baseDamageMultiplier) + (variableDamage * variableDamageMultiplier)) * globalDamageMultiplier;
+    //}
 
     public float GetHealthPercentage() {
         return health / baseHealth;
@@ -175,7 +192,7 @@ public class PlayerHealth : MonoBehaviour
 
         if (vignetteControl != null)
         {
-            vignetteControl.SetVignetteHeal(GetHealthPercentage());
+            vignetteControl.SetVignetteHeal(healAmount);
         }
     }
 
@@ -189,4 +206,14 @@ public class PlayerHealth : MonoBehaviour
         return baseHealth;
     }
 
+    IEnumerator LowHealthBehaviour()
+    {
+        while(GetHealthPercentage() < lowHealthPercentage)
+        {
+            vignetteControl.DamagePulse();
+            yield return new WaitForSeconds(lowHealthPulseIntervalTime);
+        }
+
+        _lowHealthReaction = null;
+    }
 }

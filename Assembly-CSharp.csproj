@@ -411,6 +411,7 @@
     <Compile Include="Assets\Imported Assets\VolumetricLines\Scripts\VolumetricLineVertexData.cs" />
     <Compile Include="Assets\Imported Assets\VolumetricLines\Scripts\VolumetricMultiLineBehavior.cs" />
     <Compile Include="Assets\Models\Chad_Stride\AtomicEagleExpressionStates.cs" />
+    <Compile Include="Assets\PortalEffect.cs" />
     <Compile Include="Assets\Shaders\OutlinePost.cs" />
     <Compile Include="Assets\SteamVR_Input\ActionObjects\SteamVR_Input_ActionSet_buggy.cs" />
     <Compile Include="Assets\SteamVR_Input\ActionObjects\SteamVR_Input_ActionSet_buggy_In.cs" />
